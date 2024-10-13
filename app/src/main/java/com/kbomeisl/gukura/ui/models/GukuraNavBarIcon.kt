@@ -1,4 +1,4 @@
-package com.kbomeisl.gukura.ui.common
+package com.kbomeisl.gukura.ui.models
 
 data class GukuraNavBarIcon(
     val id: Int,
