@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Gukura</string>
+    <string name="title_activity_measurement">MeasurementActivity</string>
 </resources>

@@ -41,6 +41,10 @@ android {
 
 dependencies {
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -52,4 +56,7 @@ dependencies {
     implementation(libs.androidx.activity.compose.v192)
     // Optional - Integration with ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    debugImplementation(libs.androidx.ui.tooling)
+    //Compose Sensors 3rd party
+    implementation("com.mutualmobile:composesensors:1.1.2")
 }
