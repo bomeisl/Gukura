@@ -59,4 +59,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     //Compose Sensors 3rd party
     implementation("com.mutualmobile:composesensors:1.1.2")
+    //Room
+    implementation("androidx.room:room-runtime:2.6.1")
 }
