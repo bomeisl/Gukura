@@ -13,11 +13,6 @@
         android:theme="@style/Theme.Gukura"
         tools:targetApi="31">
         <activity
-            android:name=".MeasurementActivity"
-            android:exported="false"
-            android:label="@string/title_activity_measurement"
-            android:theme="@style/Theme.Gukura" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

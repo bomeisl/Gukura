@@ -19,24 +19,27 @@ import com.mutualmobile.composesensors.rememberRelativeHumiditySensorState
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MeasurementScreen() {
-    val temperatureState = rememberAmbientTemperatureSensorState()
-    val lightState = rememberLightSensorState()
-    val humiditySensorState = rememberRelativeHumiditySensorState()
-    val magnetomometerState = rememberMagneticFieldSensorState()
+//    val temperatureState = rememberAmbientTemperatureSensorState()
+//    val lightState = rememberLightSensorState()
+//    val humiditySensorState = rememberRelativeHumiditySensorState()
+//    val magnetomometerState = rememberMagneticFieldSensorState()
     Surface {
         Row {
             Column {
                 Spacer(modifier = Modifier.height(100.dp))
                 Text(
-                    temperatureState.temperature.toString(),
+                    "Standby...",
+                    //temperatureState.temperature.toString(),
                     color = Color.Black
                 )
                 Text(
-                    lightState.illuminance.toString(),
+                    "Standby...",
+                    //lightState.illuminance.toString(),
                     color = Color.Red
                 )
                 Text(
-                    humiditySensorState.relativeHumidity.toString(),
+                    "Standby...",
+                    //humiditySensorState.relativeHumidity.toString(),
                     color = Color.Blue
                 )
             }

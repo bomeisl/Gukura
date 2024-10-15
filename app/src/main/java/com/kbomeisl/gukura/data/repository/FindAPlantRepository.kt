@@ -1,6 +1,6 @@
 package com.kbomeisl.gukura.data.repository
 
-class FindAPlantRepository {
+class FindAPlantRepository() {
 
     fun takeTemperatureReading() {
         //TODO(Grab temperature reading from smartphone sensor)

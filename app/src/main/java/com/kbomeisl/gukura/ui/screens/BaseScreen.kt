@@ -1,15 +1,19 @@
 package com.kbomeisl.gukura.ui.screens
 
+import android.annotation.SuppressLint
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModel
-import com.kbomeisl.gukura.ui.common.GukuraScaffold
-import com.kbomeisl.gukura.ui.common.GukuraTopAppBar
-import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun GukuraBaseScreen() {
-    GukuraScaffold(
-        topNavBar = { GukuraTopAppBar(gukuraTopAppBar = GukuraTopAppBar()) },
-        content = { GukuraNavHost() }
+fun GukuraBaseScreen(
+    topAppBar: @Composable () -> Unit,
+    content: @Composable () -> Unit
+) {
+
+    Scaffold (
+        topBar = { topAppBar() },
+        content = { content() },
+
     )
 }

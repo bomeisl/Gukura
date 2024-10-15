@@ -1,5 +1,8 @@
 package com.kbomeisl.gukura
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,7 +21,6 @@ class MainActivity : ComponentActivity() {
                 MeasurementScreen()
             }
         }
-
     }
 
     override fun onResume() {
@@ -29,5 +31,4 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
     }
-
 }
