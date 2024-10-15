@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -61,4 +63,19 @@ dependencies {
     implementation("com.mutualmobile:composesensors:1.1.2")
     //Room
     implementation("androidx.room:room-runtime:2.6.1")
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.52")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.52")
+
+    // For instrumentation tests
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.52")
+
+    // For local unit tests
+    testImplementation("com.google.dagger:hilt-android-testing:2.52")
+    testAnnotationProcessor("com.google.dagger:hilt-compiler:2.52")
+}
+
+kapt {
+    correctErrorTypes = true
 }
