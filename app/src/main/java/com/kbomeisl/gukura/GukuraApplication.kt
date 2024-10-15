@@ -1,8 +1,14 @@
 package com.kbomeisl.gukura
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.kbomeisl.gukura.di.gukuraAppModule
+import org.koin.core.context.GlobalContext.startKoin
 
-@HiltAndroidApp
 class GukuraApplication: Application() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            modules(gukuraAppModule)
+        }
+    }
 }

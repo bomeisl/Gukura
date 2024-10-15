@@ -2,8 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -30,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
@@ -60,22 +58,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     debugImplementation(libs.androidx.ui.tooling)
     //Compose Sensors 3rd party
-    implementation("com.mutualmobile:composesensors:1.1.2")
+    implementation(libs.composesensors)
     //Room
-    implementation("androidx.room:room-runtime:2.6.1")
-    //Hilt
-    implementation("com.google.dagger:hilt-android:2.52")
-    annotationProcessor("com.google.dagger:hilt-compiler:2.52")
-
-    // For instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
-    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.52")
-
-    // For local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:2.52")
-    testAnnotationProcessor("com.google.dagger:hilt-compiler:2.52")
-}
-
-kapt {
-    correctErrorTypes = true
+    implementation(libs.androidx.room.runtime)
+    //Koin
+    implementation("io.insert-koin:koin-android:4.0.0")
+    //Koin Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:4.0.0")
+    implementation("io.insert-koin:koin-androidx-compose-navigation:4.0.0")
 }

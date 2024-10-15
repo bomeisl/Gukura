@@ -3,9 +3,8 @@ package com.kbomeisl.gukura.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import com.kbomeisl.gukura.ui.models.NavigationIcons
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
-import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
-@HiltViewModel
 class HomeViewModel: ViewModel() {
     val homeTopAppBar: GukuraTopAppBar = GukuraTopAppBar(
         title = "Gukura",
@@ -16,4 +15,5 @@ class HomeViewModel: ViewModel() {
             NavigationIcons.whereToPlantIcon,
             )
     )
+    val temperature = MutableStateFlow<Float>(0F)
 }

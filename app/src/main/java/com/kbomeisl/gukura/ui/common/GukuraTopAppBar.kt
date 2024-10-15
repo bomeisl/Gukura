@@ -23,8 +23,7 @@ fun GukuraTopAppBar(
                 for (i in gukuraTopAppBar.navIcons) {
                     Image(painter = painterResource(i.id),i.textDescription)
                 }
-            },
-            colors = gukuraTopAppBar.colors
+            }
         )
     }
 }

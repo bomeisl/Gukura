@@ -6,10 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.kbomeisl.gukura.ui.screens.MeasurementScreen
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity(){
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,10 +18,12 @@ class MainActivity : ComponentActivity(){
                 MeasurementScreen()
             }
         }
+
     }
 
     override fun onResume() {
         super.onResume()
+
     }
 
     override fun onPause() {
