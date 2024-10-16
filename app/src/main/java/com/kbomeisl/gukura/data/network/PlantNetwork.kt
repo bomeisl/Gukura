@@ -5,10 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PlantNetwork(
     val name: String,
-    val upperTemperature: Int,
-    val lowerTemperature: Int,
-    val upperHumidity: Int,
-    val lowerHumidity: Int,
-    val upperLightLevel: Int,
-    val lowerLightLevel: Int
+    val temperature: Pair<Int,Int>,
+    val humidity: Pair<Int,Int>,
+    val lightLevel: Pair<Int,Int>
 )

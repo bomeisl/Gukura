@@ -1,6 +1,13 @@
 package com.kbomeisl.gukura.data.repository
 
-class FindAPlantRepository() {
+import com.kbomeisl.gukura.data.database.PlantDao
+import com.kbomeisl.gukura.data.database.PlantDb
+import com.kbomeisl.gukura.data.network.PlantDataSource
+
+class FindAPlantRepository(
+    val plantDataSource: PlantDataSource,
+    val plantDao: PlantDao
+) {
 
     fun takeTemperatureReading() {
         //TODO(Grab temperature reading from smartphone sensor)
@@ -24,6 +31,21 @@ class FindAPlantRepository() {
 
     fun saveLightReadingToDb() {
         //TODO(save a light reading to database)
+    }
+
+    suspend fun lookUpPlantApi(plantName: String) {
+        val plant = plantDataSource.getPlant(name = plantName)
+        //TODO(Do something with plant data retrieved from online API)
+    }
+
+    fun lookUpPlantDb(name: String) {
+        val plant = plantDao.findPlant(plantName = name)
+        //TODO(Do something with plant retrieved from app database)
+    }
+
+    //save a new plant to user's app database under 'My Plants'
+    fun savePlant(plantDb: PlantDb) {
+        plantDao.addPlant(plantDb)
     }
 
 }

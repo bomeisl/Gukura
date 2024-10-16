@@ -60,7 +60,9 @@ dependencies {
     //Compose Sensors 3rd party
     implementation(libs.composesensors)
     //Room
-    implementation(libs.androidx.room.runtime)
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
     //Koin
     implementation("io.insert-koin:koin-android:4.0.0")
     //Koin Jetpack Compose
