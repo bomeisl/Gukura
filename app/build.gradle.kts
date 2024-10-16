@@ -66,4 +66,10 @@ dependencies {
     //Koin Jetpack Compose
     implementation("io.insert-koin:koin-androidx-compose:4.0.0")
     implementation("io.insert-koin:koin-androidx-compose-navigation:4.0.0")
+    //Ktor
+    val ktorVersion = "3.0.0"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
 }
