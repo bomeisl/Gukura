@@ -3,11 +3,11 @@ package com.kbomeisl.gukura.di
 import androidx.room.Room
 import com.kbomeisl.gukura.data.database.GukuraDatabase
 import com.kbomeisl.gukura.data.database.PlantDao
-import com.kbomeisl.gukura.data.network.PlantDataSource
+import com.kbomeisl.gukura.data.network.PlantNetworkDataSource
 import com.kbomeisl.gukura.data.repository.FindAPlantRepository
+import com.kbomeisl.gukura.data.repository.HomeRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
-import kotlin.math.sin
 
 val gukuraAppModule = module {
 
@@ -24,13 +24,19 @@ val gukuraAppModule = module {
         gukuraDatabase.plantDao()
     }
 
-    factory<FindAPlantRepository> {
+    single<FindAPlantRepository> {
         FindAPlantRepository(
             plantDao = get<PlantDao>(),
-            plantDataSource = PlantDataSource()
+            plantDataSource = PlantNetworkDataSource()
         )
     }
 
+    single<HomeRepository> {
+        HomeRepository(
+            plantDao = get<PlantDao>(),
+            plantDataSource = PlantNetworkDataSource()
+        )
+    }
 }
 
 

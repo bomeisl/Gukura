@@ -2,10 +2,10 @@ package com.kbomeisl.gukura.data.repository
 
 import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.database.PlantDb
-import com.kbomeisl.gukura.data.network.PlantDataSource
+import com.kbomeisl.gukura.data.network.PlantNetworkDataSource
 
 class FindAPlantRepository(
-    val plantDataSource: PlantDataSource,
+    private val plantDataSource: PlantNetworkDataSource,
     private val plantDao: PlantDao
 ) {
 

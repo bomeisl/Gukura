@@ -6,9 +6,11 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PlantDb(
-    @PrimaryKey val id: Int,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "temperature") val temperature: Pair<Int,Int>,
-    @ColumnInfo(name = "humidity") val humidity: Pair<Int,Int>,
-    @ColumnInfo(name = "lightLevel") val lightLevel: Pair<Int,Int>
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val name: String,
+    val description: String,
+    val temperature: Pair<Int,Int>,
+    val humidity: Pair<Int,Int>,
+    val lightLevel: Pair<Int,Int>,
+    val imageLink: String
 )
