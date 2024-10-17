@@ -1,2 +1,2 @@
 /build
-/src/main/java/environmentalVariables
+app/src/main/java/com/kbomeisl/gukura/environmentalVariables.kt

@@ -14,15 +14,15 @@ data class PlantNetwork(
     val maxLightLevel: Int = 2000,
     val minLightLevel: Int = 1000,
     val pictureLink: String = ""
-) {
-    fun PlantNetwork.toUi(): PlantUi {
-        return PlantUi(
-            name = name,
-            description = description,
-            temperature = Pair(minTemperature,maxTemperature),
-            humidity = Pair(minHumidity,maxHumidity),
-            lightLevel = Pair(minLightLevel,maxLightLevel),
-            pictureLink = pictureLink
-        )
-    }
+)
+fun PlantNetwork.toUi(): PlantUi {
+    return PlantUi(
+        name = name,
+        description = description,
+        temperature = Pair(minTemperature,maxTemperature),
+        humidity = Pair(minHumidity,maxHumidity),
+        lightLevel = Pair(minLightLevel,maxLightLevel),
+        imageLink = pictureLink
+    )
 }
+

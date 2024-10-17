@@ -20,8 +20,4 @@ class HomeRepository(
         }
         return myPlants
     }
-
-//    suspend fun getPlantPictureLink(plantName: String): String {
-//        val plantPicture = plantDataSource.(plantName)
-//    }
 }

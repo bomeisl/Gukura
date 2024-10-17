@@ -6,7 +6,10 @@ import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.network.PlantNetworkDataSource
 import com.kbomeisl.gukura.data.repository.FindAPlantRepository
 import com.kbomeisl.gukura.data.repository.HomeRepository
+import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import org.koin.android.ext.koin.androidApplication
+import org.koin.core.module.dsl.viewModel
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val gukuraAppModule = module {
@@ -37,6 +40,8 @@ val gukuraAppModule = module {
             plantDataSource = PlantNetworkDataSource()
         )
     }
+
+    viewModel { HomeViewModel(get<HomeRepository>()) }
 }
 
 

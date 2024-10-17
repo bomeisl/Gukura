@@ -14,8 +14,8 @@ interface PlantDao {
     fun findPlant(plantName: String): PlantDb
 
     @Insert
-    fun addPlant(plantDb: PlantDb)
+    suspend fun addPlant(plantDb: PlantDb)
 
     @Delete
-    fun deletePlant(plantDb: PlantDb)
+    suspend fun deletePlant(plantDb: PlantDb)
 }

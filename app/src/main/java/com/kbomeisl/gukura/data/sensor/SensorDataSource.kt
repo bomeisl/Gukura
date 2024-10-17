@@ -6,11 +6,13 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class SensorDataSource(val context: Context): SensorEventListener, DefaultLifecycleObserver {
+class SensorDataSource(val context: Context): SensorEventListener {
+    private val logTag = "sensorSource"
     private lateinit var sensorManager: SensorManager
     private var temperatureSensor: Sensor? = null
     private var humiditySensor: Sensor? = null
@@ -38,7 +40,10 @@ class SensorDataSource(val context: Context): SensorEventListener, DefaultLifecy
         }
     }
 
-    //sensor lifecycle methods
+    fun detatchListener() {
+        sensorManager.unregisterListener(this)
+    }
+
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null) {
             when (event.sensor.type) {
@@ -50,23 +55,7 @@ class SensorDataSource(val context: Context): SensorEventListener, DefaultLifecy
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-
-    }
-
-    //activity lifecycle methods
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-        initializeSensors()
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        super.onResume(owner)
-        attachListeners()
-    }
-
-    override fun onPause(owner: LifecycleOwner) {
-        super.onPause(owner)
-        sensorManager.unregisterListener(this)
+        Log.i(logTag, "${sensor?.type} accuracy changed")
     }
 
 }

@@ -12,7 +12,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-
 class PlantNetworkDataSource() {
     val logTag = "PlantDataSource"
 
@@ -20,14 +19,13 @@ class PlantNetworkDataSource() {
         install(ContentNegotiation) {
             json(Json {
                 isLenient = true
+                prettyPrint = true
             })
         }
     }
 
     val requestRootUrl = environmentalVariables.firebaseRootUrl
 
-    //always use a suspend function for network operations. They can take an arbitrary amount of time
-    //and you will block the UI thread otherwise.
     suspend fun getPlantList(): List<PlantNetwork> {
         val response: HttpResponse = ktorClient.request(requestRootUrl+"/plantData"+"/plants") {
             method = HttpMethod.Get
@@ -40,7 +38,6 @@ class PlantNetworkDataSource() {
         } else {
             Log.e(logTag ,"${response.status}")
         }
-
         return plantList
     }
 
@@ -56,7 +53,6 @@ class PlantNetworkDataSource() {
         } else {
             Log.e(logTag ,"${response.status}")
         }
-
         return plant
     }
 }
