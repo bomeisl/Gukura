@@ -18,16 +18,22 @@ class PlantDataSource() {
         }
     }
 
-    val requestRootUrl = ""
+    val requestRootUrl = "gs://rosemerta-6e458.appspot.com"
 
     suspend fun getPlantList() {
-        val response: HttpResponse = ktorClient.request(requestRootUrl+"/plants") {
+        val response: HttpResponse = ktorClient.request(requestRootUrl+"/plantData"+"/plants") {
             method = HttpMethod.Get
         }
     }
 
     suspend fun getPlant(name: String) {
-        val response: HttpResponse = ktorClient.request(requestRootUrl+"/plant"+name) {
+        val response: HttpResponse = ktorClient.request(requestRootUrl+"plantData"+"/plant"+name) {
+            method = HttpMethod.Get
+        }
+    }
+
+    suspend fun getPlantPicture(name: String) {
+        val response: HttpResponse = ktorClient.request(requestRootUrl+"plantPics"+"/plant"+name) {
             method = HttpMethod.Get
         }
     }
