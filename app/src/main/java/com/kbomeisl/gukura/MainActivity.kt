@@ -1,13 +1,11 @@
 package com.kbomeisl.gukura
 
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.kbomeisl.gukura.ui.screens.MeasurementScreen
+import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
+import com.kbomeisl.gukura.ui.screens.GukuraNavHost
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GukuraTheme {
-                MeasurementScreen()
+                GukuraNavHost()
             }
         }
     }

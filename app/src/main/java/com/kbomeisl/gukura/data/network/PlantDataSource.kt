@@ -20,6 +20,8 @@ class PlantDataSource() {
 
     val requestRootUrl = "gs://rosemerta-6e458.appspot.com"
 
+    //always use a suspend function for network operations. They can take an arbitrary amount of time
+    //and you will block the UI thread otherwise.
     suspend fun getPlantList() {
         val response: HttpResponse = ktorClient.request(requestRootUrl+"/plantData"+"/plants") {
             method = HttpMethod.Get

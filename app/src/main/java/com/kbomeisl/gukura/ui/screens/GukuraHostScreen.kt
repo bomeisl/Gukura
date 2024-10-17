@@ -11,7 +11,7 @@ fun GukuraNavHost() {
     val navController = rememberNavController()
            NavHost(
                navController = navController,
-               startDestination = Routes.FINDAPLANT.name
+               startDestination = Routes.HOME.name
            ) {
                composable(route = Routes.HOME.name) {
                    Home()

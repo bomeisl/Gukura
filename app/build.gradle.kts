@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    //Compose
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -53,13 +54,13 @@ dependencies {
     implementation(libs.material3)
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.test.manifest)
-    // Optional - Integration with activities
     implementation(libs.androidx.activity.compose.v192)
-    // Optional - Integration with ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     debugImplementation(libs.androidx.ui.tooling)
     //Compose Sensors 3rd party
     implementation(libs.composesensors)
+    //Compose-Navigation
+    implementation("androidx.navigation:navigation-compose:2.8.3")
     //Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

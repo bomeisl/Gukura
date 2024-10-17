@@ -9,15 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.kbomeisl.gukura.R
+import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
+import com.kbomeisl.gukura.ui.common.GukuraTopAppBar
+import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
+import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Home() {
-    Surface(modifier = Modifier) {
-        Row(modifier = Modifier) {
+fun Home(homeViewModel: HomeViewModel) {
+    GukuraBaseScreen(
+        topAppBar = { GukuraTopAppBar(gukuraTopAppBar = homeViewModel.homeTopAppBar) },
+        content = {
 
         }
-    }
+    )
 }
 
 

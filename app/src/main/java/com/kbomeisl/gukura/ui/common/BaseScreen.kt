@@ -1,4 +1,4 @@
-package com.kbomeisl.gukura.ui.screens
+package com.kbomeisl.gukura.ui.common
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
@@ -14,6 +14,5 @@ fun GukuraBaseScreen(
     Scaffold (
         topBar = { topAppBar() },
         content = { content() },
-
     )
 }
