@@ -6,7 +6,7 @@ import com.kbomeisl.gukura.data.network.PlantDataSource
 
 class FindAPlantRepository(
     val plantDataSource: PlantDataSource,
-    val plantDao: PlantDao
+    private val plantDao: PlantDao
 ) {
 
     fun takeTemperatureReading() {

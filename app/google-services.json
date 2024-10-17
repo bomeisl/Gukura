@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "615631342178",
+    "project_id": "rosemerta-6e458",
+    "storage_bucket": "rosemerta-6e458.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615631342178:android:1242f5aae6d573900a9f3b",
+        "android_client_info": {
+          "package_name": "com.kbomeisl.gukura"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615631342178-qu26e44k37jb81gtjc4drdj5pcv5o4l3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTjz7GerPUIgnQGcD64bC6NBL2RvdpmmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615631342178-qu26e44k37jb81gtjc4drdj5pcv5o4l3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
