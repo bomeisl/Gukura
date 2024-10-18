@@ -8,12 +8,12 @@ import com.kbomeisl.gukura.ui.models.PlantUi
 @Entity
 data class PlantDb(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val name: String,
-    val description: String,
-    val temperature: Pair<Int,Int>,
-    val humidity: Pair<Int,Int>,
-    val lightLevel: Pair<Int,Int>,
-    val imageLink: String
+    val name: String = "Loading...",
+    val description: String = "Loading...",
+    val temperature: Pair<Int,Int> = Pair(0,0),
+    val humidity: Pair<Int,Int> = Pair(0,0),
+    val lightLevel: Pair<Int,Int> = Pair(0,0),
+    val imageLink: String=""
 )
 
 fun PlantDb.toUi(): PlantUi {
