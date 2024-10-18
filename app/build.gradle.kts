@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     id("com.google.gms.google-services")
+    id("com.google.devtools.ksp") version "2.0.21-1.0.25"
 }
 
 android {
@@ -29,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -48,8 +49,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     //Compose
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
+    implementation("androidx.compose:compose-bom:2024.10.00")
+    androidTestImplementation("androidx.compose:compose-bom:2024.10.00")
 
     implementation(libs.material3)
     androidTestImplementation(libs.ui.test.junit4)
@@ -58,18 +59,23 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     debugImplementation(libs.androidx.ui.tooling)
     //Compose Sensors 3rd party
-    implementation(libs.composesensors)
+    implementation("dev.ricknout.composesensors:composesensors:0.2.0")
     //Compose-Navigation
     implementation("androidx.navigation:navigation-compose:2.8.3")
     //Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
     //Koin
-    implementation("io.insert-koin:koin-android:4.0.0")
+    val koin_version = "4.0.0"
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:$koin_version"))
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-android:$koin_version")
     //Koin Jetpack Compose
-    implementation("io.insert-koin:koin-androidx-compose:4.0.0")
-    implementation("io.insert-koin:koin-androidx-compose-navigation:4.0.0")
+    implementation("io.insert-koin:koin-androidx-compose:$koin_version")
+    implementation("io.insert-koin:koin-androidx-compose-navigation:$koin_version")
     //Ktor
     val ktorVersion = "3.0.0"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -86,6 +92,6 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test:core:1.6.1")
     testImplementation("org.mockito:mockito-core:5.14.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testImplementation("io.mockk:mockk:1.13.13")
 }

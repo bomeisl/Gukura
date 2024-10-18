@@ -11,10 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.mutualmobile.composesensors.rememberAmbientTemperatureSensorState
-import com.mutualmobile.composesensors.rememberLightSensorState
-import com.mutualmobile.composesensors.rememberMagneticFieldSensorState
-import com.mutualmobile.composesensors.rememberRelativeHumiditySensorState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

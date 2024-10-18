@@ -3,11 +3,10 @@ package com.kbomeisl.gukura.data.repository
 import android.util.Log
 import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.database.PlantDb
-import com.kbomeisl.gukura.data.network.PlantNetworkDataSource
+import com.kbomeisl.gukura.data.network.plantNetworkDataSource
 
 class HomeRepository(
-    private val plantDao: PlantDao,
-    private val plantDataSource: PlantNetworkDataSource
+    private val plantDao: PlantDao
 ) {
     val logTag = "HomeRespository"
 

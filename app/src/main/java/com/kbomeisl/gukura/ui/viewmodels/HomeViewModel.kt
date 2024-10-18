@@ -11,7 +11,9 @@ import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class HomeViewModel(private val homeRepository: HomeRepository): ViewModel(), DefaultLifecycleObserver {
+class HomeViewModel(
+    val homeRepository: HomeRepository
+): ViewModel(), DefaultLifecycleObserver {
     val homeTopAppBar: GukuraTopAppBar = GukuraTopAppBar(
         title = "Gukura",
         subtitle = "Home",

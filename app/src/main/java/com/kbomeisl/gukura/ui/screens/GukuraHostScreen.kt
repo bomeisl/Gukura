@@ -17,7 +17,7 @@ fun GukuraNavHost() {
                    //Home()
                }
                composable(route = Routes.FINDAPLANT.name) {
-                   FindAPlant()
+                   //FindAPlant()
                }
                composable(route = Routes.WHERETOPLANT.name) {
                    WhereToPlant()

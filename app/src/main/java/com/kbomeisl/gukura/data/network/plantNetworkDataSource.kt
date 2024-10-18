@@ -12,7 +12,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class PlantNetworkDataSource() {
+object plantNetworkDataSource {
     val logTag = "PlantDataSource"
 
     val ktorClient = HttpClient(CIO) {

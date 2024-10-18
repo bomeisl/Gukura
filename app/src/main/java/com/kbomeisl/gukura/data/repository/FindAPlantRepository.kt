@@ -3,14 +3,13 @@ package com.kbomeisl.gukura.data.repository
 import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.database.PlantDb
 import com.kbomeisl.gukura.data.network.PlantNetwork
-import com.kbomeisl.gukura.data.network.PlantNetworkDataSource
+import com.kbomeisl.gukura.data.network.plantNetworkDataSource
 
 class FindAPlantRepository(
-    private val plantDataSource: PlantNetworkDataSource,
     private val plantDao: PlantDao
 ) {
     suspend fun getPlantListApi(): List<PlantNetwork> {
-        return plantDataSource.getPlantList()
+        return plantNetworkDataSource.getPlantList()
     }
 
     fun indexPlantNames(plantList: List<PlantNetwork>): List<String> {
@@ -25,7 +24,7 @@ class FindAPlantRepository(
         if (plantNameIndex.contains(plantName)) { plantIsInDatabase = true }
 
         if (plantIsInDatabase) {
-            return plantDataSource.getPlant(name = plantName)
+            return plantNetworkDataSource.getPlant(name = plantName)
         } else {
             return PlantNetwork()
         }

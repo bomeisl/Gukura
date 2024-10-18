@@ -15,10 +15,11 @@ import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.common.GukuraTopAppBar
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Home(homeViewModel: HomeViewModel) {
+fun Home(homeViewModel: HomeViewModel = koinViewModel()) {
     GukuraBaseScreen(
         topAppBar = { GukuraTopAppBar(gukuraTopAppBar = homeViewModel.homeTopAppBar) },
         content = {

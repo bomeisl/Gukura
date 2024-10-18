@@ -1,5 +1,5 @@
 [versions]
-activityComposeVersion = "1.9.2"
+activityComposeVersion = "1.9.3"
 agp = "8.7.0"
 composesensors = "1.1.2"
 hiltCompiler = "2.52"
@@ -36,8 +36,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 material3 = { module = "androidx.compose.material3:material3" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version = "1.7.3" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version = "1.7.4" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.8.3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
