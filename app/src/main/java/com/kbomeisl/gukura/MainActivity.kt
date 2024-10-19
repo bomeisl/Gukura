@@ -1,20 +1,28 @@
 package com.kbomeisl.gukura
 
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.kbomeisl.gukura.ui.screens.FindAPlant
+import com.kbomeisl.gukura.data.sensor.sensorDataSource
+import com.kbomeisl.gukura.data.sensor.sensorDataSource.humiditySensor
+import com.kbomeisl.gukura.data.sensor.sensorDataSource.lightSensor
+import com.kbomeisl.gukura.data.sensor.sensorDataSource.temperatureSensor
 import com.kbomeisl.gukura.ui.screens.Home
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
-import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity() : ComponentActivity(), SensorEventListener {
+    lateinit var sensorManager: SensorManager
+    private val temperature = MutableStateFlow<Float>(0F)
+    private val humidity = MutableStateFlow<Float>(0F)
+    private val light = MutableStateFlow<Float>(0F)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,24 +31,41 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
         enableEdgeToEdge()
         setContent {
             GukuraTheme {
-                Home()
+                Home(temperature = temperature, humidity = humidity, light = light)
             }
         }
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensorDataSource.initializeSensors(sensorManager)
     }
 
     override fun onResume() {
         super.onResume()
+        registerSensorListener()
     }
 
     override fun onPause() {
         super.onPause()
+        sensorManager.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         Log.d("Main Activity", "sensor changed")
+        event?.also {
+            when (event.sensor.type) {
+                Sensor.TYPE_AMBIENT_TEMPERATURE -> temperature.value = event.values[0]
+                Sensor.TYPE_RELATIVE_HUMIDITY -> humidity.value = event.values[0]
+                Sensor.TYPE_LIGHT -> light.value = event.values[0]
+            }
+        }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        TODO("Not yet implemented")
+        val dummyVar = "something"
+    }
+
+    fun registerSensorListener() {
+        sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, humiditySensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
     }
 }

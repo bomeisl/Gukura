@@ -25,18 +25,15 @@ class FindAPlantViewModel(
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
-        sensorDataSource.initializeSensors()
         Log.d("view model", "oncreate fired")
     }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        sensorDataSource.attachListeners()
     }
 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
-        sensorDataSource.detatchListeners()
     }
 
     //Get plants by name from Gukura's online database
