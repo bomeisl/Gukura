@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.lights.Light
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -14,7 +15,9 @@ import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.humiditySensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.lightSensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.temperatureSensor
+import com.kbomeisl.gukura.ui.common.SensorCard
 import com.kbomeisl.gukura.ui.screens.Home
+import com.kbomeisl.gukura.ui.screens.MeasurementScreen
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -22,7 +25,7 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
     lateinit var sensorManager: SensorManager
     private val temperature = MutableStateFlow<Float>(0F)
     private val humidity = MutableStateFlow<Float>(0F)
-    private val light = MutableStateFlow<Float>(0F)
+    private val lightLevel = MutableStateFlow<Float>(0F)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +34,8 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
         enableEdgeToEdge()
         setContent {
             GukuraTheme {
-                Home(temperature = temperature, humidity = humidity, light = light)
+                //Home(temperature = temperature, humidity = humidity, light = light)
+                MeasurementScreen(temperature = temperature, lightLevel = lightLevel, humidity = humidity)
             }
         }
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -54,7 +58,7 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
             when (event.sensor.type) {
                 Sensor.TYPE_AMBIENT_TEMPERATURE -> temperature.value = event.values[0]
                 Sensor.TYPE_RELATIVE_HUMIDITY -> humidity.value = event.values[0]
-                Sensor.TYPE_LIGHT -> light.value = event.values[0]
+                Sensor.TYPE_LIGHT -> lightLevel.value = event.values[0]
             }
         }
     }

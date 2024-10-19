@@ -14,3 +14,9 @@ val Pink40 = Color(0xFF7D5260)
 val backgroundTAB = Color(0xFF4DB6AC)
 val textTAB = Color(0xFF000000)
 val navIconInsetTAB = Color(0xFFFFE57F)
+
+//sensors
+val sunOrange = Color(0xFFFB8C00)
+val humidityColor = Color(0xFF104FA2)
+
+
