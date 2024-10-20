@@ -18,19 +18,19 @@ class FindAPlantViewModel(
 ): ViewModel() {
     private val coroutineScope = viewModelScope
 
-    //Get plants by name from Gukura's online database
-    fun getPlantFromFirebase(plantName: String): Deferred<PlantUi> {
-        val plantNetworkJob = coroutineScope.async {
-           findAPlantRepository.lookUpPlantApi(plantName = plantName).toUi()
-        }
-        return plantNetworkJob
-    }
+//    //Get plants by name from Gukura's online database
+//    fun getPlantFromFirebase(plantName: String): Deferred<PlantUi> {
+//        val plantNetworkJob = coroutineScope.async {
+//           findAPlantRepository.lookUpPlantApi(plantName = plantName).toUi()
+//        }
+//        return plantNetworkJob
+//    }
 
     //Get plants from Gukura's online database that would thrive at a given temperature
     fun getPlantsFromFirebaseByTemperature(temperature: Float): Deferred<List<PlantUi>> {
         val plantTempNetworkJob = coroutineScope.async {
             findAPlantRepository.getPlantListApi().filter {
-                it.minTemperature < temperature && it.maxTemperature > temperature
+                it.tempMin < temperature && it.tempMax > temperature
             }.map {
                 plantNetwork -> plantNetwork.toUi()
             }
@@ -42,7 +42,7 @@ class FindAPlantViewModel(
     fun getPlantsFromFirebaseByHumidity(humidity: Float): Deferred<List<PlantUi>> {
         val plantHumidityNetworkJob = coroutineScope.async {
             findAPlantRepository.getPlantListApi().filter {
-                it.minHumidity < humidity && it.maxHumidity > humidity
+                it.humidityMin < humidity && it.humidityMax > humidity
             }.map {
                 plantNetwork -> plantNetwork.toUi()
             }
@@ -54,7 +54,7 @@ class FindAPlantViewModel(
     fun getPlantsFromFirebaseByLightLevel(lightLevel: Float): Deferred<List<PlantUi>> {
         val plantLightNetworkJob = coroutineScope.async {
             findAPlantRepository.getPlantListApi().filter {
-                it.minLightLevel < lightLevel && it.maxLightLevel > lightLevel
+                it.lightMin < lightLevel && it.lightMax > lightLevel
             }.map {
                 plantNetwork -> plantNetwork.toUi()
             }

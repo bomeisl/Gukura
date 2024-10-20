@@ -1,15 +1,19 @@
 package com.kbomeisl.gukura.data.network
 import android.util.Log
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
+import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.environmentalVariables
+import com.kbomeisl.gukura.ui.models.PlantUi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.gson.gson
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -18,43 +22,21 @@ object plantNetworkDataSource {
 
     val ktorClient = HttpClient(CIO) {
         install(ContentNegotiation) {
-            json(Json {
-                isLenient = true
-                prettyPrint = true
-            })
+            gson()
         }
     }
 
-    val requestRootUrl = environmentalVariables.firebaseRootUrl
+    private val requestRootUrl = environmentalVariables.firebaseRootUrl
 
     suspend fun getPlantList(): List<PlantNetwork> {
-        val response: HttpResponse = ktorClient.request(requestRootUrl+"/plantData"+"/plants") {
-            method = HttpMethod.Get
-        }
-        var plantList = listOf<PlantNetwork>()
-
-        if (response.status == HttpStatusCode.OK) {
-            Log.i(logTag, "OK")
-            plantList = response.body()
-        } else {
-            Log.e(logTag ,"${response.status}")
-        }
-        return plantList
+        Log.d(logTag,"get json")
+        return ktorClient.get(requestRootUrl).body()
     }
 
-    suspend fun getPlant(name: String): PlantNetwork {
-        val response: HttpResponse = ktorClient.request(requestRootUrl+"plantData"+"/plant"+name) {
-            method = HttpMethod.Get
+    suspend fun getPlantsByNames(plantNameList: List<String>): List<PlantNetwork> {
+        return getPlantList().filter {
+            plantNameList.contains(it.name)
         }
-        var plant: PlantNetwork = PlantNetwork()
-
-        if (response.status == HttpStatusCode.OK) {
-            Log.i(logTag, "OK")
-            plant = response.body()
-        } else {
-            Log.e(logTag ,"${response.status}")
-        }
-        return plant
     }
 }
 

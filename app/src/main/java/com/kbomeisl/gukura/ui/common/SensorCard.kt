@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.dp
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.theme.humidityColor
 import com.kbomeisl.gukura.ui.theme.sunOrange
@@ -37,7 +39,7 @@ fun SensorCard(
     val lightLevelState = lightLevel.collectAsState()
     val humidityState = humidity.collectAsState()
     val textMeasurer = rememberTextMeasurer()
-    Column(Modifier.fillMaxHeight()) {
+    Column(Modifier.fillMaxHeight().padding(top = 70.dp)) {
             Canvas(
                 modifier = Modifier.fillMaxWidth(1f).fillMaxHeight(.6f),
                 onDraw = {
@@ -59,7 +61,7 @@ fun SensorCard(
                         )
                         drawText(
                             textMeasurer = textMeasurer,
-                            text = "Temperature: " + temperatureState.value.toString() + " °F",
+                            text = "Temperature: " + temperatureState.value.toString() + " °C",
                             style = TextStyle(fontFamily = FontFamily.Monospace),
                             topLeft = Offset(400f, 460f)
                         )
@@ -109,6 +111,5 @@ fun SensorCard(
         )
     }
 }
-
 
 

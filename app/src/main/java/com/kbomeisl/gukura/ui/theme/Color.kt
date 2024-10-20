@@ -19,4 +19,10 @@ val navIconInsetTAB = Color(0xFFFFE57F)
 val sunOrange = Color(0xFFFB8C00)
 val humidityColor = Color(0xFF104FA2)
 
+//navMenu
+val forestGreen = Color(0xFF004D40)
+val skyBlue = Color(0xFF00B8D4)
+val nightBlue = Color(0xFF1A237E)
+
+
 

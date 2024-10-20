@@ -23,20 +23,6 @@ class FindAPlantRepository(
         return plantList.map { plant -> plant.name }
     }
 
-    //Look up a plant in the online database
-    suspend fun lookUpPlantApi(plantName: String): PlantNetwork {
-        //check if the plant is in the online database
-        var plantIsInDatabase: Boolean = false
-        val plantNameIndex = indexPlantNames(getPlantListApi())
-        if (plantNameIndex.contains(plantName)) { plantIsInDatabase = true }
-
-        if (plantIsInDatabase) {
-            return plantNetworkDataSource.getPlant(name = plantName)
-        } else {
-            return PlantNetwork()
-        }
-    }
-
     fun getPlantListDb(): List<PlantDb> {
         return plantDao.listAllPlants()
     }

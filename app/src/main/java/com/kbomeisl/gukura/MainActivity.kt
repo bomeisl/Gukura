@@ -14,6 +14,7 @@ import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.humiditySensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.lightSensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.temperatureSensor
+import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.screens.GukuraNavHost
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +30,10 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
         enableEdgeToEdge()
         setContent {
             GukuraTheme {
-                GukuraNavHost(
+                GukuraBaseScreen(
                     temperature = temperature,
-                    lightLevel = lightLevel,
-                    humidity = humidity
+                    humidity = humidity,
+                    lightLevel = lightLevel
                 )
             }
         }

@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.common.GukuraTopAppBar
+import com.kbomeisl.gukura.ui.models.GukuraNavBarIcon
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,24 +32,21 @@ fun Home(
     homeViewModel: HomeViewModel = koinViewModel(),
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float> ,
-    light: MutableStateFlow<Float>
+    light: MutableStateFlow<Float>,
+    navHostController: NavHostController
 ) {
     val temperatureState = temperature.collectAsState()
     val humidityState = humidity.collectAsState()
     val lightState = light.collectAsState()
-    GukuraBaseScreen(
-        topAppBar = {  },
-        content = {
             Surface {
-                    Row {
-                        Column {
-                            Spacer(modifier = Modifier.height(200.dp))
-                            Text("My Plants", color = Color.Black)
-                        }
+                Row {
+                    Column {
+                        Spacer(modifier = Modifier.height(200.dp))
+                        Text("My Plants", color = Color.Black)
+                    }
                 }
             }
-        }
-    )
+
 }
 
 

@@ -4,5 +4,6 @@ enum class Routes {
     HOME,
     FINDAPLANT,
     WHERETOPLANT,
-    MEASURE
+    MEASURE,
+    MYPLANTS
 }

@@ -3,29 +3,30 @@ package com.kbomeisl.gukura.data.database.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.kbomeisl.gukura.ui.models.PlantUi
+import kotlin.random.Random
 
 @Entity
 data class PlantDb(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = Random.nextInt(),
     val name: String = "Loading...",
     val description: String = "Loading...",
     val maxTemperature: Int = 0,
     val minTemperature: Int = 0,
     val maxHumidity: Int = 0,
     val minHumidity: Int = 0,
-    val maxSunlight: Int = 0,
-    val minSunlight: Int = 0,
-    val imageLink: String=""
+    val maxLightLevel: Int = 0,
+    val minLightLevel: Int = 0,
+    val imageUrl: String=""
 )
 
 fun PlantDb.toUi(): PlantUi {
     return PlantUi(
         name = name,
         description = description,
-        temperature = Pair(minTemperature,maxTemperature),
-        humidity = Pair(minHumidity,maxHumidity),
-        lightLevel = Pair(minSunlight,maxSunlight),
-        imageLink = imageLink
+        temperature = "${minTemperature}-${maxTemperature}",
+        humidity = "${minHumidity}-${maxHumidity}",
+        lightLevel = "${minLightLevel}-${maxLightLevel}",
+        imageUrl = imageUrl
     )
 }
 

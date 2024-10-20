@@ -18,8 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
+import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.common.SensorCard
+import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -27,10 +30,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun MeasurementScreen(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
-    lightLevel: MutableStateFlow<Float>) {
-        SensorCard(
-            temperature = temperature,
-            humidity = humidity,
-            lightLevel = lightLevel
-        )
-    }
+    lightLevel: MutableStateFlow<Float>,
+    navHostController: NavHostController
+) {
+            SensorCard(
+                temperature = temperature,
+                humidity = humidity,
+                lightLevel = lightLevel
+            )
+        }

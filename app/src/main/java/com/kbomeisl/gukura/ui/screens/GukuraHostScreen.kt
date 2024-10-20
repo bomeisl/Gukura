@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.ui.screens
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,9 +14,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun GukuraNavHost(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
-    lightLevel: MutableStateFlow<Float>
+    lightLevel: MutableStateFlow<Float>,
+    navController: NavHostController
 ) {
-    val navController = rememberNavController()
            NavHost(
                navController = navController,
                startDestination = Routes.MEASURE.name
@@ -24,11 +25,12 @@ fun GukuraNavHost(
                    Home(
                        temperature = temperature,
                        humidity = humidity,
-                       light = lightLevel
+                       light = lightLevel,
+                       navHostController = navController
                    )
                }
                composable(route = Routes.FINDAPLANT.name) {
-                   FindAPlant()
+                   FindAPlant(navHostController = navController)
                }
                composable(route = Routes.WHERETOPLANT.name) {
                    WhereToPlant()
@@ -37,8 +39,12 @@ fun GukuraNavHost(
                    MeasurementScreen(
                        temperature = temperature,
                        humidity = humidity,
-                       lightLevel = lightLevel
+                       lightLevel = lightLevel,
+                       navHostController = navController
                    )
+               }
+               composable(route = Routes.MYPLANTS.name) {
+                   MyPlantsScreen()
                }
            }
        }

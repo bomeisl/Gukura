@@ -11,19 +11,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FindAPlant(
-    findAPlantViewModel: FindAPlantViewModel = koinViewModel()
+    findAPlantViewModel: FindAPlantViewModel = koinViewModel(),
+    navHostController: NavHostController
 ) {
     Surface {
         Row {
             Column {
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(150.dp))
                 Text(text = "Find a Plant", color = Color.Black)
-                Text(text = findAPlantViewModel.temperature.toString())
             }
         }
     }

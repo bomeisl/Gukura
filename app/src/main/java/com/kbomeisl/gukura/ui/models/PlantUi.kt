@@ -1,10 +1,10 @@
 package com.kbomeisl.gukura.ui.models
 
 data class PlantUi(
-    val name: String,
-    val description: String,
-    val temperature: Pair<Int,Int>,
-    val humidity: Pair<Int,Int>,
-    val lightLevel: Pair<Int,Int>,
-    val imageLink: String
+    val name: String = "Loading...",
+    val description: String = "Loading...",
+    val temperature: String = "Loading...",
+    val humidity: String = "Loading...",
+    val lightLevel: String = "Loading...",
+    val imageUrl: String = ""
 )

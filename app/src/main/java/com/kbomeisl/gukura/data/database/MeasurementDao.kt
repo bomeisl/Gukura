@@ -12,7 +12,7 @@ interface MeasurementDao {
     @Query("SELECT * FROM measurementDb WHERE timestamp = :timestamp")
     fun findMeasurementByTimestamp(timestamp: String): MeasurementDb
 
-    @Query("SELECT * FROM measurementdb WHERE plantDb = :plant")
+    @Query("SELECT * FROM measurementdb WHERE plantName = :plantName")
     fun findPlantMeasurements(plantName: String): List<MeasurementDb>
 
     @Insert
