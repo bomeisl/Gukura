@@ -43,18 +43,6 @@ fun Home(
                         Column {
                             Spacer(modifier = Modifier.height(200.dp))
                             Text("My Plants", color = Color.Black)
-                            Row {
-                                Text("Temperature: ")
-                                Text(temperatureState.value.toString())
-                            }
-                            Row {
-                                Text("Relative Humidity: ")
-                                Text(humidityState.value.toString())
-                            }
-                            Row {
-                                Text("Light Level: ")
-                                Text(lightState.value.toString())
-                            }
                         }
                 }
             }

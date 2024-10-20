@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.data.network
 import android.util.Log
+import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.environmentalVariables
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

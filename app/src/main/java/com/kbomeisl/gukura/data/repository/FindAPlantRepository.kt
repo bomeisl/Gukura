@@ -1,12 +1,19 @@
 package com.kbomeisl.gukura.data.repository
 
+import com.google.firebase.Timestamp
+import com.kbomeisl.gukura.data.database.MeasurementDao
 import com.kbomeisl.gukura.data.database.PlantDao
-import com.kbomeisl.gukura.data.database.PlantDb
-import com.kbomeisl.gukura.data.network.PlantNetwork
+import com.kbomeisl.gukura.data.database.models.MeasurementDb
+import com.kbomeisl.gukura.data.database.models.PlantDb
+import com.kbomeisl.gukura.data.database.models.toUi
+import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.plantNetworkDataSource
+import com.kbomeisl.gukura.ui.models.MeasurementUi
+import java.util.Date
 
 class FindAPlantRepository(
-    private val plantDao: PlantDao
+    private val plantDao: PlantDao,
+    private val measurementDao: MeasurementDao
 ) {
     suspend fun getPlantListApi(): List<PlantNetwork> {
         return plantNetworkDataSource.getPlantList()
@@ -46,5 +53,29 @@ class FindAPlantRepository(
     //add a new plant to the app's database
     suspend fun addPlant(plantDb: PlantDb) {
         plantDao.addPlant(plantDb)
+    }
+
+    //Save a sensor measurement to the app database for a given plant
+    suspend fun saveMeasurementToDb(
+        plantName: String,
+        temperature: Float,
+        humidity: Float,
+        lightLevel: Float
+    ) {
+        val measurement = MeasurementDb(
+            temperature = temperature,
+            humidity = humidity,
+            lightLevel = lightLevel,
+            plantName = plantName,
+            timestamp = Timestamp.now().toString()
+        )
+        measurementDao.upsertMeasurement(measurement)
+    }
+
+    //Retrieve all sensor measurements for a plant from the app database
+    suspend fun getPlantMeasurements(plantName: String): List<MeasurementUi> {
+        return measurementDao.findPlantMeasurements(plantName).map {
+            measurementDb ->  measurementDb.toUi()
+        }
     }
 }

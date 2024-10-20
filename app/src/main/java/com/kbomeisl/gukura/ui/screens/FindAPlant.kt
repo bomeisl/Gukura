@@ -15,7 +15,9 @@ import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FindAPlant(findAPlantViewModel: FindAPlantViewModel = koinViewModel()) {
+fun FindAPlant(
+    findAPlantViewModel: FindAPlantViewModel = koinViewModel()
+) {
     Surface {
         Row {
             Column {

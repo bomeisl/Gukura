@@ -2,8 +2,7 @@ package com.kbomeisl.gukura.data.repository
 
 import android.util.Log
 import com.kbomeisl.gukura.data.database.PlantDao
-import com.kbomeisl.gukura.data.database.PlantDb
-import com.kbomeisl.gukura.data.network.plantNetworkDataSource
+import com.kbomeisl.gukura.data.database.models.PlantDb
 
 class HomeRepository(
     private val plantDao: PlantDao

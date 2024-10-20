@@ -5,22 +5,40 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kbomeisl.gukura.ui.navigation.Routes
+import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
+import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun GukuraNavHost() {
+fun GukuraNavHost(
+    temperature: MutableStateFlow<Float>,
+    humidity: MutableStateFlow<Float>,
+    lightLevel: MutableStateFlow<Float>
+) {
     val navController = rememberNavController()
            NavHost(
                navController = navController,
-               startDestination = Routes.HOME.name
+               startDestination = Routes.MEASURE.name
            ) {
                composable(route = Routes.HOME.name) {
-                   //Home()
+                   Home(
+                       temperature = temperature,
+                       humidity = humidity,
+                       light = lightLevel
+                   )
                }
                composable(route = Routes.FINDAPLANT.name) {
-                   //FindAPlant()
+                   FindAPlant()
                }
                composable(route = Routes.WHERETOPLANT.name) {
                    WhereToPlant()
+               }
+               composable(route = Routes.MEASURE.name) {
+                   MeasurementScreen(
+                       temperature = temperature,
+                       humidity = humidity,
+                       lightLevel = lightLevel
+                   )
                }
            }
        }

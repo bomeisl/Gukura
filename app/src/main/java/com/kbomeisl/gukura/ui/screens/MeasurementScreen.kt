@@ -28,23 +28,9 @@ fun MeasurementScreen(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.fillMaxHeight()) {
-                Box {
-//                    Image(
-//                        painter = painterResource(R.drawable.plant_growing),
-//                        "",
-//                        contentScale = ContentScale.Fit
-//                    )
-                    SensorCard(
-                        temperature = temperature,
-                        humidity = humidity,
-                        lightLevel = lightLevel
-                    )
-
-                }
-            }
-        }
+        SensorCard(
+            temperature = temperature,
+            humidity = humidity,
+            lightLevel = lightLevel
+        )
     }
-}

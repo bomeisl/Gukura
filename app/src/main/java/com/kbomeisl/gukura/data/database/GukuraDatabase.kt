@@ -2,16 +2,16 @@ package com.kbomeisl.gukura.data.database
 
 import android.content.Context
 import androidx.room.Database
-import androidx.room.DatabaseConfiguration
-import androidx.room.InvalidationTracker
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteOpenHelper
+import com.kbomeisl.gukura.data.database.models.MeasurementDb
+import com.kbomeisl.gukura.data.database.models.PlantDb
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [PlantDb::class], version = 1)
+@Database(entities = [PlantDb::class, MeasurementDb::class], version = 1)
 abstract class GukuraDatabase: RoomDatabase() {
     abstract fun plantDao(): PlantDao
+    abstract fun measurementDao(): MeasurementDao
 
     companion object {
         @Volatile

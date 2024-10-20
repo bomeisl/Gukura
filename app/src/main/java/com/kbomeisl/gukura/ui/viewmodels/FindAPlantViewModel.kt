@@ -1,14 +1,12 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kbomeisl.gukura.data.database.toUi
-import com.kbomeisl.gukura.data.network.toUi
+import com.kbomeisl.gukura.data.database.models.toUi
+import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.FindAPlantRepository
 import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.ui.models.PlantUi
@@ -17,24 +15,8 @@ import kotlinx.coroutines.async
 
 class FindAPlantViewModel(
     val findAPlantRepository: FindAPlantRepository,
-): ViewModel(), DefaultLifecycleObserver {
+): ViewModel() {
     private val coroutineScope = viewModelScope
-    val temperature = sensorDataSource.temperature
-    //val humidity = sensorDataSource.humidity
-    //val lightLevel = sensorDataSource.light
-
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-        Log.d("view model", "oncreate fired")
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        super.onResume(owner)
-    }
-
-    override fun onPause(owner: LifecycleOwner) {
-        super.onPause(owner)
-    }
 
     //Get plants by name from Gukura's online database
     fun getPlantFromFirebase(plantName: String): Deferred<PlantUi> {
@@ -82,5 +64,9 @@ class FindAPlantViewModel(
 
     fun getPlantFromDatabase(plantName: String): PlantUi {
         return findAPlantRepository.lookUpPlantDb(plantName = plantName).toUi()
+    }
+
+    fun saveMeasurementToDb(temperature: Float, humidity: Float, lightLevel: Float) {
+
     }
 }

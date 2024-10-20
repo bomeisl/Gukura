@@ -1,32 +1,28 @@
-package com.kbomeisl.gukura.data.database
+package com.kbomeisl.gukura.data.network.models
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.kbomeisl.gukura.ui.models.PlantUi
+import kotlinx.serialization.Serializable
 
-@Entity
-data class PlantDb(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+@Serializable
+data class PlantNetwork(
     val name: String = "Loading...",
     val description: String = "Loading...",
     val maxTemperature: Int = 0,
     val minTemperature: Int = 0,
     val maxHumidity: Int = 0,
     val minHumidity: Int = 0,
-    val maxSunlight: Int = 0,
-    val minSunlight: Int = 0,
-    val imageLink: String=""
+    val maxLightLevel: Int = 0,
+    val minLightLevel: Int = 0,
+    val pictureLink: String = ""
 )
-
-fun PlantDb.toUi(): PlantUi {
+fun PlantNetwork.toUi(): PlantUi {
     return PlantUi(
         name = name,
         description = description,
         temperature = Pair(minTemperature,maxTemperature),
         humidity = Pair(minHumidity,maxHumidity),
-        lightLevel = Pair(minSunlight,maxSunlight),
-        imageLink = imageLink
+        lightLevel = Pair(minLightLevel,maxLightLevel),
+        imageLink = pictureLink
     )
 }
 

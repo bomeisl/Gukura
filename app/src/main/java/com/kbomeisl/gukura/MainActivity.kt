@@ -5,7 +5,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.hardware.lights.Light
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -15,9 +14,7 @@ import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.humiditySensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.lightSensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.temperatureSensor
-import com.kbomeisl.gukura.ui.common.SensorCard
-import com.kbomeisl.gukura.ui.screens.Home
-import com.kbomeisl.gukura.ui.screens.MeasurementScreen
+import com.kbomeisl.gukura.ui.screens.GukuraNavHost
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -29,13 +26,14 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Main Activity","onCreate")
-
         enableEdgeToEdge()
         setContent {
             GukuraTheme {
-                //Home(temperature = temperature, humidity = humidity, light = light)
-                MeasurementScreen(temperature = temperature, lightLevel = lightLevel, humidity = humidity)
+                GukuraNavHost(
+                    temperature = temperature,
+                    lightLevel = lightLevel,
+                    humidity = humidity
+                )
             }
         }
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager

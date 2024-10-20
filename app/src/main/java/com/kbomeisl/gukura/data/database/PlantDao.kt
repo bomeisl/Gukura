@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.kbomeisl.gukura.data.database.models.PlantDb
 
 @Dao
 interface PlantDao {
