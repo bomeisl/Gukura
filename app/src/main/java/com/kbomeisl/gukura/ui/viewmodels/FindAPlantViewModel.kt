@@ -6,25 +6,30 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.database.models.toUi
+import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.FindAPlantRepository
 import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class FindAPlantViewModel(
     val findAPlantRepository: FindAPlantRepository,
 ): ViewModel() {
     private val coroutineScope = viewModelScope
 
-//    //Get plants by name from Gukura's online database
-//    fun getPlantFromFirebase(plantName: String): Deferred<PlantUi> {
-//        val plantNetworkJob = coroutineScope.async {
-//           findAPlantRepository.lookUpPlantApi(plantName = plantName).toUi()
-//        }
-//        return plantNetworkJob
-//    }
+    val plantList = MutableStateFlow<List<PlantUi>>(listOf())
+
+    fun getPlantsByName(plantName: String) {
+        coroutineScope.launch {
+            plantList.value = findAPlantRepository.getPlantListApi()
+                .map { it.toUi() }
+                .filter { it.name.contains(plantName) }
+        }
+    }
 
     //Get plants from Gukura's online database that would thrive at a given temperature
     fun getPlantsFromFirebaseByTemperature(temperature: Float): Deferred<List<PlantUi>> {
