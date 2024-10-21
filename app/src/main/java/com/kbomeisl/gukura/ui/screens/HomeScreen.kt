@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
@@ -18,6 +19,7 @@ import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.androidx.compose.koinViewModel
+import java.sql.Time
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -29,11 +31,14 @@ fun HomeScreen(
                 Row {
                     Column(Modifier.padding(5.dp)) {
                         Spacer(modifier = Modifier.height(200.dp))
-                        Text(
-                            "Landing Page Under Construction",
-                            color = Color.Black,
-                            textAlign = TextAlign.Center
-                        )
+                        Surface(
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth(),
+                            shadowElevation = 5.dp,
+                        ) {
+
+                        }
                     }
                 }
             }
