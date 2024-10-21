@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -23,7 +25,9 @@ import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.common.SensorCard
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
+import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -31,11 +35,18 @@ fun MeasurementScreen(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    measurementViewModel: MeasurementViewModel = koinViewModel()
 ) {
-            SensorCard(
-                temperature = temperature,
-                humidity = humidity,
-                lightLevel = lightLevel
-            )
-        }
+    val temperatureState = temperature.collectAsState()
+    val humidityState = humidity.collectAsState()
+    val lightLevelState = lightLevel.collectAsState()
+
+    SensorCard(
+        temperature = temperature,
+        humidity = humidity,
+        lightLevel = lightLevel,
+        measurementViewModel = measurementViewModel,
+        navHostController = navHostController
+    )
+}

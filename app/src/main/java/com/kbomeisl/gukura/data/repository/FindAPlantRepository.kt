@@ -43,7 +43,7 @@ class FindAPlantRepository(
 
     //Save a sensor measurement to the app database for a given plant
     suspend fun saveMeasurementToDb(
-        plantName: String,
+        location: String,
         temperature: Float,
         humidity: Float,
         lightLevel: Float
@@ -52,7 +52,7 @@ class FindAPlantRepository(
             temperature = temperature,
             humidity = humidity,
             lightLevel = lightLevel,
-            plantName = plantName,
+            location = location,
             timestamp = Timestamp.now().toString()
         )
         measurementDao.upsertMeasurement(measurement)

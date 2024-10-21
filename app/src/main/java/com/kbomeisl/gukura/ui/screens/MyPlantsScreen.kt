@@ -28,37 +28,7 @@ import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.viewmodels.MyPlantsViewModel
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyPlantsScreen(
-    myPlantsViewModel: MyPlantsViewModel = koinViewModel()
-) {
+fun MyPlantsScreen() {
 
-    LaunchedEffect(Unit) {
-        myPlantsViewModel.getPlants()
-    }
-
-    Surface {
-        Row(Modifier.fillMaxWidth()) {
-            Column(Modifier.fillMaxHeight()) {
-                Spacer(Modifier.height(130.dp))
-                Row(horizontalArrangement = Arrangement.Center) {
-                    Icon(painter = painterResource(R.drawable.heart), "", tint = Color.Red, modifier = Modifier.size(50.dp).padding(10.dp))
-                    Text(
-                        "My Plants",
-                        fontSize = 24.sp,
-                        modifier = Modifier.padding(10.dp),
-                        textAlign = TextAlign.Center,
-                        fontFamily = FontFamily.Monospace,
-                        color = Color.Gray
-                    )
-                }
-                myPlantsViewModel.plantList.collectAsState().value.forEach {
-                    PlantCard(
-                        it
-                    )
-                }
-            }
-        }
-    }
 }

@@ -18,4 +18,8 @@ class HomeRepository(
         }
         return myPlants
     }
+
+    fun getMyGardens() {
+
+    }
 }

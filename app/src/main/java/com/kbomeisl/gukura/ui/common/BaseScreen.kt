@@ -1,12 +1,16 @@
 package com.kbomeisl.gukura.ui.common
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material3.DrawerState
@@ -23,11 +27,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,20 +64,34 @@ fun GukuraBaseScreen(
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
     val iconSize = 25.dp
+    var subtitle by remember { mutableStateOf("") }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.fillMaxWidth(.5f)) {
-                Column(Modifier.fillMaxHeight()) {
+                Column(Modifier.fillMaxSize()) {
                     TopAppBar(
                         title = {
-                            Text(
-                                "Gukura",
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
-                                modifier = Modifier.padding(5.dp)
-                            )
+                            Row {
+                                Text(
+                                    "Gukura",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp,
+                                    modifier = Modifier.padding(10.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                                IconButton(
+                                    content = {
+                                        Image(painter = painterResource(R.drawable.logo),"")
+                                    },
+                                    onClick = {
+                                        navController.navigate(route = Routes.HOME.name)
+                                        subtitle = ""
+                                    }
+                                )
+                            }
+
                         }
                     )
                     Row(Modifier.padding(10.dp)) {
@@ -85,6 +108,7 @@ fun GukuraBaseScreen(
                             },
                             onClick = {
                                 navController.navigate(Routes.FINDAPLANT.name)
+                                subtitle = "Find a Plant"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
@@ -92,7 +116,7 @@ fun GukuraBaseScreen(
                             "Find the Perfect Plant",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(5.dp)
+                            modifier = Modifier.padding(10.dp)
                         )
                     }
                     Row(modifier = Modifier.padding(10.dp)) {
@@ -109,14 +133,15 @@ fun GukuraBaseScreen(
                             },
                             onClick = {
                                 navController.navigate(Routes.WHERETOPLANT.name)
+                                subtitle = "Where to Plant"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
                         Text(
-                            "Where should I plant this?",
+                            "Where Should I Put This Plant?",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(5.dp)
+                            modifier = Modifier.padding(10.dp)
                         )
                     }
                     Row(modifier = Modifier.padding(10.dp)) {
@@ -133,11 +158,12 @@ fun GukuraBaseScreen(
                             },
                             onClick = {
                                 navController.navigate(Routes.MEASURE.name)
+                                subtitle = "Measurements"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
                         Text(
-                            "My plant data",
+                            "How Well Will Plants Grow Here?",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp)
@@ -157,11 +183,37 @@ fun GukuraBaseScreen(
                             },
                             onClick = {
                                 navController.navigate(Routes.MYPLANTS.name)
+                                subtitle = "My Plants"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
                         Text(
-                            "My plants",
+                            "My Plants",
+                            color = Color.Gray,
+                            fontFamily = FontFamily.Monospace,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                    Row(Modifier.padding(10.dp)) {
+                        IconButton(
+                            modifier = Modifier,
+                            enabled = true,
+                            content = {
+                                Icon(
+                                    painter = painterResource(R.drawable.database),
+                                    "",
+                                    tint = forestGreen,
+                                    modifier = Modifier.size(iconSize)
+                                )
+                            },
+                            onClick = {
+                                navController.navigate(Routes.PLANTDB.name)
+                                subtitle = "Database"
+                                coroutineScope.launch { drawerState.close() }
+                            }
+                        )
+                        Text(
+                            "Plant Database",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp)
@@ -179,17 +231,36 @@ fun GukuraBaseScreen(
                 topBar = {
                     TopAppBar(
                         title = {
-                            Text(
-                                text = "Gukura",
-                                fontFamily = FontFamily.Monospace,
-                                textAlign = TextAlign.Left,
-                                modifier = Modifier.padding(5.dp),
-                                fontSize = 34.sp
-                            )
+                            Row(Modifier.fillMaxWidth()) {
+                                IconButton(
+                                    content = {
+                                        Image(painter = painterResource(R.drawable.logo),"")
+                                    },
+                                    onClick = {
+                                        navController.navigate(route = Routes.HOME.name)
+                                        subtitle = ""
+                                    }
+                                )
+                                Text(
+                                    text = "Gukura",
+                                    fontFamily = FontFamily.Monospace,
+                                    textAlign = TextAlign.Left,
+                                    modifier = Modifier.padding(5.dp),
+                                    fontSize = 30.sp
+                                )
+
+                                Spacer(Modifier.width(60.dp))
+                                Text(
+                                    subtitle,
+                                    modifier = Modifier.padding(10.dp),
+                                    fontWeight = FontWeight.Light,
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.End
+                                )
+                            }
                         },
                         modifier = Modifier
-                            .padding(0.dp)
-                            .fillMaxWidth(),
+                            .padding(0.dp),
                         navigationIcon = {
                             IconButton(
                                 content = { Icon(Icons.TwoTone.Menu,"") },

@@ -3,6 +3,7 @@ package com.kbomeisl.gukura.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
@@ -32,9 +33,12 @@ fun FindAPlant(
 ) {
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
-    Surface {
+    Surface(Modifier.fillMaxSize()) {
         Row {
-            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Spacer(modifier = Modifier.height(150.dp))
                 Text(text = "Find a Plant", color = Color.Black, fontFamily = FontFamily.Monospace)
                 TextField(

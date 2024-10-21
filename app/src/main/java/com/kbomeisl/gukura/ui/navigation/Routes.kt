@@ -5,5 +5,7 @@ enum class Routes {
     FINDAPLANT,
     WHERETOPLANT,
     MEASURE,
-    MYPLANTS
+    MYPLANTS,
+    PLANTDB,
+    PLANTRECOMMENDATIONS
 }

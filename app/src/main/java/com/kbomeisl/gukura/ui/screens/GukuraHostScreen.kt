@@ -19,13 +19,10 @@ fun GukuraNavHost(
 ) {
            NavHost(
                navController = navController,
-               startDestination = Routes.MEASURE.name
+               startDestination = Routes.HOME.name
            ) {
                composable(route = Routes.HOME.name) {
-                   Home(
-                       temperature = temperature,
-                       humidity = humidity,
-                       light = lightLevel,
+                   HomeScreen(
                        navHostController = navController
                    )
                }
@@ -45,6 +42,12 @@ fun GukuraNavHost(
                }
                composable(route = Routes.MYPLANTS.name) {
                    MyPlantsScreen()
+               }
+               composable(route = Routes.PLANTDB.name) {
+                   FindAPlant(navHostController = navController)
+               }
+               composable(route = Routes.PLANTRECOMMENDATIONS.name) {
+                   PlantRecommendationScreen()
                }
            }
        }

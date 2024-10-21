@@ -8,7 +8,14 @@ import com.kbomeisl.gukura.data.database.models.MeasurementDb
 import com.kbomeisl.gukura.data.database.models.PlantDb
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [PlantDb::class, MeasurementDb::class], version = 1)
+@Database(
+    entities = [
+        PlantDb::class,
+        MeasurementDb::class
+               ],
+    version = 1,
+    exportSchema = false
+)
 abstract class GukuraDatabase: RoomDatabase() {
     abstract fun plantDao(): PlantDao
     abstract fun measurementDao(): MeasurementDao
