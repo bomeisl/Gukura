@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.data.database
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -13,7 +14,7 @@ import kotlinx.coroutines.CoroutineScope
         PlantDb::class,
         MeasurementDb::class
                ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class GukuraDatabase: RoomDatabase() {
@@ -32,7 +33,9 @@ abstract class GukuraDatabase: RoomDatabase() {
                     context = context.applicationContext,
                     GukuraDatabase::class.java,
                     "gukuraDatabase"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

@@ -20,7 +20,7 @@ data class PlantNetwork (
     @SerializedName("link"         ) var link         : String,
     @SerializedName("summary"      ) var summary      : String,
     @SerializedName("notes"        ) var notes        : String,
-    @SerializedName("image"        ) var image        : String
+    @SerializedName("image"        ) var image        : String,
 
 )
 fun PlantNetwork.toUi(): PlantUi =

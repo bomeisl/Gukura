@@ -59,6 +59,8 @@ import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.compose.KoinContext
+import org.koin.core.context.KoinContext
 
 @Composable
 fun SensorCard(
@@ -77,156 +79,159 @@ fun SensorCard(
     var screenTransitionCue by remember { mutableStateOf(true) }
     var screenTransitionToPlantRecommendations by remember { mutableStateOf(false) }
     val plantList = measurementViewModel.plantList.collectAsState()
+    KoinContext {
 
-    AnimatedVisibility(
-        screenTransitionCue,
-        exit = fadeOut()
-    ) {
-    Column(Modifier.fillMaxHeight().padding(top = 50.dp)) {
-            Canvas(
-                modifier = Modifier.fillMaxWidth(1f).fillMaxHeight(.6f),
-                onDraw = {
-                    drawIntoCanvas { canvas ->
+        AnimatedVisibility(
+            screenTransitionCue,
+            exit = fadeOut()
+        ) {
+            Column(Modifier.fillMaxHeight().padding(top = 50.dp)) {
+                Canvas(
+                    modifier = Modifier.fillMaxWidth(1f).fillMaxHeight(.6f),
+                    onDraw = {
+                        drawIntoCanvas { canvas ->
 
-                        //temperature gauge
-                        drawArc(
-                            brush = Brush.linearGradient(
-                                0.0f to Color.Blue,
-                                0.4f to Color.Red,
-                                tileMode = TileMode.Clamp,
-                            ),
-                            topLeft = Offset(380f, 200f),
-                            startAngle = -180f, // 0 represents 3'0 clock
-                            sweepAngle = 2 * temperatureState.value, // size of the arc
-                            useCenter = false,
-                            style = Stroke(10f, cap = StrokeCap.Round),
-                            size = Size(600f, 600f)
-                        )
-                        drawText(
-                            textMeasurer = textMeasurer,
-                            text = "Temperature: " + temperatureState.value.toString() + " °C",
-                            style = TextStyle(fontFamily = FontFamily.Monospace),
-                            topLeft = Offset(400f, 460f)
-                        )
-
-                        //sunlight gauge
-                        drawCircle(
-                            color = sunOrange,
-                            radius = 300f,
-                            alpha = lightLevelState.value / 40000,
-                            center = Offset(670f, 1170f)
-                        )
-                        drawText(
-                            textMeasurer = textMeasurer,
-                            text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
-                            style = TextStyle(fontFamily = FontFamily.Monospace),
-                            topLeft = Offset(300f, 1130f)
-                        )
-
-                        //humidity gauge
-                        drawRect(
-                            brush = Brush.linearGradient(
-                                0.0f to Color.Transparent,
-                                0.4f to humidityColor,
-                                tileMode = TileMode.Clamp,
-                            ),
-                            topLeft = Offset(450f, 1650f),
-                            size = Size(width = humidityState.value * 5, height = 20f),
-                            style = Fill
-                        )
-                        drawText(
-                            textMeasurer = textMeasurer,
-                            text = "Relative Humidity: " + humidity.value.toString() + " %",
-                            style = TextStyle(fontFamily = FontFamily.Monospace),
-                            topLeft = Offset(350f, 1550f)
-                        )
-
-                        canvas.save()
-                        canvas.restore()
-                    }
-                }
-            )
-            Box {
-                Image(
-                    painter = painterResource(R.drawable.plant_growing),
-                    "",
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.Crop
-                )
-                Row(
-                    Modifier.fillMaxWidth().padding(horizontal = 80.dp, vertical = 40.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        value = location,
-                        onValueChange = {
-                            location = it
-                        },
-                        placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center) },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.location_sign),
-                                "",
-                                modifier = Modifier.size(30.dp)
+                            //temperature gauge
+                            drawArc(
+                                brush = Brush.linearGradient(
+                                    0.0f to Color.Blue,
+                                    0.4f to Color.Red,
+                                    tileMode = TileMode.Clamp,
+                                ),
+                                topLeft = Offset(380f, 200f),
+                                startAngle = -180f, // 0 represents 3'0 clock
+                                sweepAngle = 2 * temperatureState.value, // size of the arc
+                                useCenter = false,
+                                style = Stroke(10f, cap = StrokeCap.Round),
+                                size = Size(600f, 600f)
                             )
-                        },
-                        singleLine = true,
-                        colors = TextFieldDefaults.colors(),
-                        trailingIcon = {
-                            Button(
-                                content = {
-                                    Row(Modifier.padding(5.dp)) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.sensor),
-                                            "",
-                                            modifier = Modifier.size(30.dp)
-                                        )
-                                    }
-                                },
-                                onClick = {
-                                    measurementViewModel.populatePlantList(
-                                        temperature = temperatureState.value,
-                                        humidity = humidityState.value,
-                                        lightLevel = lightLevelState.value,
-                                        location = location
-                                    )
-                                    measurementViewModel.saveMeasurementToDb(
-                                        temperature = temperatureState.value,
-                                        humidity = humidityState.value,
-                                        lightLevel = lightLevelState.value,
-                                        location = location
-                                    )
-                                    screenTransitionCue = false
-                                    screenTransitionToPlantRecommendations = true
-                                },
-                                modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                                shape = RectangleShape
+                            drawText(
+                                textMeasurer = textMeasurer,
+                                text = "Temperature: " + temperatureState.value.toString() + " °C",
+                                style = TextStyle(fontFamily = FontFamily.Monospace),
+                                topLeft = Offset(400f, 460f)
                             )
+
+                            //sunlight gauge
+                            drawCircle(
+                                color = sunOrange,
+                                radius = 300f,
+                                alpha = lightLevelState.value / 40000,
+                                center = Offset(670f, 1170f)
+                            )
+                            drawText(
+                                textMeasurer = textMeasurer,
+                                text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
+                                style = TextStyle(fontFamily = FontFamily.Monospace),
+                                topLeft = Offset(300f, 1130f)
+                            )
+
+                            //humidity gauge
+                            drawRect(
+                                brush = Brush.linearGradient(
+                                    0.0f to Color.Transparent,
+                                    0.4f to humidityColor,
+                                    tileMode = TileMode.Clamp,
+                                ),
+                                topLeft = Offset(450f, 1650f),
+                                size = Size(width = humidityState.value * 5, height = 20f),
+                                style = Fill
+                            )
+                            drawText(
+                                textMeasurer = textMeasurer,
+                                text = "Relative Humidity: " + humidity.value.toString() + " %",
+                                style = TextStyle(fontFamily = FontFamily.Monospace),
+                                topLeft = Offset(350f, 1550f)
+                            )
+
+                            canvas.save()
+                            canvas.restore()
                         }
+                    }
+                )
+                Box {
+                    Image(
+                        painter = painterResource(R.drawable.plant_growing),
+                        "",
+                        modifier = Modifier.fillMaxWidth(),
+                        contentScale = ContentScale.Crop
                     )
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 80.dp, vertical = 40.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            value = location,
+                            onValueChange = {
+                                location = it
+                            },
+                            placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.location_sign),
+                                    "",
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            },
+                            singleLine = true,
+                            colors = TextFieldDefaults.colors(),
+                            trailingIcon = {
+                                Button(
+                                    content = {
+                                        Row(Modifier.padding(5.dp)) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.sensor),
+                                                "",
+                                                modifier = Modifier.size(30.dp)
+                                            )
+                                        }
+                                    },
+                                    onClick = {
+                                        measurementViewModel.populatePlantList(
+                                            temperature = temperatureState.value,
+                                            humidity = humidityState.value,
+                                            lightLevel = lightLevelState.value,
+                                            location = location
+                                        )
+                                        measurementViewModel.saveMeasurementToDb(
+                                            temperature = temperatureState.value,
+                                            humidity = humidityState.value,
+                                            lightLevel = lightLevelState.value,
+                                            location = location
+                                        )
+                                        screenTransitionCue = false
+                                        screenTransitionToPlantRecommendations = true
+                                    },
+                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                                    shape = RectangleShape
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
-    }
-    AnimatedVisibility(
-        screenTransitionToPlantRecommendations,
-        enter = fadeIn()
-    ) {
-        Surface(Modifier.fillMaxSize()){
-            Row{
-                Column(Modifier.padding(5.dp)) {
-                    Spacer(Modifier.height(110.dp))
-                    Text("Your ${location} has an average temperature of " +
-                            "${temperatureState.value} °C, relative humidity of ${humidityState.value} %," +
-                            " and ambient sunlight level of ${lightLevelState.value} lux. Here are some " +
-                            "plants that will thrive under these conditions.",
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color.Gray
-                    )
-                    plantList.value.forEach {
-                        PlantCard(it)
+        AnimatedVisibility(
+            screenTransitionToPlantRecommendations,
+            enter = fadeIn()
+        ) {
+            Surface(Modifier.fillMaxSize()) {
+                Row {
+                    Column(Modifier.padding(5.dp)) {
+                        Spacer(Modifier.height(110.dp))
+                        Text(
+                            "Your ${location} has an average temperature of " +
+                                    "${temperatureState.value} °C, relative humidity of ${humidityState.value} %," +
+                                    " and ambient sunlight level of ${lightLevelState.value} lux. Here are some " +
+                                    "plants that will thrive under these conditions.",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray
+                        )
+                        plantList.value.forEach {
+                            PlantCard(it)
+                        }
                     }
                 }
             }

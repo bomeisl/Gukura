@@ -6,5 +6,6 @@ data class PlantUi(
     val temperature: String = "Loading...",
     val humidity: String = "Loading...",
     val lightLevel: String = "Loading...",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val garden: String = ""
 )

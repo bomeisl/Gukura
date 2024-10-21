@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.kbomeisl.gukura.ui.common.GardenCard
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.androidx.compose.koinViewModel
@@ -37,7 +38,12 @@ fun HomeScreen(
                                 .fillMaxWidth(),
                             shadowElevation = 5.dp,
                         ) {
-
+                            Column {
+                                homeViewModel.myGardenList.forEach {
+                                    val plants = homeViewModel.getPlantsForGarden(it)
+                                    GardenCard(it, plants)
+                                }
+                            }
                         }
                     }
                 }

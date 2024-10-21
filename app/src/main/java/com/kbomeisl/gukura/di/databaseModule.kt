@@ -15,7 +15,9 @@ val databaseModule = module {
             androidApplication(),
             GukuraDatabase::class.java,
             "gukuraDatabase"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     factory<PlantDao> {

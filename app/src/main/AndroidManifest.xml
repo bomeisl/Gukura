@@ -13,7 +13,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Gukura"
-        tools:targetApi="35">
+        tools:targetApi="34">
         <activity
             android:name=".MainActivity"
             android:exported="true"

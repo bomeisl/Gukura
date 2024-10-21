@@ -8,17 +8,20 @@ import com.kbomeisl.gukura.data.repository.HomeRepository
 import com.kbomeisl.gukura.ui.models.navigationIcons
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.testData.gardens
+import com.kbomeisl.gukura.ui.testData.plants
 
 class HomeViewModel(
     val homeRepository: HomeRepository
-): ViewModel(), DefaultLifecycleObserver {
+): ViewModel() {
     val homeTopAppBar: GukuraTopAppBar = GukuraTopAppBar()
-    var myPlantList = listOf<PlantUi>()
+    var myPlantList = listOf<PlantUi>(
 
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-        myPlantList = homeRepository.getMyPlants().map {
-            plantDb ->  plantDb.toUi()
-        }
+    )
+    var myGardenList = gardens.gardenList
+
+    fun getPlantsForGarden(garden: String): List<PlantUi> {
+        return myPlantList
+            .filter { it.garden == garden }
     }
 }

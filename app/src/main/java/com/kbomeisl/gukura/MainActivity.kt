@@ -21,9 +21,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity() : ComponentActivity(), SensorEventListener {
     lateinit var sensorManager: SensorManager
-    private val temperature = MutableStateFlow<Float>(0F)
-    private val humidity = MutableStateFlow<Float>(0F)
-    private val lightLevel = MutableStateFlow<Float>(0F)
+    private val temperature = MutableStateFlow<Float>(50F)
+    private val humidity = MutableStateFlow<Float>(50F)
+    private val lightLevel = MutableStateFlow<Float>(1000F)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
