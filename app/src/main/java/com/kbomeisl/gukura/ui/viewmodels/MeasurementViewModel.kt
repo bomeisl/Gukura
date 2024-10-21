@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.kbomeisl.gukura.data.database.MeasurementDao
 import com.kbomeisl.gukura.data.database.models.MeasurementDb
+import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.RecommendationRepository
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class MeasurementViewModel(
     private val measurementDao: MeasurementDao,
-    private val recommendationRepository: RecommendationRepository
+    //private val recommendationRepository: RecommendationRepository
+    private val plantRepository: PlantRepository
 ): ViewModel() {
     val coroutineScope = viewModelScope
 
@@ -49,7 +51,7 @@ class MeasurementViewModel(
     ) {
         coroutineScope.launch {
             plantList.value =
-                recommendationRepository.getPlantsInRange(temperature, humidity, lightLevel)
+                plantRepository.getPlantsInRange(temperature, humidity, lightLevel)
         }
     }
 }

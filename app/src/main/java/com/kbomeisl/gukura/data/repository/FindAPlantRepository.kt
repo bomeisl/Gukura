@@ -38,7 +38,7 @@ class FindAPlantRepository(
 
     //add a new plant to the app's database
     suspend fun addPlant(plantDb: PlantDb) {
-        plantDao.addPlant(plantDb)
+        plantDao.upsertPlant(plantDb)
     }
 
     //Save a sensor measurement to the app database for a given plant

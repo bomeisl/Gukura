@@ -1,11 +1,15 @@
 package com.kbomeisl.gukura.ui.screens
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,10 +37,12 @@ fun FindAPlant(
 ) {
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
+    val scrollState = rememberScrollState()
     Surface(Modifier.fillMaxSize()) {
         Row {
             Column(
-                Modifier.fillMaxWidth(),
+                Modifier
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(150.dp))
@@ -48,10 +54,16 @@ fun FindAPlant(
                         findAPlantViewModel.getPlantsByName(it)
                     }
                 )
-                plantList.value.forEach {
-                    PlantCard(
-                        it
-                    )
+                Column(
+                    Modifier
+                    .fillMaxSize()
+                    .verticalScroll(state = scrollState)
+                ) {
+                    plantList.value.forEach {
+                        PlantCard(
+                            it
+                        )
+                    }
                 }
             }
         }

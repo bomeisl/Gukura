@@ -59,6 +59,7 @@ import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
 import org.koin.core.context.KoinContext
 

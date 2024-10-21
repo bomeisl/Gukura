@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +66,11 @@ fun GukuraBaseScreen(
     val navController = rememberNavController()
     val iconSize = 25.dp
     var subtitle by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {

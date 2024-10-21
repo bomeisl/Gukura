@@ -20,6 +20,6 @@ class MyPlantsRepository(
     }
 
     suspend fun upsertPlant(plantNetwork: PlantNetwork) {
-        plantDao.addPlant(plantDb = plantNetwork.toDb())
+        plantDao.upsertPlant(plantDb = plantNetwork.toDb())
     }
 }

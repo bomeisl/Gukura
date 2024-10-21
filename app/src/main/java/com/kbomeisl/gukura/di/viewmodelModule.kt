@@ -5,6 +5,7 @@ import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.repository.FindAPlantRepository
 import com.kbomeisl.gukura.data.repository.HomeRepository
 import com.kbomeisl.gukura.data.repository.MyPlantsRepository
+import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.RecommendationRepository
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
@@ -19,7 +20,7 @@ val viewmodelModule = module {
         HomeViewModel(get<HomeRepository>())
     }
     viewModel<FindAPlantViewModel> {
-        FindAPlantViewModel(get<FindAPlantRepository>())
+        FindAPlantViewModel(get<PlantRepository>())
     }
     viewModel<MyPlantsViewModel> {
         MyPlantsViewModel(get<MyPlantsRepository>())
@@ -27,7 +28,7 @@ val viewmodelModule = module {
     viewModel<MeasurementViewModel> {
         MeasurementViewModel(
             get<MeasurementDao>(),
-            get<RecommendationRepository>()
+            get<PlantRepository>()
         )
     }
 }

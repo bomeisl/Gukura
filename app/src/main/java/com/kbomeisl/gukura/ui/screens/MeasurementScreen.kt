@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
+import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.common.SensorCard
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
