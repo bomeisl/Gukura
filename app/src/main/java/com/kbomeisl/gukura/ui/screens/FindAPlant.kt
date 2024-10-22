@@ -1,19 +1,27 @@
 package com.kbomeisl.gukura.ui.screens
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowDropDown
+import androidx.compose.material.icons.twotone.Done
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,10 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.ui.common.PlantCard
+import com.kbomeisl.gukura.ui.models.PlantFormConstants
+import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,31 +48,244 @@ fun FindAPlant(
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
     val scrollState = rememberScrollState()
+    var floweringDropDownExpanded by remember { mutableStateOf(false) }
+    var annualDropDownExpanded by remember { mutableStateOf(false) }
+    var sizeDropDownExpanded by remember { mutableStateOf(false) }
+    var gardenDropDownExpanded by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) { findAPlantViewModel.populatePlantList() }
+
     Surface(Modifier.fillMaxSize()) {
         Row {
             Column(
                 Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(150.dp))
-                Text(text = "Find a Plant", color = Color.Black, fontFamily = FontFamily.Monospace)
-                TextField(
-                    value = plantSearchText,
-                    onValueChange = {
-                        plantSearchText = it
-                        findAPlantViewModel.getPlantsByName(it)
+                Spacer(modifier = Modifier.height(130.dp))
+
+                Surface(onClick = { annualDropDownExpanded = true }) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row {
+                            Text(
+                                text = "Are you looking for an annual or perennial plant?",
+                                color = Color.Black,
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Icon(Icons.TwoTone.ArrowDropDown, "")
+                        AnimatedVisibility( findAPlantViewModel.plantLifeType.value != "" ) {
+                            Row {
+                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+                                Text(findAPlantViewModel.plantLifeType.value, color = Color.Gray)
+                            }
+                        }
                     }
-                )
-                Column(
-                    Modifier
-                    .fillMaxSize()
-                    .verticalScroll(state = scrollState)
-                ) {
-                    plantList.value.forEach {
-                        PlantCard(
-                            it
+                    DropdownMenu(
+                        content = {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(PlantFormConstants.Annual.name)
+                                },
+                                onClick = {
+                                    findAPlantViewModel.plantLifeType.value = PlantFormConstants.Annual.name
+                                    annualDropDownExpanded = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(PlantFormConstants.Perennial.name) },
+                                onClick = {
+                                    findAPlantViewModel.plantLifeType.value = PlantFormConstants.Perennial.name
+                                    annualDropDownExpanded = false
+                                }
+                            )
+                        },
+                        expanded = annualDropDownExpanded,
+                        onDismissRequest = { annualDropDownExpanded = false },
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth()
+                    )
+                }
+
+                AnimatedVisibility( annualDropDownExpanded ) {
+                    Spacer(Modifier.height(130.dp))
+                }
+                Spacer(Modifier.height(15.dp))
+
+                Box {
+                    Surface(onClick = {floweringDropDownExpanded = true}) {
+                        Row {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = "Would you like a flowering or non-flowering plant?",
+                                    color = Color.Black,
+                                    fontFamily = FontFamily.Monospace,
+                                    textAlign = TextAlign.Center
+                                )
+                                Icon(Icons.TwoTone.ArrowDropDown, "")
+                                AnimatedVisibility( findAPlantViewModel.plantFlowerType.value != "" ) {
+                                    Row {
+                                        Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+                                        Text(findAPlantViewModel.plantFlowerType.value, color = Color.Gray)
+                                    }
+                                }
+                            }
+                        }
+
+                        DropdownMenu(
+                            content = {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(PlantFormConstants.Flowering.name)
+                                    },
+                                    onClick = {
+                                        findAPlantViewModel.plantFlowerType.value = PlantFormConstants.Flowering.name
+                                        floweringDropDownExpanded = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(PlantFormConstants.Nonflowering.name) },
+                                    onClick = {
+                                        findAPlantViewModel.plantFlowerType.value = PlantFormConstants.Nonflowering.name
+                                        floweringDropDownExpanded = false
+                                    }
+                                )
+                            },
+                            expanded = floweringDropDownExpanded,
+                            onDismissRequest = { floweringDropDownExpanded = false },
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .fillMaxWidth()
                         )
+                    }
+                }
+
+                AnimatedVisibility( floweringDropDownExpanded ) {
+                    Spacer(Modifier.height(130.dp))
+                }
+                Spacer(Modifier.height(15.dp))
+
+
+
+                Surface(onClick = { sizeDropDownExpanded = true }) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "How large of a plant are you looking for?",
+                            color = Color.Black,
+                            fontFamily = FontFamily.Monospace,
+                            textAlign = TextAlign.Center
+                        )
+                        Icon(Icons.TwoTone.ArrowDropDown, "")
+                        AnimatedVisibility( findAPlantViewModel.plantSizeType.value != "" ) {
+                            Row {
+                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+                                Text(findAPlantViewModel.plantSizeType.value, color = Color.Gray)
+                            }
+                        }
+                    }
+                    DropdownMenu(
+                        content = {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(PlantFormConstants.Large.name)
+                                },
+                                onClick = {
+                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Large.name
+                                    sizeDropDownExpanded = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(PlantFormConstants.Medium.name, textAlign = TextAlign.Center) },
+                                onClick = {
+                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Medium.name
+                                    sizeDropDownExpanded = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            DropdownMenuItem(
+                                text = { Text(PlantFormConstants.Small.name) },
+                                onClick = {
+                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Small.name
+                                    sizeDropDownExpanded = false
+                                }
+                            )
+                        },
+                        expanded = sizeDropDownExpanded,
+                        onDismissRequest = { sizeDropDownExpanded = false },
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth()
+                    )
+                }
+
+                AnimatedVisibility( sizeDropDownExpanded ) {
+                    Spacer(Modifier.height(130.dp))
+                }
+                Spacer(Modifier.height(15.dp))
+
+                Surface(onClick = { gardenDropDownExpanded = true }) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Select a garden to plant it in",
+                            color = Color.Black,
+                            fontFamily = FontFamily.Monospace,
+                            textAlign = TextAlign.Center
+                        )
+                        Icon(Icons.TwoTone.ArrowDropDown, "")
+                        AnimatedVisibility( findAPlantViewModel.garden.value != "" ) {
+                            Row {
+                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+                                Text(findAPlantViewModel.garden.value, color = Color.Gray)
+                            }
+                        }
+                    }
+                    DropdownMenu(
+                        content = {
+                            gardens.gardenList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(it.name)
+                                    },
+                                    onClick = {
+                                        findAPlantViewModel.garden.value =
+                                            it.name
+                                        gardenDropDownExpanded = false
+                                    }
+                                )
+                            }
+                        },
+                        expanded = gardenDropDownExpanded,
+                        onDismissRequest = { gardenDropDownExpanded = false },
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth()
+                    )
+                }
+
+                AnimatedVisibility( sizeDropDownExpanded ) {
+                    Spacer(Modifier.height(130.dp))
+                }
+                Spacer(Modifier.height(5.dp))
+                HorizontalDivider()
+                Spacer(Modifier.height(5.dp))
+
+                AnimatedVisibility(
+                    (
+                        findAPlantViewModel.plantSizeType.value != ""
+                        && findAPlantViewModel.plantLifeType.value != ""
+                        && findAPlantViewModel.plantFlowerType.value != ""
+                        && findAPlantViewModel.garden.value != ""
+                    )
+                ) {
+                    Surface() {
+                        Column(Modifier.verticalScroll(scrollState)) {
+                        plantList.value.forEach {
+                            PlantCard(it)
+                        }
+                        }
                     }
                 }
             }

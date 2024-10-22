@@ -1,19 +1,12 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
-import android.util.Log
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kbomeisl.gukura.data.database.models.toUi
-import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toUi
-import com.kbomeisl.gukura.data.repository.FindAPlantRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
-import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -24,9 +17,19 @@ class FindAPlantViewModel(
     private val coroutineScope = viewModelScope
 
     val plantList = MutableStateFlow<List<PlantUi>>(listOf())
+    var plantLifeType = mutableStateOf("")
+    var plantFlowerType = mutableStateOf("")
+    var plantSizeType = mutableStateOf("")
+    var garden = mutableStateOf("")
+
+    fun populatePlantList() {
+        coroutineScope.launch {
+            plantList.value = plantRepository.getAllPlantsNetwork().map { it.toUi() }
+        }
+    }
 
     fun getPlantsByName(plantName: String) {
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch {
             plantList.value = plantRepository.getAllPlantsNetwork()
                 .filter { it.name.contains(plantName, ignoreCase = true) }
                 .map { it.toUi() }

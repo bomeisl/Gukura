@@ -44,7 +44,7 @@ fun GukuraNavHost(
                    MyPlantsScreen()
                }
                composable(route = Routes.PLANTDB.name) {
-                   FindAPlant(navHostController = navController)
+                   PlantDatabaseScreen()
                }
                composable(route = Routes.PLANTRECOMMENDATIONS.name) {
                    PlantRecommendationScreen()

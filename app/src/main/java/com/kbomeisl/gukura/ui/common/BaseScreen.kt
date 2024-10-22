@@ -114,7 +114,7 @@ fun GukuraBaseScreen(
                             },
                             onClick = {
                                 navController.navigate(Routes.FINDAPLANT.name)
-                                subtitle = "Find a Plant"
+                                subtitle = "Garden Planner"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )

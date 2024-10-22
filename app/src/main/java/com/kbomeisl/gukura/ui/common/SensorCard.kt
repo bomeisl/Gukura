@@ -134,7 +134,7 @@ fun SensorCard(
                                     0.4f to humidityColor,
                                     tileMode = TileMode.Clamp,
                                 ),
-                                topLeft = Offset(450f, 1650f),
+                                topLeft = Offset(460f, 1650f),
                                 size = Size(width = humidityState.value * 5, height = 20f),
                                 style = Fill
                             )
@@ -142,7 +142,7 @@ fun SensorCard(
                                 textMeasurer = textMeasurer,
                                 text = "Relative Humidity: " + humidity.value.toString() + " %",
                                 style = TextStyle(fontFamily = FontFamily.Monospace),
-                                topLeft = Offset(350f, 1550f)
+                                topLeft = Offset(370f, 1550f)
                             )
 
                             canvas.save()

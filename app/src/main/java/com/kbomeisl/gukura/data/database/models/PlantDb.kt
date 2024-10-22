@@ -1,11 +1,21 @@
 package com.kbomeisl.gukura.data.database.models
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlin.random.Random
 
-@Entity
+@Entity(
+    foreignKeys = arrayOf(
+        ForeignKey(
+            entity = GardenDb::class,
+            parentColumns = ["gardenId"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    )
+)
 data class PlantDb(
     @PrimaryKey(autoGenerate = true) val id: Int = Random.nextInt(),
     val name: String = "Loading...",
