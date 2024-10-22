@@ -17,7 +17,7 @@ data class PlantDb(
     val maxLightLevel: Int = 0,
     val minLightLevel: Int = 0,
     val imageUrl: String="",
-    val garden: String=""
+    val garden: String="None"
 )
 
 fun PlantDb.toUi(): PlantUi {

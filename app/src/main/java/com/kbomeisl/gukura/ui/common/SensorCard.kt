@@ -118,13 +118,13 @@ fun SensorCard(
                                 color = sunOrange,
                                 radius = 300f,
                                 alpha = lightLevelState.value / 40000,
-                                center = Offset(670f, 1170f)
+                                center = Offset(690f, 1170f)
                             )
                             drawText(
                                 textMeasurer = textMeasurer,
                                 text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
                                 style = TextStyle(fontFamily = FontFamily.Monospace),
-                                topLeft = Offset(300f, 1130f)
+                                topLeft = Offset(320f, 1130f)
                             )
 
                             //humidity gauge
@@ -166,7 +166,7 @@ fun SensorCard(
                             onValueChange = {
                                 location = it
                             },
-                            placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center) },
+                            placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center, fontFamily = FontFamily.Monospace) },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(R.drawable.location_sign),
@@ -176,6 +176,7 @@ fun SensorCard(
                             },
                             singleLine = true,
                             colors = TextFieldDefaults.colors(),
+                            textStyle = TextStyle(fontFamily = FontFamily.Monospace),
                             trailingIcon = {
                                 Button(
                                     content = {
@@ -204,7 +205,7 @@ fun SensorCard(
                                         screenTransitionToPlantRecommendations = true
                                     },
                                     modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                                    shape = RectangleShape
+                                    shape = RectangleShape,
                                 )
                             }
                         )

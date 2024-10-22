@@ -15,9 +15,7 @@ class HomeViewModel(
     val homeRepository: HomeRepository
 ): ViewModel() {
     val homeTopAppBar: GukuraTopAppBar = GukuraTopAppBar()
-    var myPlantList = listOf<PlantUi>(
-
-    )
+    var myPlantList = listOf<PlantUi>()
     var myGardenList = gardens.gardenList
 
     fun getPlantsForGarden(garden: String): List<PlantUi> {
