@@ -17,7 +17,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -31,7 +37,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -48,21 +56,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.firebase.Timestamp
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.navigation.Routes
+import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.humidityColor
 import com.kbomeisl.gukura.ui.theme.nightBlue
+import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
 import org.koin.core.context.KoinContext
+import java.sql.Time
+import java.util.Date
 
 @Composable
 fun SensorCard(
@@ -78,10 +93,13 @@ fun SensorCard(
     val lightLevelState = lightLevel.collectAsState()
     val humidityState = humidity.collectAsState()
     val textMeasurer = rememberTextMeasurer()
-    var location by remember { mutableStateOf("") }
-    var screenTransitionCue by remember { mutableStateOf(true) }
-    var screenTransitionToPlantRecommendations by remember { mutableStateOf(false) }
+    val location by remember { mutableStateOf("") }
+    val screenTransitionCue by remember { mutableStateOf(true) }
+    val screenTransitionToPlantRecommendations by remember { mutableStateOf(false) }
     val plantList = measurementViewModel.plantList.collectAsState()
+    val gardenDropDownExpanded = remember { mutableStateOf(false) }
+    val menuText = remember { mutableStateOf("Select a Garden") }
+    val coroutineScope = rememberCoroutineScope()
     KoinContext {
 
         AnimatedVisibility(
@@ -163,54 +181,142 @@ fun SensorCard(
                         Modifier.fillMaxWidth().padding(horizontal = 80.dp, vertical = 40.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        TextField(
-                            value = location,
-                            onValueChange = {
-                                location = it
-                            },
-                            placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center, fontFamily = FontFamily.Monospace) },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.location_sign),
-                                    "",
-                                    modifier = Modifier.size(30.dp)
-                                )
-                            },
-                            singleLine = true,
-                            colors = TextFieldDefaults.colors(),
-                            textStyle = TextStyle(fontFamily = FontFamily.Monospace),
-                            trailingIcon = {
-                                Button(
-                                    content = {
-                                        Row(Modifier.padding(5.dp)) {
-                                            Icon(
-                                                painter = painterResource(R.drawable.sensor),
-                                                "",
-                                                modifier = Modifier.size(30.dp)
+//                        TextField(
+//                            value = location,
+//                            onValueChange = {
+//                                location = it
+//                            },
+//                            placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center, fontFamily = FontFamily.Monospace) },
+//                            leadingIcon = {
+//                                Icon(
+//                                    painter = painterResource(R.drawable.location_sign),
+//                                    "",
+//                                    modifier = Modifier.size(30.dp)
+//                                )
+//                            },
+//                            singleLine = true,
+//                            colors = TextFieldDefaults.colors(),
+//                            textStyle = TextStyle(fontFamily = FontFamily.Monospace),
+//                            trailingIcon = {
+//                                Button(
+//                                    content = {
+//                                        Row(Modifier.padding(5.dp)) {
+//                                            Icon(
+//                                                painter = painterResource(R.drawable.sensor),
+//                                                "",
+//                                                modifier = Modifier.size(30.dp)
+//                                            )
+//                                        }
+//                                    },
+//                                    onClick = {
+//                                        measurementViewModel.populatePlantList(
+//                                            temperature = temperatureState.value,
+//                                            humidity = humidityState.value,
+//                                            lightLevel = lightLevelState.value,
+//                                            location = location
+//                                        )
+//                                        measurementViewModel.saveMeasurementToDb(
+//                                            temperature = temperatureState.value,
+//                                            humidity = humidityState.value,
+//                                            lightLevel = lightLevelState.value,
+//                                            location = location
+//                                        )
+//                                        screenTransitionCue = false
+//                                        screenTransitionToPlantRecommendations = true
+//                                    },
+//                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+//                                    shape = RectangleShape,
+//                                )
+//                            }
+//
+//
+//                        )
+                        Column(
+
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Surface(
+                                onClick = { gardenDropDownExpanded.value = true },
+                                shape = RoundedCornerShape(50),
+                                shadowElevation = 7.dp,
+                                modifier = Modifier.padding(20.dp)
+                            ) {
+                                Row(Modifier.fillMaxWidth()) {
+                                    Column(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = menuText.value,
+                                            color = Color.Black,
+                                            fontFamily = FontFamily.Monospace,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.padding(5.dp).fillMaxWidth()
+                                        )
+
+                                        Icon(Icons.TwoTone.ArrowDropDown, "")
+                                    }
+
+                                }
+                            }
+                            Button(
+                                content = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.sensor),
+                                        "",
+                                        modifier = Modifier.size(30.dp)
+                                    )
+                                },
+                                onClick = {
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = "Environmental measurements saved for " +
+                                                    "${measurementViewModel.currentGarden.value.name}" +
+                                                    ""
+                                        )
+                                    }
+                                },
+                                shape = RoundedCornerShape(50),
+                            )
+                        }
+                            DropdownMenu(
+                                content = {
+                                    gardens.gardenList.forEach {
+                                        Column(modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)) {
+                                            DropdownMenuItem(
+                                                text = {
+                                                    Box(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        Text(
+                                                            it.name,
+                                                            fontWeight = FontWeight.SemiBold,
+                                                            fontFamily = FontFamily.Monospace,
+                                                            textAlign = TextAlign.Center,
+                                                        )
+                                                    }
+                                                },
+                                                onClick = {
+                                                    measurementViewModel.currentGarden.value =
+                                                        it
+                                                    menuText.value = it.name
+                                                    gardenDropDownExpanded.value = false
+                                                },
+                                                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
                                             )
                                         }
-                                    },
-                                    onClick = {
-                                        measurementViewModel.populatePlantList(
-                                            temperature = temperatureState.value,
-                                            humidity = humidityState.value,
-                                            lightLevel = lightLevelState.value,
-                                            location = location
-                                        )
-                                        measurementViewModel.saveMeasurementToDb(
-                                            temperature = temperatureState.value,
-                                            humidity = humidityState.value,
-                                            lightLevel = lightLevelState.value,
-                                            location = location
-                                        )
-                                        screenTransitionCue = false
-                                        screenTransitionToPlantRecommendations = true
-                                    },
-                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                                    shape = RectangleShape,
-                                )
-                            }
-                        )
+                                    }
+                                },
+                                expanded = gardenDropDownExpanded.value,
+                                onDismissRequest = {
+                                    gardenDropDownExpanded.value = false
+                                },
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .fillMaxWidth(),
+                            )
+                        }
                     }
                 }
             }
@@ -241,6 +347,6 @@ fun SensorCard(
             }
         }
     }
-}
+
 
 

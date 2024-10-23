@@ -3,6 +3,7 @@ package com.kbomeisl.gukura.data.database.models
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.kbomeisl.gukura.ui.models.GardenUi
 
 @Entity
 data class GardenDb(
@@ -12,3 +13,11 @@ data class GardenDb(
     var avgHumidity: Float,
     var avgLightLevel: Float,
 )
+
+fun GardenDb.toUi(): GardenUi =
+    GardenUi(
+        name = name,
+        avgTemperature = avgTemperature.toString(),
+        avgHumidity = avgHumidity.toString(),
+        avgLightLevel = avgLightLevel.toString()
+    )

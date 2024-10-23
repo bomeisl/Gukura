@@ -2,6 +2,7 @@ package com.kbomeisl.gukura.di
 
 import androidx.room.Room
 import com.kbomeisl.gukura.GukuraApplication
+import com.kbomeisl.gukura.data.database.GardenDao
 import com.kbomeisl.gukura.data.database.GukuraDatabase
 import com.kbomeisl.gukura.data.database.MeasurementDao
 import com.kbomeisl.gukura.data.database.PlantDao
@@ -28,5 +29,10 @@ val databaseModule = module {
     factory<MeasurementDao> {
         val gukuraDatabase = get<GukuraDatabase>()
         gukuraDatabase.measurementDao()
+    }
+
+    factory<GardenDao> {
+        val gukuraDatabase = get<GukuraDatabase>()
+        gukuraDatabase.gardenDao()
     }
 }
