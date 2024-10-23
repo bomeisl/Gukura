@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,13 +32,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.models.PlantFormConstants
 import com.kbomeisl.gukura.ui.testData.gardens
+import com.kbomeisl.gukura.ui.theme.nightBlue
+import com.kbomeisl.gukura.ui.theme.skyBlue
+import com.kbomeisl.gukura.ui.theme.sunOrange
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -235,10 +244,46 @@ fun FindAPlant(
                             textAlign = TextAlign.Center
                         )
                         Icon(Icons.TwoTone.ArrowDropDown, "")
-                        AnimatedVisibility( findAPlantViewModel.garden.value != "" ) {
+                        AnimatedVisibility( findAPlantViewModel.garden.value.name != "" ) {
                             Row {
                                 Icon(Icons.TwoTone.Done, "", tint = Color.Green)
-                                Text(findAPlantViewModel.garden.value, color = Color.Gray)
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(findAPlantViewModel.garden.value.name, color = Color.Gray)
+                                    Row(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(5.dp),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.thermometer),
+                                                "",
+                                                Modifier.size(10.dp).align(Alignment.CenterVertically),
+                                                tint = Color.Red
+                                            )
+                                            Text(findAPlantViewModel.garden.value.avgTemperature + "°F", fontFamily = FontFamily.Monospace)
+                                        }
+                                        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.humidity),
+                                                "",
+                                                Modifier.size(10.dp).align(Alignment.CenterVertically),
+                                                tint = skyBlue,
+                                            )
+                                            Text(findAPlantViewModel.garden.value.avgHumidity + "%", fontFamily = FontFamily.Monospace)
+                                        }
+                                        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.sun_2),
+                                                "",
+                                                Modifier.size(10.dp).align(Alignment.CenterVertically),
+                                                tint = sunOrange
+                                            )
+                                            Text(findAPlantViewModel.garden.value.avgLightLevel + "lux", fontFamily = FontFamily.Monospace)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -251,7 +296,7 @@ fun FindAPlant(
                                     },
                                     onClick = {
                                         findAPlantViewModel.garden.value =
-                                            it.name
+                                            it
                                         gardenDropDownExpanded = false
                                     }
                                 )
@@ -277,14 +322,23 @@ fun FindAPlant(
                         findAPlantViewModel.plantSizeType.value != ""
                         && findAPlantViewModel.plantLifeType.value != ""
                         && findAPlantViewModel.plantFlowerType.value != ""
-                        && findAPlantViewModel.garden.value != ""
+                        && findAPlantViewModel.garden.value.name != ""
                     )
                 ) {
                     Surface() {
-                        Column(Modifier.verticalScroll(scrollState)) {
-                        plantList.value.forEach {
-                            PlantCard(it)
-                        }
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                "Recommended Plants",
+                                color = nightBlue,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Light,
+                                fontSize = 20.sp
+                            )
+                            Column(Modifier.verticalScroll(scrollState)) {
+                                plantList.value.forEach {
+                                    PlantCard(it)
+                                }
+                            }
                         }
                     }
                 }

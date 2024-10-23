@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.PlantRepository
+import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -20,7 +21,7 @@ class FindAPlantViewModel(
     var plantLifeType = mutableStateOf("")
     var plantFlowerType = mutableStateOf("")
     var plantSizeType = mutableStateOf("")
-    var garden = mutableStateOf("")
+    var garden = mutableStateOf<GardenUi>(GardenUi())
 
     fun populatePlantList() {
         coroutineScope.launch {
@@ -31,7 +32,7 @@ class FindAPlantViewModel(
     fun getPlantsByName(plantName: String) {
         coroutineScope.launch {
             plantList.value = plantRepository.getAllPlantsNetwork()
-                .filter { it.name.contains(plantName, ignoreCase = true) }
+                .filter { it.name.startsWith(plantName, ignoreCase = true) }
                 .map { it.toUi() }
         }
     }

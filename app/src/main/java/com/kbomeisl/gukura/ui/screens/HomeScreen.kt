@@ -54,7 +54,7 @@ fun HomeScreen(
                                 modifier = Modifier.padding(10.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Row {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
                                         painter = painterResource(R.drawable.flowers_pot_of_yard),
                                         "",
