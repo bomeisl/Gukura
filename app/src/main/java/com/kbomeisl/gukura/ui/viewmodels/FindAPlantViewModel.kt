@@ -18,6 +18,7 @@ class FindAPlantViewModel(
     private val coroutineScope = viewModelScope
 
     val plantList = MutableStateFlow<List<PlantUi>>(listOf())
+    val recommendedPlants = MutableStateFlow<List<PlantUi>>(listOf())
     var plantLifeType = mutableStateOf("")
     var plantFlowerType = mutableStateOf("")
     var plantSizeType = mutableStateOf("")
@@ -37,40 +38,10 @@ class FindAPlantViewModel(
         }
     }
 
-    //Get plants from Gukura's online database that would thrive at a given temperature
-    fun getPlantsFromFirebaseByTemperature(temperature: Float): Deferred<List<PlantUi>> {
-        val plantTempNetworkJob = coroutineScope.async {
-            plantRepository.getAllPlantsNetwork().filter {
-                it.tempMin < temperature && it.tempMax > temperature
-            }.map {
-                plantNetwork -> plantNetwork.toUi()
-            }
+    fun getPlantsInRange(temperature: Float,humidity: Float,lightLevel: Float) {
+        coroutineScope.launch {
+            recommendedPlants.value = plantRepository.getPlantsInRange(temperature, humidity, lightLevel)
         }
-        return plantTempNetworkJob
-    }
-
-    //Get plants from Gukura's online database that would thrive at a given humidity
-    fun getPlantsFromFirebaseByHumidity(humidity: Float): Deferred<List<PlantUi>> {
-        val plantHumidityNetworkJob = coroutineScope.async {
-            plantRepository.getAllPlantsNetwork().filter {
-                it.humidityMin < humidity && it.humidityMax > humidity
-            }.map {
-                plantNetwork -> plantNetwork.toUi()
-            }
-        }
-        return plantHumidityNetworkJob
-    }
-
-    //Get plants from Gukura's online database that would thrive at a given level of sunlight
-    fun getPlantsFromFirebaseByLightLevel(lightLevel: Float): Deferred<List<PlantUi>> {
-        val plantLightNetworkJob = coroutineScope.async {
-            plantRepository.getAllPlantsNetwork().filter {
-                it.lightMin < lightLevel && it.lightMax > lightLevel
-            }.map {
-                plantNetwork -> plantNetwork.toUi()
-            }
-        }
-        return plantLightNetworkJob
     }
 
     fun getPlantFromDatabase(plantName: String): PlantUi {

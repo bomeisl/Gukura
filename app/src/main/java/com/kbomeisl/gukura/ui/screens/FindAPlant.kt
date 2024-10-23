@@ -15,11 +15,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowDropDown
-import androidx.compose.material.icons.twotone.Done
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.PlantCard
-import com.kbomeisl.gukura.ui.models.PlantFormConstants
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
@@ -51,11 +50,13 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FindAPlant(
+    navHostController: NavHostController,
     findAPlantViewModel: FindAPlantViewModel = koinViewModel(),
-    navHostController: NavHostController
+    snackbarHostState: SnackbarHostState,
 ) {
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
+    val recommendedPlants = findAPlantViewModel.recommendedPlants.collectAsState()
     val scrollState = rememberScrollState()
     var floweringDropDownExpanded by remember { mutableStateOf(false) }
     var annualDropDownExpanded by remember { mutableStateOf(false) }
@@ -74,161 +75,161 @@ fun FindAPlant(
             ) {
                 Spacer(modifier = Modifier.height(130.dp))
 
-                Surface(onClick = { annualDropDownExpanded = true }) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Row {
-                            Text(
-                                text = "Are you looking for an annual or perennial plant?",
-                                color = Color.Black,
-                                fontFamily = FontFamily.Monospace,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                        Icon(Icons.TwoTone.ArrowDropDown, "")
-                        AnimatedVisibility( findAPlantViewModel.plantLifeType.value != "" ) {
-                            Row {
-                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
-                                Text(findAPlantViewModel.plantLifeType.value, color = Color.Gray)
-                            }
-                        }
-                    }
-                    DropdownMenu(
-                        content = {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(PlantFormConstants.Annual.name)
-                                },
-                                onClick = {
-                                    findAPlantViewModel.plantLifeType.value = PlantFormConstants.Annual.name
-                                    annualDropDownExpanded = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(PlantFormConstants.Perennial.name) },
-                                onClick = {
-                                    findAPlantViewModel.plantLifeType.value = PlantFormConstants.Perennial.name
-                                    annualDropDownExpanded = false
-                                }
-                            )
-                        },
-                        expanded = annualDropDownExpanded,
-                        onDismissRequest = { annualDropDownExpanded = false },
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .fillMaxWidth()
-                    )
-                }
-
-                AnimatedVisibility( annualDropDownExpanded ) {
-                    Spacer(Modifier.height(130.dp))
-                }
-                Spacer(Modifier.height(15.dp))
-
-                Box {
-                    Surface(onClick = {floweringDropDownExpanded = true}) {
-                        Row {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = "Would you like a flowering or non-flowering plant?",
-                                    color = Color.Black,
-                                    fontFamily = FontFamily.Monospace,
-                                    textAlign = TextAlign.Center
-                                )
-                                Icon(Icons.TwoTone.ArrowDropDown, "")
-                                AnimatedVisibility( findAPlantViewModel.plantFlowerType.value != "" ) {
-                                    Row {
-                                        Icon(Icons.TwoTone.Done, "", tint = Color.Green)
-                                        Text(findAPlantViewModel.plantFlowerType.value, color = Color.Gray)
-                                    }
-                                }
-                            }
-                        }
-
-                        DropdownMenu(
-                            content = {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(PlantFormConstants.Flowering.name)
-                                    },
-                                    onClick = {
-                                        findAPlantViewModel.plantFlowerType.value = PlantFormConstants.Flowering.name
-                                        floweringDropDownExpanded = false
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(PlantFormConstants.Nonflowering.name) },
-                                    onClick = {
-                                        findAPlantViewModel.plantFlowerType.value = PlantFormConstants.Nonflowering.name
-                                        floweringDropDownExpanded = false
-                                    }
-                                )
-                            },
-                            expanded = floweringDropDownExpanded,
-                            onDismissRequest = { floweringDropDownExpanded = false },
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .fillMaxWidth()
-                        )
-                    }
-                }
-
-                AnimatedVisibility( floweringDropDownExpanded ) {
-                    Spacer(Modifier.height(130.dp))
-                }
-                Spacer(Modifier.height(15.dp))
-
-
-
-                Surface(onClick = { sizeDropDownExpanded = true }) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "How large of a plant are you looking for?",
-                            color = Color.Black,
-                            fontFamily = FontFamily.Monospace,
-                            textAlign = TextAlign.Center
-                        )
-                        Icon(Icons.TwoTone.ArrowDropDown, "")
-                        AnimatedVisibility( findAPlantViewModel.plantSizeType.value != "" ) {
-                            Row {
-                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
-                                Text(findAPlantViewModel.plantSizeType.value, color = Color.Gray)
-                            }
-                        }
-                    }
-                    DropdownMenu(
-                        content = {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(PlantFormConstants.Large.name)
-                                },
-                                onClick = {
-                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Large.name
-                                    sizeDropDownExpanded = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(PlantFormConstants.Medium.name, textAlign = TextAlign.Center) },
-                                onClick = {
-                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Medium.name
-                                    sizeDropDownExpanded = false
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            DropdownMenuItem(
-                                text = { Text(PlantFormConstants.Small.name) },
-                                onClick = {
-                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Small.name
-                                    sizeDropDownExpanded = false
-                                }
-                            )
-                        },
-                        expanded = sizeDropDownExpanded,
-                        onDismissRequest = { sizeDropDownExpanded = false },
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .fillMaxWidth()
-                    )
-                }
+//                Surface(onClick = { annualDropDownExpanded = true }) {
+//                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                        Row {
+//                            Text(
+//                                text = "Are you looking for an annual or perennial plant?",
+//                                color = Color.Black,
+//                                fontFamily = FontFamily.Monospace,
+//                                textAlign = TextAlign.Center
+//                            )
+//                        }
+//                        Icon(Icons.TwoTone.ArrowDropDown, "")
+//                        AnimatedVisibility( findAPlantViewModel.plantLifeType.value != "" ) {
+//                            Row {
+//                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+//                                Text(findAPlantViewModel.plantLifeType.value, color = Color.Gray)
+//                            }
+//                        }
+//                    }
+//                    DropdownMenu(
+//                        content = {
+//                            DropdownMenuItem(
+//                                text = {
+//                                    Text(PlantFormConstants.Annual.name)
+//                                },
+//                                onClick = {
+//                                    findAPlantViewModel.plantLifeType.value = PlantFormConstants.Annual.name
+//                                    annualDropDownExpanded = false
+//                                }
+//                            )
+//                            DropdownMenuItem(
+//                                text = { Text(PlantFormConstants.Perennial.name) },
+//                                onClick = {
+//                                    findAPlantViewModel.plantLifeType.value = PlantFormConstants.Perennial.name
+//                                    annualDropDownExpanded = false
+//                                }
+//                            )
+//                        },
+//                        expanded = annualDropDownExpanded,
+//                        onDismissRequest = { annualDropDownExpanded = false },
+//                        modifier = Modifier
+//                            .padding(5.dp)
+//                            .fillMaxWidth()
+//                    )
+//                }
+//
+//                AnimatedVisibility( annualDropDownExpanded ) {
+//                    Spacer(Modifier.height(130.dp))
+//                }
+//                Spacer(Modifier.height(15.dp))
+//
+//                Box {
+//                    Surface(onClick = {floweringDropDownExpanded = true}) {
+//                        Row {
+//                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                                Text(
+//                                    text = "Would you like a flowering or non-flowering plant?",
+//                                    color = Color.Black,
+//                                    fontFamily = FontFamily.Monospace,
+//                                    textAlign = TextAlign.Center
+//                                )
+//                                Icon(Icons.TwoTone.ArrowDropDown, "")
+//                                AnimatedVisibility( findAPlantViewModel.plantFlowerType.value != "" ) {
+//                                    Row {
+//                                        Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+//                                        Text(findAPlantViewModel.plantFlowerType.value, color = Color.Gray)
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        DropdownMenu(
+//                            content = {
+//                                DropdownMenuItem(
+//                                    text = {
+//                                        Text(PlantFormConstants.Flowering.name)
+//                                    },
+//                                    onClick = {
+//                                        findAPlantViewModel.plantFlowerType.value = PlantFormConstants.Flowering.name
+//                                        floweringDropDownExpanded = false
+//                                    }
+//                                )
+//                                DropdownMenuItem(
+//                                    text = { Text(PlantFormConstants.Nonflowering.name) },
+//                                    onClick = {
+//                                        findAPlantViewModel.plantFlowerType.value = PlantFormConstants.Nonflowering.name
+//                                        floweringDropDownExpanded = false
+//                                    }
+//                                )
+//                            },
+//                            expanded = floweringDropDownExpanded,
+//                            onDismissRequest = { floweringDropDownExpanded = false },
+//                            modifier = Modifier
+//                                .padding(5.dp)
+//                                .fillMaxWidth()
+//                        )
+//                    }
+//                }
+//
+//                AnimatedVisibility( floweringDropDownExpanded ) {
+//                    Spacer(Modifier.height(130.dp))
+//                }
+//                Spacer(Modifier.height(15.dp))
+//
+//
+//
+//                Surface(onClick = { sizeDropDownExpanded = true }) {
+//                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                        Text(
+//                            text = "How large of a plant are you looking for?",
+//                            color = Color.Black,
+//                            fontFamily = FontFamily.Monospace,
+//                            textAlign = TextAlign.Center
+//                        )
+//                        Icon(Icons.TwoTone.ArrowDropDown, "")
+//                        AnimatedVisibility( findAPlantViewModel.plantSizeType.value != "" ) {
+//                            Row {
+//                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
+//                                Text(findAPlantViewModel.plantSizeType.value, color = Color.Gray)
+//                            }
+//                        }
+//                    }
+//                    DropdownMenu(
+//                        content = {
+//                            DropdownMenuItem(
+//                                text = {
+//                                    Text(PlantFormConstants.Large.name)
+//                                },
+//                                onClick = {
+//                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Large.name
+//                                    sizeDropDownExpanded = false
+//                                }
+//                            )
+//                            DropdownMenuItem(
+//                                text = { Text(PlantFormConstants.Medium.name, textAlign = TextAlign.Center) },
+//                                onClick = {
+//                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Medium.name
+//                                    sizeDropDownExpanded = false
+//                                },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+//                            DropdownMenuItem(
+//                                text = { Text(PlantFormConstants.Small.name) },
+//                                onClick = {
+//                                    findAPlantViewModel.plantSizeType.value = PlantFormConstants.Small.name
+//                                    sizeDropDownExpanded = false
+//                                }
+//                            )
+//                        },
+//                        expanded = sizeDropDownExpanded,
+//                        onDismissRequest = { sizeDropDownExpanded = false },
+//                        modifier = Modifier
+//                            .padding(5.dp)
+//                            .fillMaxWidth()
+//                    )
+//                }
 
                 AnimatedVisibility( sizeDropDownExpanded ) {
                     Spacer(Modifier.height(130.dp))
@@ -238,7 +239,7 @@ fun FindAPlant(
                 Surface(onClick = { gardenDropDownExpanded = true }) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Select a garden to plant it in",
+                            text = "Select a Garden",
                             color = Color.Black,
                             fontFamily = FontFamily.Monospace,
                             textAlign = TextAlign.Center
@@ -246,7 +247,6 @@ fun FindAPlant(
                         Icon(Icons.TwoTone.ArrowDropDown, "")
                         AnimatedVisibility( findAPlantViewModel.garden.value.name != "" ) {
                             Row {
-                                Icon(Icons.TwoTone.Done, "", tint = Color.Green)
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text(findAPlantViewModel.garden.value.name, color = Color.Gray)
                                     Row(
@@ -280,7 +280,7 @@ fun FindAPlant(
                                                 Modifier.size(10.dp).align(Alignment.CenterVertically),
                                                 tint = sunOrange
                                             )
-                                            Text(findAPlantViewModel.garden.value.avgLightLevel + "lux", fontFamily = FontFamily.Monospace)
+                                            Text(findAPlantViewModel.garden.value.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
                                         }
                                     }
                                 }
@@ -290,23 +290,44 @@ fun FindAPlant(
                     DropdownMenu(
                         content = {
                             gardens.gardenList.forEach {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(it.name)
-                                    },
-                                    onClick = {
-                                        findAPlantViewModel.garden.value =
-                                            it
-                                        gardenDropDownExpanded = false
-                                    }
-                                )
+                                Column(modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)) {
+                                    DropdownMenuItem(
+                                        text = {
+                                            Box(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(
+                                                    it.name,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    fontFamily = FontFamily.Monospace,
+                                                    textAlign = TextAlign.Center,
+                                                )
+                                            }
+                                        },
+                                        onClick = {
+                                            findAPlantViewModel.garden.value =
+                                                it
+                                            findAPlantViewModel.getPlantsInRange(
+                                                it.avgTemperature.toFloat(),
+                                                it.avgHumidity.toFloat(),
+                                                it.avgLightLevel.toFloat()
+                                            )
+                                            gardenDropDownExpanded = false
+                                        },
+                                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                                    )
+                                }
                             }
                         },
                         expanded = gardenDropDownExpanded,
-                        onDismissRequest = { gardenDropDownExpanded = false },
+                        onDismissRequest = {
+                            gardenDropDownExpanded = false
+                                           },
                         modifier = Modifier
                             .padding(5.dp)
                             .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
                     )
                 }
 
@@ -319,24 +340,30 @@ fun FindAPlant(
 
                 AnimatedVisibility(
                     (
-                        findAPlantViewModel.plantSizeType.value != ""
-                        && findAPlantViewModel.plantLifeType.value != ""
-                        && findAPlantViewModel.plantFlowerType.value != ""
-                        && findAPlantViewModel.garden.value.name != ""
+//                        findAPlantViewModel.plantSizeType.value != ""
+//                        && findAPlantViewModel.plantLifeType.value != ""
+//                        && findAPlantViewModel.plantFlowerType.value != ""
+                        findAPlantViewModel.garden.value.name != ""
                     )
                 ) {
                     Surface() {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                "Recommended Plants",
-                                color = nightBlue,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Light,
-                                fontSize = 20.sp
-                            )
+                            Row {
+                                Text(
+                                    "Recommended Plants",
+                                    color = nightBlue,
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Light,
+                                    fontSize = 20.sp
+                                )
+                            }
                             Column(Modifier.verticalScroll(scrollState)) {
-                                plantList.value.forEach {
-                                    PlantCard(it)
+                                recommendedPlants.value.forEach {
+                                    PlantCard(
+                                        it,
+                                        findAPlantViewModel.garden.value,
+                                        snackbarHostState
+                                    )
                                 }
                             }
                         }

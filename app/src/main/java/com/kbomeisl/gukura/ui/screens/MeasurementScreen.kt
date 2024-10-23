@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,8 @@ fun MeasurementScreen(
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>,
     navHostController: NavHostController,
-    measurementViewModel: MeasurementViewModel = koinViewModel()
+    measurementViewModel: MeasurementViewModel = koinViewModel(),
+    snackbarHostState: SnackbarHostState
 ) {
     val temperatureState = temperature.collectAsState()
     val humidityState = humidity.collectAsState()
@@ -48,6 +50,7 @@ fun MeasurementScreen(
         humidity = humidity,
         lightLevel = lightLevel,
         measurementViewModel = measurementViewModel,
-        navHostController = navHostController
+        navHostController = navHostController,
+        snackbarHostState = snackbarHostState
     )
 }

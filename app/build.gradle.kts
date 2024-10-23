@@ -51,15 +51,12 @@ dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
     implementation("androidx.compose:compose-bom:2024.10.00")
     androidTestImplementation("androidx.compose:compose-bom:2024.10.00")
-
-    implementation(libs.material3)
+    implementation("androidx.compose.material3:material3:1.3.0")
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.test.manifest)
     implementation(libs.androidx.activity.compose.v192)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     debugImplementation(libs.androidx.ui.tooling)
-    //Compose Sensors 3rd party
-    implementation("dev.ricknout.composesensors:composesensors:0.2.0")
     //Compose-Navigation
     implementation("androidx.navigation:navigation-compose:2.8.3")
     //Room

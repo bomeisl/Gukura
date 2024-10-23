@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -69,7 +70,8 @@ fun SensorCard(
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>,
     measurementViewModel: MeasurementViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    snackbarHostState: SnackbarHostState
 ) {
 
     val temperatureState = temperature.collectAsState()
@@ -232,7 +234,7 @@ fun SensorCard(
                             color = Color.Gray
                         )
                         plantList.value.forEach {
-                            PlantCard(it)
+                            PlantCard(it, snackbarHostState = snackbarHostState)
                         }
                     }
                 }

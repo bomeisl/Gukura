@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.screens
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,7 +16,8 @@ fun GukuraNavHost(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>,
-    navController: NavHostController
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState
 ) {
            NavHost(
                navController = navController,
@@ -27,7 +29,11 @@ fun GukuraNavHost(
                    )
                }
                composable(route = Routes.FINDAPLANT.name) {
-                   FindAPlant(navHostController = navController)
+                   FindAPlant(
+                       navHostController = navController,
+                       snackbarHostState = snackbarHostState
+
+                   )
                }
                composable(route = Routes.WHERETOPLANT.name) {
                    WhereToPlant()
@@ -37,17 +43,18 @@ fun GukuraNavHost(
                        temperature = temperature,
                        humidity = humidity,
                        lightLevel = lightLevel,
-                       navHostController = navController
+                       navHostController = navController,
+                       snackbarHostState = snackbarHostState
                    )
                }
                composable(route = Routes.MYPLANTS.name) {
                    MyPlantsScreen()
                }
                composable(route = Routes.PLANTDB.name) {
-                   PlantDatabaseScreen()
+                   PlantDatabaseScreen(snackbarHostState = snackbarHostState)
                }
                composable(route = Routes.PLANTRECOMMENDATIONS.name) {
-                   PlantRecommendationScreen()
+                   PlantRecommendationScreen(snackbarHostState = snackbarHostState)
                }
            }
        }

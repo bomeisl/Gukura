@@ -68,7 +68,7 @@ fun GardenCard(gardenUi: GardenUi) {
                         Modifier.size(10.dp).align(Alignment.CenterVertically),
                         tint = sunOrange
                     )
-                    Text(gardenUi.avgLightLevel + "lux", fontFamily = FontFamily.Monospace)
+                    Text(gardenUi.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
                 }
             }
         }

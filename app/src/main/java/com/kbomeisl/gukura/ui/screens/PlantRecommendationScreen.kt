@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,7 +17,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PlantRecommendationScreen(
-    measurementViewModel: MeasurementViewModel = koinViewModel()
+    measurementViewModel: MeasurementViewModel = koinViewModel(),
+    snackbarHostState: SnackbarHostState
 ) {
     val plantList = measurementViewModel.plantList.collectAsState()
 
@@ -25,7 +27,7 @@ fun PlantRecommendationScreen(
             Column {
                 Spacer(Modifier.height(100.dp))
                 plantList.value.forEach {
-                    PlantCard(it)
+                    //PlantCard(it)
                 }
             }
         }
