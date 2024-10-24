@@ -15,10 +15,16 @@ import org.koin.dsl.module
 
 val viewmodelModule = module {
     viewModel<HomeViewModel> {
-        HomeViewModel(get<HomeRepository>())
+        HomeViewModel(
+            get<PlantRepository>(),
+            get<GardenRepository>()
+        )
     }
     viewModel<FindAPlantViewModel> {
-        FindAPlantViewModel(get<PlantRepository>())
+        FindAPlantViewModel(
+            get<PlantRepository>(),
+            get<GardenRepository>()
+        )
     }
     viewModel<MyPlantsViewModel> {
         MyPlantsViewModel(get<PlantRepository>())

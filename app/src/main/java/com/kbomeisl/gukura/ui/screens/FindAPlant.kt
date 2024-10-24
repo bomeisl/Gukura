@@ -56,14 +56,13 @@ fun FindAPlant(
 ) {
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
+    val gardenList = findAPlantViewModel.gardenList.collectAsState()
     val recommendedPlants = findAPlantViewModel.recommendedPlants.collectAsState()
     val scrollState = rememberScrollState()
     var floweringDropDownExpanded by remember { mutableStateOf(false) }
     var annualDropDownExpanded by remember { mutableStateOf(false) }
     var sizeDropDownExpanded by remember { mutableStateOf(false) }
     var gardenDropDownExpanded by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) { findAPlantViewModel.populatePlantList() }
 
     Surface(Modifier.fillMaxSize()) {
         Row {
@@ -202,7 +201,7 @@ fun FindAPlant(
                                 recommendedPlants.value.forEach {
                                     PlantCard(
                                         it,
-                                        findAPlantViewModel.garden.value,
+                                        gardenList = gardenList.value,
                                         snackbarHostState
                                     )
                                 }

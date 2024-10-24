@@ -18,13 +18,28 @@ class PlantRepository(
         return plantNetworkDataSource.getPlantList()
     }
 
+    suspend fun cacheAllPlants() {
+        val plants = plantNetworkDataSource.getPlantList()
+        plants.forEach {
+            plantDao.upsertPlant(it.toDb())
+        }
+    }
+
+    suspend fun getAllPlantsAndCache(): List<PlantNetwork> {
+        val plants = plantNetworkDataSource.getPlantList()
+        plants.forEach {
+            plantDao.upsertPlant(it.toDb())
+        }
+        return plants
+    }
+
     //retrieve all plants from the app database
-    fun getAllPlantsDb(): List<PlantUi> {
+    suspend fun getAllPlantsDb(): List<PlantUi> {
         return plantDao.listAllPlants().map { it.toUi() }
     }
 
     //retrieve a plant from the app database by name
-    fun getPlantDb(plantName: String): PlantDb {
+    suspend fun getPlantDb(plantName: String): PlantDb {
         return plantDao.findPlant(plantName)
     }
 

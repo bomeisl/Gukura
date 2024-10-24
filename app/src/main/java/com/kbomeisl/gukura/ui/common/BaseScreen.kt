@@ -2,6 +2,7 @@ package com.kbomeisl.gukura.ui.common
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,12 +29,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -66,10 +67,6 @@ fun GukuraBaseScreen(
     val iconSize = 25.dp
     var subtitle by remember { mutableStateOf("") }
     val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-
-    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -296,10 +293,13 @@ fun GukuraBaseScreen(
                         snackBarHostState,
                         modifier = Modifier.padding(5.dp),
                         snackbar = {
-                            Snackbar(
-                                snackbarData = it,
-                                shape = RoundedCornerShape(30)
-                            )
+                            Row(horizontalArrangement = Arrangement.Center) {
+                                Snackbar(
+                                    snackbarData = it,
+                                    shape = RoundedCornerShape(30),
+                                    modifier = Modifier.padding(5.dp)
+                                )
+                            }
                         }
                     )
                 }

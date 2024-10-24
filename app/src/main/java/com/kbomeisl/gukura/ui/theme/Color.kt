@@ -24,5 +24,8 @@ val forestGreen = Color(0xFF004D40)
 val skyBlue = Color(0xFF00B8D4)
 val nightBlue = Color(0xFF1A237E)
 
+//Plant Card
+val add = Color(0xFF1B5E20)
+
 
 

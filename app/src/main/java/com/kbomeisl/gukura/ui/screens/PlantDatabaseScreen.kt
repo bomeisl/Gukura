@@ -34,6 +34,7 @@ fun PlantDatabaseScreen(
 ) {
     var plantName = remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
+    val gardenList = findAPlantViewModel.gardenList.collectAsState()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(plantName.value) {
@@ -53,7 +54,11 @@ fun PlantDatabaseScreen(
             )
             Column(Modifier.verticalScroll(scrollState)) {
                 plantList.value.forEach {
-                    PlantCard(it, snackbarHostState = snackbarHostState)
+                    PlantCard(
+                        it,
+                        snackbarHostState = snackbarHostState,
+                        gardenList = gardenList.value
+                    )
                 }
             }
         }

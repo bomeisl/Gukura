@@ -92,6 +92,7 @@ fun SensorCard(
     val temperatureState = temperature.collectAsState()
     val lightLevelState = lightLevel.collectAsState()
     val humidityState = humidity.collectAsState()
+    val gardenList = measurementViewModel.gardenList.collectAsState()
     val textMeasurer = rememberTextMeasurer()
     val location by remember { mutableStateOf("") }
     val screenTransitionCue by remember { mutableStateOf(true) }
@@ -181,56 +182,6 @@ fun SensorCard(
                         Modifier.fillMaxWidth().padding(horizontal = 80.dp, vertical = 40.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-//                        TextField(
-//                            value = location,
-//                            onValueChange = {
-//                                location = it
-//                            },
-//                            placeholder = { Text("Ex: 'Kitchen'", textAlign = TextAlign.Center, fontFamily = FontFamily.Monospace) },
-//                            leadingIcon = {
-//                                Icon(
-//                                    painter = painterResource(R.drawable.location_sign),
-//                                    "",
-//                                    modifier = Modifier.size(30.dp)
-//                                )
-//                            },
-//                            singleLine = true,
-//                            colors = TextFieldDefaults.colors(),
-//                            textStyle = TextStyle(fontFamily = FontFamily.Monospace),
-//                            trailingIcon = {
-//                                Button(
-//                                    content = {
-//                                        Row(Modifier.padding(5.dp)) {
-//                                            Icon(
-//                                                painter = painterResource(R.drawable.sensor),
-//                                                "",
-//                                                modifier = Modifier.size(30.dp)
-//                                            )
-//                                        }
-//                                    },
-//                                    onClick = {
-//                                        measurementViewModel.populatePlantList(
-//                                            temperature = temperatureState.value,
-//                                            humidity = humidityState.value,
-//                                            lightLevel = lightLevelState.value,
-//                                            location = location
-//                                        )
-//                                        measurementViewModel.saveMeasurementToDb(
-//                                            temperature = temperatureState.value,
-//                                            humidity = humidityState.value,
-//                                            lightLevel = lightLevelState.value,
-//                                            location = location
-//                                        )
-//                                        screenTransitionCue = false
-//                                        screenTransitionToPlantRecommendations = true
-//                                    },
-//                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-//                                    shape = RectangleShape,
-//                                )
-//                            }
-//
-//
-//                        )
                         Column(
 
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -339,7 +290,11 @@ fun SensorCard(
                             color = Color.Gray
                         )
                         plantList.value.forEach {
-                            PlantCard(it, snackbarHostState = snackbarHostState)
+                            PlantCard(
+                                it,
+                                snackbarHostState = snackbarHostState,
+                                gardenList = gardenList.value
+                            )
                         }
                     }
                 }

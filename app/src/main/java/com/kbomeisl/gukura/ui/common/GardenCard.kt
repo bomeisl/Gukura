@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,10 +30,17 @@ import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
 
 @Composable
-fun GardenCard(gardenUi: GardenUi) {
+fun GardenCard(
+    gardenUi: GardenUi,
+    onClick: (GardenUi) -> Unit
+) {
     val scrollState = rememberScrollState()
     Surface(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier
+            .padding(10.dp)
+            .clickable {
+                onClick(gardenUi)
+            },
         shadowElevation = 1.dp
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

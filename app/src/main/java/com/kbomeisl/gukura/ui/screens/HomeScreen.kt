@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,12 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -26,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.GardenCard
+import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.forestGreen
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
@@ -37,9 +44,16 @@ import java.sql.Time
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = koinViewModel(),
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    snackbarHostState: SnackbarHostState
 ) {
+   LaunchedEffect(Unit) {
+       homeViewModel.cacheAllPlants()
+   }
+
     val scrollstate = rememberScrollState()
+    val plantList = homeViewModel.plantList.collectAsState()
+    val gardenList = homeViewModel.gardenList
             Surface {
                 Row {
                     Column(Modifier.padding(5.dp)) {
@@ -54,56 +68,32 @@ fun HomeScreen(
                                 modifier = Modifier.padding(10.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.flowers_pot_of_yard),
-                                        "",
-                                        tint = forestGreen,
-                                        modifier = Modifier
-                                            .size(40.dp)
-                                            .padding(5.dp)
-                                    )
-                                    Text(
-                                        "My Gardens",
-                                        fontFamily = FontFamily.Monospace,
-                                        modifier = Modifier.padding(5.dp),
-                                        fontSize = 20.sp
-                                    )
-                                }
-
-                                Text("Average Environmental Measurements", color = Color.Gray, fontFamily = FontFamily.Monospace)
-
                                 Row(Modifier.horizontalScroll(scrollstate)) {
                                     gardens.gardenList.forEach {
-                                        GardenCard(it)
+                                        GardenCard(
+                                            it,
+                                            onClick = { garden ->
+                                                homeViewModel.currentGarden.value = garden
+                                                homeViewModel.getPlantsInGarden()
+                                            }
+                                        )
                                     }
                                 }
                             }
                         }
 
-                        Surface(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        Surface {
                             Column {
-                                Row {
-                                    Icon(
-                                        painter = painterResource(R.drawable.heart),
-                                        "",
-                                        Modifier
-                                            .size(40.dp)
-                                            .padding(5.dp),
-                                        tint = Color.Red
+                                plantList.value.forEach {
+                                    PlantCard(
+                                        it,
+                                        snackbarHostState = snackbarHostState,
+                                        gardenList = gardenList.value
                                     )
-                                    Text(
-                                        "My Wishlist",
-                                        fontSize = 20.sp,
-                                        fontFamily = FontFamily.Monospace,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                }
-                                Row {
-
                                 }
                             }
                         }
+
                     }
                 }
             }

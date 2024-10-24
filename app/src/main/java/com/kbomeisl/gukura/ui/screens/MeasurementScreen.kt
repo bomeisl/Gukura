@@ -45,6 +45,10 @@ fun MeasurementScreen(
     val humidityState = humidity.collectAsState()
     val lightLevelState = lightLevel.collectAsState()
 
+    LaunchedEffect(Unit) {
+        measurementViewModel.populateGardenList()
+    }
+
     SensorCard(
         temperature = temperature,
         humidity = humidity,

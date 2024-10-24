@@ -6,18 +6,9 @@ import androidx.room.PrimaryKey
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlin.random.Random
 
-@Entity(
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = GardenDb::class,
-            parentColumns = ["gardenId"],
-            childColumns = ["id"],
-            onDelete = ForeignKey.CASCADE
-        )
-    )
-)
+@Entity
 data class PlantDb(
-    @PrimaryKey(autoGenerate = true) val id: Int = Random.nextInt(),
+    @PrimaryKey(autoGenerate = true) val plantId: Int,
     val name: String = "Loading...",
     val description: String = "Loading...",
     val maxTemperature: Int = 0,
@@ -27,7 +18,6 @@ data class PlantDb(
     val maxLightLevel: Int = 0,
     val minLightLevel: Int = 0,
     val imageUrl: String="",
-    val garden: String="None",
     val wishListed: Boolean = false
 )
 
@@ -39,7 +29,6 @@ fun PlantDb.toUi(): PlantUi {
         humidity = "${minHumidity}-${maxHumidity}",
         lightLevel = "${minLightLevel}-${maxLightLevel}",
         imageUrl = imageUrl,
-        garden = garden
     )
 }
 

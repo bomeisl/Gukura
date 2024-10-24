@@ -25,7 +25,8 @@ fun GukuraNavHost(
            ) {
                composable(route = Routes.HOME.name) {
                    HomeScreen(
-                       navHostController = navController
+                       navHostController = navController,
+                       snackbarHostState = snackbarHostState
                    )
                }
                composable(route = Routes.FINDAPLANT.name) {
@@ -36,7 +37,7 @@ fun GukuraNavHost(
                    )
                }
                composable(route = Routes.WHERETOPLANT.name) {
-                   WhereToPlantScreen()
+                   WhereToPlantScreen(snackbarHostState=snackbarHostState)
                }
                composable(route = Routes.MEASURE.name) {
                    MeasurementScreen(

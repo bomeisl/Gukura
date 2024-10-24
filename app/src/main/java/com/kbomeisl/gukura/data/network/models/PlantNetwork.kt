@@ -33,18 +33,18 @@ fun PlantNetwork.toUi(): PlantUi =
         imageUrl = image
     )
 
-
 fun PlantNetwork.toDb(): PlantDb =
     PlantDb(
+        plantId = name.hashCode(),
         name = name,
         description = summary,
-        maxTemperature = tempMin,
-        minTemperature = tempMax,
+        maxTemperature = tempMax,
+        minTemperature = tempMin,
+        maxHumidity = humidityMin,
         minHumidity = humidityMin,
-        maxHumidity = humidityMax,
-        minLightLevel = lightMin.toInt(),
         maxLightLevel = lightMax.toInt(),
-        imageUrl = image
+        minLightLevel = lightMin.toInt(),
+        wishListed = false
     )
 
 
