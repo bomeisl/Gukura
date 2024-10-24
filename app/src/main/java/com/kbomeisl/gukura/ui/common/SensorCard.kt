@@ -271,8 +271,7 @@ fun SensorCard(
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(
                                             message = "Environmental measurements saved for " +
-                                                    "${measurementViewModel.currentGarden.value.name}" +
-                                                    ""
+                                                    "${measurementViewModel.currentGarden.value.name}"
                                         )
                                     }
                                 },

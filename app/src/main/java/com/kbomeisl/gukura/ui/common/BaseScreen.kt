@@ -34,7 +34,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -120,7 +119,7 @@ fun GukuraBaseScreen(
                             }
                         )
                         Text(
-                            "Find the Perfect Plant",
+                            "Garden Planner",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp)
@@ -145,7 +144,7 @@ fun GukuraBaseScreen(
                             }
                         )
                         Text(
-                            "Where Should I Put This Plant?",
+                            "Where Should I Plant This?",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp)
@@ -170,7 +169,7 @@ fun GukuraBaseScreen(
                             }
                         )
                         Text(
-                            "How Well Will Plants Grow Here?",
+                            "Which Plants Will Thrive Here?",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp)
@@ -190,12 +189,12 @@ fun GukuraBaseScreen(
                             },
                             onClick = {
                                 navController.navigate(Routes.MYPLANTS.name)
-                                subtitle = "My Plants"
+                                subtitle = "My Plant Wishlist"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
                         Text(
-                            "My Plants",
+                            "My Plant Wishlist",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp)

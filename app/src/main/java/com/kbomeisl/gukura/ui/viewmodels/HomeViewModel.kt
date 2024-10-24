@@ -14,12 +14,11 @@ import com.kbomeisl.gukura.ui.testData.plants
 class HomeViewModel(
     val homeRepository: HomeRepository
 ): ViewModel() {
-    val homeTopAppBar: GukuraTopAppBar = GukuraTopAppBar()
-    var myPlantList = listOf<PlantUi>()
+    var recommendedPlantList = listOf<PlantUi>()
     var myGardenList = gardens.gardenList
 
-    fun getPlantsForGarden(garden: String): List<PlantUi> {
-        return myPlantList
-            .filter { it.garden == garden }
+
+    fun getRecommendedPlants(): List<PlantUi> {
+        return listOf<PlantUi>()
     }
 }

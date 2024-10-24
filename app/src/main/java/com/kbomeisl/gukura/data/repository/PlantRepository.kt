@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.data.repository
 
 import com.kbomeisl.gukura.data.database.PlantDao
+import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toDb
@@ -23,8 +24,8 @@ class PlantRepository(
     }
 
     //retrieve a plant from the app database by name
-    fun getPlantDb(plantName: String): PlantUi {
-        return plantDao.findPlant(plantName).toUi()
+    fun getPlantDb(plantName: String): PlantDb {
+        return plantDao.findPlant(plantName)
     }
 
     //fetch plants from online database and cache them in app database

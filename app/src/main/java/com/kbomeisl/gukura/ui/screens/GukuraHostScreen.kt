@@ -36,7 +36,7 @@ fun GukuraNavHost(
                    )
                }
                composable(route = Routes.WHERETOPLANT.name) {
-                   WhereToPlant()
+                   WhereToPlantScreen()
                }
                composable(route = Routes.MEASURE.name) {
                    MeasurementScreen(

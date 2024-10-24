@@ -9,6 +9,8 @@ data class PlantUi(
     val humidity: String = "Loading...",
     val lightLevel: String = "Loading...",
     val imageUrl: String = "",
-    val garden: String = ""
+    val garden: String = "",
+    val wishListed: Boolean = false
 )
+
 

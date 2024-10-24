@@ -60,13 +60,13 @@ fun HomeScreen(
                                         "",
                                         tint = forestGreen,
                                         modifier = Modifier
-                                            .size(50.dp)
-                                            .padding(10.dp)
+                                            .size(40.dp)
+                                            .padding(5.dp)
                                     )
                                     Text(
                                         "My Gardens",
                                         fontFamily = FontFamily.Monospace,
-                                        modifier = Modifier.padding(10.dp),
+                                        modifier = Modifier.padding(5.dp),
                                         fontSize = 20.sp
                                     )
                                 }
@@ -77,6 +77,30 @@ fun HomeScreen(
                                     gardens.gardenList.forEach {
                                         GardenCard(it)
                                     }
+                                }
+                            }
+                        }
+
+                        Surface(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                            Column {
+                                Row {
+                                    Icon(
+                                        painter = painterResource(R.drawable.heart),
+                                        "",
+                                        Modifier
+                                            .size(40.dp)
+                                            .padding(5.dp),
+                                        tint = Color.Red
+                                    )
+                                    Text(
+                                        "My Wishlist",
+                                        fontSize = 20.sp,
+                                        fontFamily = FontFamily.Monospace,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                                Row {
+
                                 }
                             }
                         }

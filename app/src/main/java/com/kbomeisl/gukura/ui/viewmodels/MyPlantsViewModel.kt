@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.MyPlantsRepository
+import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.ui.models.PlantUi
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -12,22 +13,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class MyPlantsViewModel(
-    private val myPlantsRepository: MyPlantsRepository
+    private val plantRepository: PlantRepository
 ): ViewModel() {
     val coroutineScope = viewModelScope
-    //mocked up data simulating a user's houseplants
-    val usersPlants = listOf<String>(
-        "Begonia",
-        "African Violet",
-        "Air Plants",
-        "Hoya"
-    )
+    val wishListPlants = MutableStateFlow(listOf<PlantUi>())
     val plantList = MutableStateFlow(listOf<PlantUi>())
 
-    fun getPlants() {
+    fun getMyPlants() {
         coroutineScope.launch {
-            plantList.value = myPlantsRepository.getPlants(usersPlants).map { it.toUi() }
-            Log.d("View Model", "couroutine launch")
+            wishListPlants.value = plantRepository.getAllPlantsDb()
+                .filter { it.wishListed == true }
         }
     }
 

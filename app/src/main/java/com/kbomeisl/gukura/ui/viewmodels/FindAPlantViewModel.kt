@@ -3,6 +3,7 @@ package com.kbomeisl.gukura.ui.viewmodels
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.ui.models.GardenUi
@@ -44,7 +45,7 @@ class FindAPlantViewModel(
         }
     }
 
-    fun getPlantFromDatabase(plantName: String): PlantUi {
+    fun getPlantFromDatabase(plantName: String): PlantDb {
         return plantRepository.getPlantDb(plantName = plantName)
     }
 

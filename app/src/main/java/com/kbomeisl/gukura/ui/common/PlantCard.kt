@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -42,7 +43,8 @@ fun PlantCard(
     gardenUi: GardenUi = GardenUi(),
     snackbarHostState: SnackbarHostState
 ) {
-    val heartColorState = remember { mutableStateOf(Color.Gray) }
+    val colorToggle = remember { mutableStateOf(false) }
+    val heartIconColor = if (colorToggle.value) {Color.Red} else {Color.LightGray}
     val coroutineScope = rememberCoroutineScope()
 
     Surface(
@@ -81,19 +83,30 @@ fun PlantCard(
                                     Icon(
                                         painter = painterResource(R.drawable.heart),
                                         "",
-                                        tint = heartColorState.value,
-                                        modifier = Modifier.size(20.dp)
+                                        modifier = Modifier.size(20.dp),
+                                        tint = heartIconColor
                                     )
                                 },
                                 onClick = {
-                                    heartColorState.value = Color.Red
-                                    coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "${plantUi.name} wishlisted for ${gardenUi.name}",
-                                            actionLabel = "Undo",
-                                            duration = SnackbarDuration.Short
-                                        )
+
+                                    if (!colorToggle.value) {
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                message = "${plantUi.name} wishlisted",
+                                                duration = SnackbarDuration.Short
+                                            )
+                                        }
                                     }
+
+                                    if (colorToggle.value) {
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                message = "${plantUi.name} removed from wishlist",
+                                                duration = SnackbarDuration.Short
+                                            )
+                                        }
+                                    }
+                                    colorToggle.value = !colorToggle.value
                                 }
                             )
                         }
