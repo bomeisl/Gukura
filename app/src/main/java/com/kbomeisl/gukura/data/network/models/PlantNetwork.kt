@@ -44,7 +44,8 @@ fun PlantNetwork.toDb(): PlantDb =
         minHumidity = humidityMin,
         maxLightLevel = lightMax.toInt(),
         minLightLevel = lightMin.toInt(),
-        wishListed = false
+        wishListed = false,
+        imageUrl = image
     )
 
 

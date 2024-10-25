@@ -57,7 +57,9 @@ fun PlantDatabaseScreen(
                     PlantCard(
                         it,
                         snackbarHostState = snackbarHostState,
-                        gardenList = gardenList.value
+                        gardenList = gardenList.value,
+                        addGarden = { plant, garden ->  findAPlantViewModel.assignGarden(plantUi = plant, garden = garden) },
+                        removeGarden = { plant, garden ->  findAPlantViewModel.removeGarden(plantUi = plant, garden = garden) }
                     )
                 }
             }

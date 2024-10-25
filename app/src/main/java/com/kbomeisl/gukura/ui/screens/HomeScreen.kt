@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.GardenCard
+import com.kbomeisl.gukura.ui.common.HomePlantCard
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.forestGreen
@@ -48,15 +50,21 @@ fun HomeScreen(
     snackbarHostState: SnackbarHostState
 ) {
    LaunchedEffect(Unit) {
-       homeViewModel.cacheAllPlants()
+       homeViewModel.getPlantsInGarden()
    }
 
     val scrollstate = rememberScrollState()
+    val verticalScrollState = rememberScrollState()
     val plantList = homeViewModel.plantList.collectAsState()
     val gardenList = homeViewModel.gardenList
             Surface {
                 Row {
-                    Column(Modifier.padding(5.dp)) {
+                    Column(
+                        Modifier
+                            .padding(5.dp)
+                            .verticalScroll(verticalScrollState),
+
+                    ) {
                         Spacer(modifier = Modifier.height(130.dp))
                         Surface(
                             modifier = Modifier
@@ -79,21 +87,17 @@ fun HomeScreen(
                                         )
                                     }
                                 }
-                            }
-                        }
-
-                        Surface {
-                            Column {
                                 plantList.value.forEach {
                                     PlantCard(
                                         it,
+                                        gardenList = gardenList.value,
                                         snackbarHostState = snackbarHostState,
-                                        gardenList = gardenList.value
+                                        addGarden = { plantUi, garden -> homeViewModel.assignGarden(plantUi = plantUi, garden = garden) },
+                                        removeGarden = { plantUi, garden -> homeViewModel.removeGarden(plantUi = plantUi, garden = garden) }
                                     )
                                 }
                             }
                         }
-
                     }
                 }
             }

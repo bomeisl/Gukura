@@ -57,6 +57,7 @@ fun FindAPlant(
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
     val gardenList = findAPlantViewModel.gardenList.collectAsState()
+    val currentGarden = findAPlantViewModel.garden
     val recommendedPlants = findAPlantViewModel.recommendedPlants.collectAsState()
     val scrollState = rememberScrollState()
     var floweringDropDownExpanded by remember { mutableStateOf(false) }
@@ -102,7 +103,9 @@ fun FindAPlant(
                                             Icon(
                                                 painter = painterResource(R.drawable.thermometer),
                                                 "",
-                                                Modifier.size(10.dp).align(Alignment.CenterVertically),
+                                                Modifier
+                                                    .size(10.dp)
+                                                    .align(Alignment.CenterVertically),
                                                 tint = Color.Red
                                             )
                                             Text(findAPlantViewModel.garden.value.avgTemperature + "°F", fontFamily = FontFamily.Monospace)
@@ -111,7 +114,9 @@ fun FindAPlant(
                                             Icon(
                                                 painter = painterResource(R.drawable.humidity),
                                                 "",
-                                                Modifier.size(10.dp).align(Alignment.CenterVertically),
+                                                Modifier
+                                                    .size(10.dp)
+                                                    .align(Alignment.CenterVertically),
                                                 tint = skyBlue,
                                             )
                                             Text(findAPlantViewModel.garden.value.avgHumidity + "%", fontFamily = FontFamily.Monospace)
@@ -120,7 +125,9 @@ fun FindAPlant(
                                             Icon(
                                                 painter = painterResource(R.drawable.sun_2),
                                                 "",
-                                                Modifier.size(10.dp).align(Alignment.CenterVertically),
+                                                Modifier
+                                                    .size(10.dp)
+                                                    .align(Alignment.CenterVertically),
                                                 tint = sunOrange
                                             )
                                             Text(findAPlantViewModel.garden.value.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
@@ -133,7 +140,9 @@ fun FindAPlant(
                     DropdownMenu(
                         content = {
                             gardens.gardenList.forEach {
-                                Column(modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)) {
+                                Column(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.CenterHorizontally)) {
                                     DropdownMenuItem(
                                         text = {
                                             Box(
@@ -202,7 +211,9 @@ fun FindAPlant(
                                     PlantCard(
                                         it,
                                         gardenList = gardenList.value,
-                                        snackbarHostState
+                                        snackbarHostState = snackbarHostState,
+                                        addGarden = {plant, garden ->  findAPlantViewModel.assignGarden(garden,plant) },
+                                        removeGarden = {plant, garden ->  findAPlantViewModel.removeGarden(plantUi = plant, garden = garden) }
                                     )
                                 }
                             }

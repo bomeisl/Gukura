@@ -13,6 +13,7 @@ import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.RecommendationRepository
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -55,16 +56,38 @@ class MeasurementViewModel(
         lightLevel: Float,
         location: String
     ) {
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             plantList.value =
                 plantRepository.getPlantsInRange(temperature, humidity, lightLevel)
         }
     }
 
     fun populateGardenList() {
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             gardenList.value = gardenRepository.getAllGardens()
                 .map { it.toUi() }
+        }
+    }
+
+    fun assignGarden(garden: String, plantUi: PlantUi) {
+        val newPlant = PlantUi(
+            name = plantUi.name,
+            description = plantUi.description,
+            temperature = plantUi.temperature,
+            humidity = plantUi.humidity,
+            lightLevel = plantUi.lightLevel,
+            imageUrl = plantUi.imageUrl,
+            garden = garden,
+            wishListed = plantUi.wishListed
+        )
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.upsertPlant(newPlant.toDb())
+        }
+    }
+
+    fun removeGarden(plantUi: PlantUi, garden: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.deleteGarden(plantDb = plantUi.toDb())
         }
     }
 

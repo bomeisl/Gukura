@@ -6,9 +6,13 @@ import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.ui.models.PlantUi
 
 class GardenRepository(
-    private val gardenDao: GardenDao
+    private val gardenDao: GardenDao,
 ) {
     suspend fun getAllGardens(): List<GardenDb> {
         return gardenDao.getAllGardens()
+    }
+
+    suspend fun addPlantToGarden() {
+        //userGardenDao.addPlant()
     }
 }

@@ -8,6 +8,7 @@ import com.kbomeisl.gukura.data.repository.GardenRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -49,10 +50,25 @@ class WhereToPlantViewModel(
         }
     }
 
-//    fun getGardenList() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            plantSearchList.value = plantRepository.getAllPlantsDb()
-//                .filter { it.garden ==  currentGarden.value.name }
-//        }
-//    }
+    fun assignGarden(garden: String, plantUi: PlantUi) {
+        val newPlant = PlantUi(
+            name = plantUi.name,
+            description = plantUi.description,
+            temperature = plantUi.temperature,
+            humidity = plantUi.humidity,
+            lightLevel = plantUi.lightLevel,
+            imageUrl = plantUi.imageUrl,
+            garden = garden,
+            wishListed = plantUi.wishListed
+        )
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.upsertPlant(newPlant.toDb())
+        }
+    }
+
+    fun removeGarden(plantUi: PlantUi, garden: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.deleteGarden(plantDb = plantUi.toDb())
+        }
+    }
 }

@@ -13,6 +13,7 @@ import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.navigationIcons
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.testData.plants
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,7 @@ class HomeViewModel(
     val coroutineScope = viewModelScope
     var recommendedPlantList = listOf<PlantUi>()
     var gardenList = MutableStateFlow(listOf<GardenUi>())
-    val currentGarden = MutableStateFlow(GardenUi())
+    val currentGarden = MutableStateFlow(GardenUi(name = "Herb Garden"))
     val plantList = MutableStateFlow(listOf<PlantUi>())
 
     fun getRecommendedPlants(): List<PlantUi> {
@@ -51,6 +52,28 @@ class HomeViewModel(
     fun cacheAllPlants() {
         coroutineScope.launch(Dispatchers.IO) {
             plantRepository.cacheAllPlants()
+        }
+    }
+
+    fun assignGarden(garden: String, plantUi: PlantUi) {
+        val newPlant = PlantUi(
+            name = plantUi.name,
+            description = plantUi.description,
+            temperature = plantUi.temperature,
+            humidity = plantUi.humidity,
+            lightLevel = plantUi.lightLevel,
+            imageUrl = plantUi.imageUrl,
+            garden = garden,
+            wishListed = plantUi.wishListed
+        )
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.upsertPlant(newPlant.toDb())
+        }
+    }
+
+    fun removeGarden(plantUi: PlantUi, garden: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.deleteGarden(plantDb = plantUi.toDb())
         }
     }
 }

@@ -3,7 +3,9 @@ package com.kbomeisl.gukura.data.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 import com.kbomeisl.gukura.data.database.models.PlantDb
 
@@ -17,6 +19,12 @@ interface PlantDao {
 
     @Upsert
     suspend fun upsertPlant(plantDb: PlantDb)
+
+    @Update
+    suspend fun updatePlant(plantDb: PlantDb)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertPlant(plantDb: PlantDb)
 
     @Delete
     suspend fun deletePlant(plantDb: PlantDb)

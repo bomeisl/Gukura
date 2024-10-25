@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.Timestamp
 import com.kbomeisl.gukura.R
+import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.humidityColor
@@ -293,7 +294,9 @@ fun SensorCard(
                             PlantCard(
                                 it,
                                 snackbarHostState = snackbarHostState,
-                                gardenList = gardenList.value
+                                gardenList = gardenList.value,
+                                addGarden = {plant, garden -> measurementViewModel.assignGarden(garden, plant)},
+                                removeGarden = {plant, garden -> measurementViewModel.removeGarden(plant,garden) }
                             )
                         }
                     }

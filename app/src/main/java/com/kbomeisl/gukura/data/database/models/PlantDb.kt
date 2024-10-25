@@ -17,8 +17,9 @@ data class PlantDb(
     val minHumidity: Int = 0,
     val maxLightLevel: Int = 0,
     val minLightLevel: Int = 0,
-    val imageUrl: String="",
-    val wishListed: Boolean = false
+    var imageUrl: String="",
+    var wishListed: Boolean = false,
+    var garden: String = "Front Porch"
 )
 
 fun PlantDb.toUi(): PlantUi {
@@ -29,6 +30,8 @@ fun PlantDb.toUi(): PlantUi {
         humidity = "${minHumidity}-${maxHumidity}",
         lightLevel = "${minLightLevel}-${maxLightLevel}",
         imageUrl = imageUrl,
+        garden = garden
+
     )
 }
 

@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.data.repository
 
+import android.util.Log
 import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.database.models.toUi
@@ -12,6 +13,7 @@ import com.kbomeisl.gukura.ui.models.PlantUi
 class PlantRepository(
     private val plantDao: PlantDao
 ) {
+    private val logTag = "Plant Repository"
 
     //fetch all plants from the online database
     suspend fun getAllPlantsNetwork(): List<PlantNetwork> {
@@ -21,7 +23,12 @@ class PlantRepository(
     suspend fun cacheAllPlants() {
         val plants = plantNetworkDataSource.getPlantList()
         plants.forEach {
-            plantDao.upsertPlant(it.toDb())
+            try {
+                plantDao.insertPlant(it.toDb())
+            } catch (e: Exception) {
+                Log.e(logTag, "Insert Dao exception")
+            }
+
         }
     }
 
@@ -69,5 +76,28 @@ class PlantRepository(
             .filter { humidity > it.humidityMin-10 && humidity < it.humidityMax+10 }
             .filter { lightLevel > it.lightMin-1000 && lightLevel < it.lightMax+1000 }
             .map { it.toUi() }
+    }
+
+    suspend fun upsertPlant(plantDb: PlantDb) {
+        plantDao.upsertPlant(plantDb = plantDb)
+    }
+
+    suspend fun deleteGarden(plantDb: PlantDb) {
+        plantDao.updatePlant(
+            plantDb = PlantDb(
+                plantId = plantDb.plantId,
+                name = plantDb.name,
+                description = plantDb.description,
+                minTemperature = plantDb.minTemperature,
+                maxTemperature = plantDb.maxTemperature,
+                minHumidity = plantDb.minHumidity,
+                maxHumidity = plantDb.maxHumidity,
+                minLightLevel = plantDb.minLightLevel,
+                maxLightLevel = plantDb.maxLightLevel,
+                imageUrl = plantDb.imageUrl,
+                wishListed = plantDb.wishListed,
+                garden = ""
+            )
+        )
     }
 }
