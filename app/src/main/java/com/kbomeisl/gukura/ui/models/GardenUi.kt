@@ -1,5 +1,7 @@
 package com.kbomeisl.gukura.ui.models
 
+import com.kbomeisl.gukura.data.database.models.GardenDb
+
 data class GardenUi(
     val name: String="",
     val avgTemperature: String="",
@@ -7,3 +9,12 @@ data class GardenUi(
     val avgLightLevel: String="",
     val plants: List<PlantUi> = listOf<PlantUi>()
 )
+
+fun GardenUi.toDb() =
+    GardenDb(
+        gardenId = name.hashCode(),
+        name = name,
+        avgTemperature = avgTemperature,
+        avgHumidity = avgHumidity,
+        avgLightLevel = avgLightLevel,
+    )

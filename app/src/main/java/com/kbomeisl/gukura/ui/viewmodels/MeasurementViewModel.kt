@@ -22,12 +22,7 @@ class MeasurementViewModel(
     private val measurementDao: MeasurementDao,
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository
-): ViewModel() {
-    val coroutineScope = viewModelScope
-
-    val plantList = MutableStateFlow(listOf<PlantUi>())
-    val gardenList = MutableStateFlow(listOf<GardenUi>())
-    val currentGarden = mutableStateOf<GardenUi>(GardenUi())
+): PlantViewModel(plantRepository,gardenRepository) {
     val location = MutableStateFlow("")
 
     fun saveMeasurementToDb(
@@ -49,46 +44,4 @@ class MeasurementViewModel(
             Log.d("Measurements","${temperature}")
         }
     }
-
-    fun populatePlantList(
-        temperature: Float,
-        humidity: Float,
-        lightLevel: Float,
-        location: String
-    ) {
-        coroutineScope.launch(Dispatchers.IO) {
-            plantList.value =
-                plantRepository.getPlantsInRange(temperature, humidity, lightLevel)
-        }
-    }
-
-    fun populateGardenList() {
-        coroutineScope.launch(Dispatchers.IO) {
-            gardenList.value = gardenRepository.getAllGardens()
-                .map { it.toUi() }
-        }
-    }
-
-    fun assignGarden(garden: String, plantUi: PlantUi) {
-        val newPlant = PlantUi(
-            name = plantUi.name,
-            description = plantUi.description,
-            temperature = plantUi.temperature,
-            humidity = plantUi.humidity,
-            lightLevel = plantUi.lightLevel,
-            imageUrl = plantUi.imageUrl,
-            garden = garden,
-            wishListed = plantUi.wishListed
-        )
-        coroutineScope.launch(Dispatchers.IO) {
-            plantRepository.upsertPlant(newPlant.toDb())
-        }
-    }
-
-    fun removeGarden(plantUi: PlantUi, garden: String) {
-        coroutineScope.launch(Dispatchers.IO) {
-            plantRepository.deleteGarden(plantDb = plantUi.toDb())
-        }
-    }
-
 }

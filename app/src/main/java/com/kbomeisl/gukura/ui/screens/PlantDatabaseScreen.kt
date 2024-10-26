@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,6 +36,7 @@ fun PlantDatabaseScreen(
     var plantName = remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
     val gardenList = findAPlantViewModel.gardenList.collectAsState()
+    val currentGarden = findAPlantViewModel.currentGarden.collectAsState()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(plantName.value) {
@@ -53,13 +55,22 @@ fun PlantDatabaseScreen(
                 onValueChange = { plantName.value = it}
             )
             Column(Modifier.verticalScroll(scrollState)) {
-                plantList.value.forEach {
+                plantList.value.forEach { plant ->
                     PlantCard(
-                        it,
+                        plant,
                         snackbarHostState = snackbarHostState,
-                        gardenList = gardenList.value,
-                        addGarden = { plant, garden ->  findAPlantViewModel.assignGarden(plantUi = plant, garden = garden) },
-                        removeGarden = { plant, garden ->  findAPlantViewModel.removeGarden(plantUi = plant, garden = garden) }
+                        addGarden = { garden ->
+                            findAPlantViewModel.addGardenToPlant(
+                                plantUi = plant,
+                                gardenDb = garden.toDb()
+                            )
+                        },
+                        clearGarden = {
+                            findAPlantViewModel.removeGardenFromPlant(
+                                plantUi = plant,
+                                gardenName = plant.gardenName
+                            )
+                        }
                     )
                 }
             }

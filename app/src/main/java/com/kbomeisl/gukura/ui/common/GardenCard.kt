@@ -32,15 +32,13 @@ import com.kbomeisl.gukura.ui.theme.sunOrange
 @Composable
 fun GardenCard(
     gardenUi: GardenUi,
-    onClick: (GardenUi) -> Unit
+    onClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     Surface(
         modifier = Modifier
             .padding(10.dp)
-            .clickable {
-                onClick(gardenUi)
-            },
+            .clickable { onClick() },
         shadowElevation = 1.dp
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

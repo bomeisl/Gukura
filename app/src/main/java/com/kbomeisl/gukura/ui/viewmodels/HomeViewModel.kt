@@ -23,57 +23,13 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository
-): ViewModel() {
+): PlantViewModel(plantRepository, gardenRepository) {
 
-    val coroutineScope = viewModelScope
     var recommendedPlantList = listOf<PlantUi>()
-    var gardenList = MutableStateFlow(listOf<GardenUi>())
-    val currentGarden = MutableStateFlow(GardenUi(name = "Herb Garden"))
-    val plantList = MutableStateFlow(listOf<PlantUi>())
-
-    fun getRecommendedPlants(): List<PlantUi> {
-        return listOf<PlantUi>()
-    }
-
-    fun getPlantsInGarden() {
-        viewModelScope.launch(Dispatchers.IO) {
-            plantList.value = plantRepository.getAllPlantsDb()
-                .filter { it.garden ==  currentGarden.value.name}
-        }
-    }
-
-    fun populateGardenList() {
-        coroutineScope.launch(Dispatchers.IO) {
-            gardenList.value = gardenRepository.getAllGardens()
-                .map { it.toUi() }
-        }
-    }
 
     fun cacheAllPlants() {
         coroutineScope.launch(Dispatchers.IO) {
             plantRepository.cacheAllPlants()
-        }
-    }
-
-    fun assignGarden(garden: String, plantUi: PlantUi) {
-        val newPlant = PlantUi(
-            name = plantUi.name,
-            description = plantUi.description,
-            temperature = plantUi.temperature,
-            humidity = plantUi.humidity,
-            lightLevel = plantUi.lightLevel,
-            imageUrl = plantUi.imageUrl,
-            garden = garden,
-            wishListed = plantUi.wishListed
-        )
-        coroutineScope.launch(Dispatchers.IO) {
-            plantRepository.upsertPlant(newPlant.toDb())
-        }
-    }
-
-    fun removeGarden(plantUi: PlantUi, garden: String) {
-        coroutineScope.launch(Dispatchers.IO) {
-            plantRepository.deleteGarden(plantDb = plantUi.toDb())
         }
     }
 }

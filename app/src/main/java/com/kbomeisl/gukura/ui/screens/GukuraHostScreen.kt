@@ -10,6 +10,7 @@ import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun GukuraNavHost(
@@ -32,8 +33,7 @@ fun GukuraNavHost(
                composable(route = Routes.FINDAPLANT.name) {
                    FindAPlant(
                        navHostController = navController,
-                       snackbarHostState = snackbarHostState
-
+                       snackbarHostState = snackbarHostState,
                    )
                }
                composable(route = Routes.WHERETOPLANT.name) {

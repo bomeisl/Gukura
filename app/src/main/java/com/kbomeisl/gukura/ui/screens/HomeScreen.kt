@@ -18,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,9 @@ import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.GardenCard
 import com.kbomeisl.gukura.ui.common.HomePlantCard
 import com.kbomeisl.gukura.ui.common.PlantCard
+import com.kbomeisl.gukura.ui.models.GardenUi
+import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.forestGreen
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
@@ -49,13 +53,11 @@ fun HomeScreen(
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState
 ) {
-   LaunchedEffect(Unit) {
-       homeViewModel.getPlantsInGarden()
-   }
 
     val scrollstate = rememberScrollState()
     val verticalScrollState = rememberScrollState()
     val plantList = homeViewModel.plantList.collectAsState()
+    val currentGarden = remember {  mutableStateOf(GardenUi()) }
     val gardenList = homeViewModel.gardenList
             Surface {
                 Row {
@@ -78,22 +80,32 @@ fun HomeScreen(
                             ) {
                                 Row(Modifier.horizontalScroll(scrollstate)) {
                                     gardens.gardenList.forEach {
+                                        currentGarden.value = it
                                         GardenCard(
                                             it,
-                                            onClick = { garden ->
-                                                homeViewModel.currentGarden.value = garden
-                                                homeViewModel.getPlantsInGarden()
+                                            onClick = {
+                                                homeViewModel.plantList.value = listOf()
+                                                homeViewModel.getPlantsInGarden(it.name)
                                             }
                                         )
                                     }
                                 }
-                                plantList.value.forEach {
+                                plantList.value.forEach { plant ->
                                     PlantCard(
-                                        it,
-                                        gardenList = gardenList.value,
+                                        plant,
                                         snackbarHostState = snackbarHostState,
-                                        addGarden = { plantUi, garden -> homeViewModel.assignGarden(plantUi = plantUi, garden = garden) },
-                                        removeGarden = { plantUi, garden -> homeViewModel.removeGarden(plantUi = plantUi, garden = garden) }
+                                        addGarden = {garden ->
+                                            homeViewModel.addGardenToPlant(
+                                                plantUi = plant,
+                                                gardenDb = garden.toDb()
+                                            )
+                                        },
+                                        clearGarden = {
+                                            homeViewModel.removeGardenFromPlant(
+                                                plantUi = plant,
+                                                gardenName = currentGarden.value.name
+                                            )
+                                        }
                                     )
                                 }
                             }

@@ -1,36 +1,26 @@
 package com.kbomeisl.gukura.ui.common
 
-import android.text.Layout
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.twotone.Add
-import androidx.compose.material.icons.twotone.Delete
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,37 +33,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.testData.gardens
-import com.kbomeisl.gukura.ui.theme.add
-import com.kbomeisl.gukura.ui.theme.forestGreen
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
-import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 
 @Composable
 fun PlantCard(
     plantUi: PlantUi,
-    gardenList: List<GardenUi>,
     snackbarHostState: SnackbarHostState,
-    addGarden: (plant: PlantUi, garden: String) -> Unit,
-    removeGarden: (plant: PlantUi, garden: String) -> Unit,
+    addGarden:  (garden: GardenUi) -> Unit,
+    clearGarden: (garden: GardenUi) -> Unit
 ) {
     val colorToggleHeart = remember { mutableStateOf(false) }
-    val colorTogglePlanted = remember { mutableStateOf(false) }
     val heartIconColor = if (colorToggleHeart.value) {
         Color.Red
     } else {
         Color.LightGray
     }
+    val colorTogglePlanted = remember { mutableStateOf(false) }
     val plantedIcon = if (colorTogglePlanted.value) {
         Color.Green
     } else {
@@ -81,10 +64,9 @@ fun PlantCard(
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val gardenName = remember { mutableStateOf(plantUi.garden) }
-    val garden = gardens.gardenList.filter { it.name == gardenName.value }
-    val currentGardenUi: MutableState<GardenUi?> = remember { mutableStateOf(garden.firstOrNull()) }
-    val cardExpanded = remember { mutableStateOf(false) }
+    val gardenName = remember {  mutableStateOf("") }
+    val cardExpanded = remember {  mutableStateOf(false) }
+    val currentGardenUi = remember { mutableStateOf(GardenUi()) }
 
     Surface(
         modifier = Modifier
@@ -110,14 +92,17 @@ fun PlantCard(
                     contentDescription = plantUi.description,
                     contentScale = ContentScale.Fit,
                     clipToBounds = true,
-                    modifier = Modifier.size(150.dp).padding(5.dp)
+                    modifier = Modifier
+                        .size(150.dp)
+                        .padding(5.dp)
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row {
                         Icon(
                             painter = painterResource(R.drawable.thermometer),
                             "",
-                            Modifier.size(10.dp)
+                            Modifier
+                                .size(10.dp)
                                 .align(Alignment.CenterVertically),
                             tint = Color.Red
                         )
@@ -131,7 +116,8 @@ fun PlantCard(
                         Icon(
                             painter = painterResource(R.drawable.humidity),
                             "",
-                            Modifier.size(10.dp)
+                            Modifier
+                                .size(10.dp)
                                 .align(Alignment.CenterVertically),
                             tint = skyBlue,
                         )
@@ -145,7 +131,8 @@ fun PlantCard(
                         Icon(
                             painter = painterResource(R.drawable.sun_2),
                             "",
-                            Modifier.size(10.dp)
+                            Modifier
+                                .size(10.dp)
                                 .align(Alignment.CenterVertically),
                             tint = sunOrange
                         )
@@ -156,12 +143,12 @@ fun PlantCard(
                         )
                     }
                         AnimatedVisibility(
-                        plantUi.garden != ""
+                        plantUi.gardenName != ""
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Spacer(Modifier.height(20.dp))
                             Text(
-                                plantUi.garden,
+                                plantUi.gardenName,
                                 color = Color.Gray,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(5.dp)
@@ -180,12 +167,13 @@ fun PlantCard(
                                         Icon(
                                             painter = painterResource(R.drawable.thermometer),
                                             "",
-                                            Modifier.size(10.dp)
+                                            Modifier
+                                                .size(10.dp)
                                                 .align(Alignment.CenterVertically),
                                             tint = Color.Red
                                         )
                                         Text(
-                                            currentGardenUi.value?.avgTemperature + "°F",
+                                            plantUi.gardenTemp + "°F",
                                             fontFamily = FontFamily.Monospace
                                         )
                                     }
@@ -196,12 +184,13 @@ fun PlantCard(
                                         Icon(
                                             painter = painterResource(R.drawable.humidity),
                                             "",
-                                            Modifier.size(10.dp)
+                                            Modifier
+                                                .size(10.dp)
                                                 .align(Alignment.CenterVertically),
                                             tint = skyBlue,
                                         )
                                         Text(
-                                            currentGardenUi.value?.avgHumidity + "%",
+                                            plantUi.gardenHumidity + "%",
                                             fontFamily = FontFamily.Monospace
                                         )
                                     }
@@ -212,12 +201,13 @@ fun PlantCard(
                                         Icon(
                                             painter = painterResource(R.drawable.sun_2),
                                             "",
-                                            Modifier.size(10.dp)
+                                            Modifier
+                                                .size(10.dp)
                                                 .align(Alignment.CenterVertically),
                                             tint = sunOrange
                                         )
                                         Text(
-                                            currentGardenUi.value?.avgLightLevel + " lux",
+                                            plantUi.gardenLightLevel + " lux",
                                             fontFamily = FontFamily.Monospace
                                         )
                                     }
@@ -264,11 +254,11 @@ fun PlantCard(
                                                     )
                                                 }
                                             }
-                                            colorToggleHeart.value = !colorToggleHeart.value
+                                           addGarden(currentGardenUi.value)
                                         }
                                     )
 
-                                    AnimatedVisibility(currentGardenUi.value == null) {
+                                    AnimatedVisibility(currentGardenUi.value.name == "") {
                                         IconButton(
                                             content = {
                                                 Column {
@@ -278,16 +268,14 @@ fun PlantCard(
                                                         modifier = Modifier.size(40.dp),
                                                         tint = plantedIcon
                                                     )
-                                                    Text("Plant", modifier = Modifier.padding(5.dp))
                                                 }
                                             },
                                             onClick = {
-                                                colorTogglePlanted.value = !colorTogglePlanted.value
                                                 cardExpanded.value = !cardExpanded.value
                                             },
                                         )
                                     }
-                                    AnimatedVisibility(currentGardenUi.value == null) {
+                                    AnimatedVisibility(currentGardenUi.value.name == "") {
                                         IconButton(
                                             content = {
                                                 Icon(
@@ -298,12 +286,7 @@ fun PlantCard(
                                                 )
                                             },
                                             onClick = {
-                                                if (currentGardenUi.value != null) {
-                                                    removeGarden(
-                                                        plantUi,
-                                                        currentGardenUi.value!!.name
-                                                    )
-                                                }
+                                                clearGarden(currentGardenUi.value)
                                             },
                                         )
                                     }
@@ -324,14 +307,14 @@ fun PlantCard(
                                     modifier = Modifier
                                         .clickable {
                                             currentGardenUi.value = it
-                                            cardExpanded.value = false
+                                            addGarden(it)
                                             coroutineScope.launch {
                                                 snackbarHostState.showSnackbar(
                                                     message = "${plantUi.name} added to ${it.name}",
                                                     duration = SnackbarDuration.Short
                                                 )
                                             }
-                                            addGarden(plantUi, it.name)
+                                            cardExpanded.value = false
                                         }
                                         .fillMaxWidth()
                                 ) {
@@ -350,7 +333,8 @@ fun PlantCard(
                                             Icon(
                                                 painter = painterResource(R.drawable.thermometer),
                                                 "",
-                                                Modifier.size(10.dp)
+                                                Modifier
+                                                    .size(10.dp)
                                                     .align(Alignment.CenterVertically),
                                                 tint = Color.Red
                                             )
@@ -366,7 +350,8 @@ fun PlantCard(
                                             Icon(
                                                 painter = painterResource(R.drawable.humidity),
                                                 "",
-                                                Modifier.size(10.dp)
+                                                Modifier
+                                                    .size(10.dp)
                                                     .align(Alignment.CenterVertically),
                                                 tint = skyBlue,
                                             )
@@ -382,7 +367,8 @@ fun PlantCard(
                                             Icon(
                                                 painter = painterResource(R.drawable.sun_2),
                                                 "",
-                                                Modifier.size(10.dp)
+                                                Modifier
+                                                    .size(10.dp)
                                                     .align(Alignment.CenterVertically),
                                                 tint = sunOrange
                                             )

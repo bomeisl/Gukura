@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kbomeisl.gukura.ui.common.PlantCard
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.viewmodels.WhereToPlantViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -27,6 +28,7 @@ fun WhereToPlantScreen(
 ) {
     val plant = remember { mutableStateOf("") }
     val plantSearchList = whereToPlantViewModel.plantSearchList.collectAsState()
+    val currentGarden = whereToPlantViewModel.currentGarden.collectAsState()
     Surface() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.height(140.dp))
@@ -41,13 +43,22 @@ fun WhereToPlantScreen(
             )
             Surface {
                 Column {
-                    plantSearchList.value.forEach {
+                    plantSearchList.value.forEach { plant ->
                         PlantCard(
-                            it,
+                            plant,
                             snackbarHostState = snackbarHostState,
-                            gardenList = gardens.gardenList,
-                            addGarden = { plant, garden -> whereToPlantViewModel.assignGarden(plantUi = plant, garden = garden) },
-                            removeGarden = { plant, garden -> whereToPlantViewModel.removeGarden(plantUi = plant,garden=garden) }
+                            addGarden = {garden ->
+                                whereToPlantViewModel.addGardenToPlant(
+                                    plantUi = plant,
+                                    gardenDb = currentGarden.value.toDb()
+                                )
+                            },
+                            clearGarden = {garden ->
+                                whereToPlantViewModel.removeGardenFromPlant(
+                                    plantUi = plant,
+                                    gardenName = garden.name
+                                )
+                            }
                         )
                     }
                 }

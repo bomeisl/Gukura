@@ -23,7 +23,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.PlantCard
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
@@ -52,12 +52,12 @@ import org.koin.androidx.compose.koinViewModel
 fun FindAPlant(
     navHostController: NavHostController,
     findAPlantViewModel: FindAPlantViewModel = koinViewModel(),
-    snackbarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState
 ) {
     var plantSearchText by remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsState()
     val gardenList = findAPlantViewModel.gardenList.collectAsState()
-    val currentGarden = findAPlantViewModel.garden
+    val currentGarden = findAPlantViewModel.currentGarden.collectAsState()
     val recommendedPlants = findAPlantViewModel.recommendedPlants.collectAsState()
     val scrollState = rememberScrollState()
     var floweringDropDownExpanded by remember { mutableStateOf(false) }
@@ -89,10 +89,10 @@ fun FindAPlant(
                             textAlign = TextAlign.Center
                         )
                         Icon(Icons.TwoTone.ArrowDropDown, "")
-                        AnimatedVisibility( findAPlantViewModel.garden.value.name != "" ) {
+                        AnimatedVisibility( currentGarden.value.name != "" ) {
                             Row {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(findAPlantViewModel.garden.value.name, color = Color.Gray)
+                                    Text(currentGarden.value.name, color = Color.Gray)
                                     Row(
                                         Modifier
                                             .fillMaxWidth()
@@ -108,7 +108,7 @@ fun FindAPlant(
                                                     .align(Alignment.CenterVertically),
                                                 tint = Color.Red
                                             )
-                                            Text(findAPlantViewModel.garden.value.avgTemperature + "°F", fontFamily = FontFamily.Monospace)
+                                            Text(currentGarden.value.avgTemperature + "°F", fontFamily = FontFamily.Monospace)
                                         }
                                         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
                                             Icon(
@@ -119,7 +119,7 @@ fun FindAPlant(
                                                     .align(Alignment.CenterVertically),
                                                 tint = skyBlue,
                                             )
-                                            Text(findAPlantViewModel.garden.value.avgHumidity + "%", fontFamily = FontFamily.Monospace)
+                                            Text(currentGarden.value.avgHumidity + "%", fontFamily = FontFamily.Monospace)
                                         }
                                         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
                                             Icon(
@@ -130,7 +130,7 @@ fun FindAPlant(
                                                     .align(Alignment.CenterVertically),
                                                 tint = sunOrange
                                             )
-                                            Text(findAPlantViewModel.garden.value.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
+                                            Text(currentGarden.value.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
                                         }
                                     }
                                 }
@@ -158,8 +158,7 @@ fun FindAPlant(
                                             }
                                         },
                                         onClick = {
-                                            findAPlantViewModel.garden.value =
-                                                it
+                                            findAPlantViewModel.updateCurrentGarden(it)
                                             findAPlantViewModel.getPlantsInRange(
                                                 it.avgTemperature.toFloat(),
                                                 it.avgHumidity.toFloat(),
@@ -192,7 +191,7 @@ fun FindAPlant(
 
                 AnimatedVisibility(
                     (
-                        findAPlantViewModel.garden.value.name != ""
+                        currentGarden.value.name != ""
                     )
                 ) {
                     Surface() {
@@ -207,13 +206,22 @@ fun FindAPlant(
                                 )
                             }
                             Column(Modifier.verticalScroll(scrollState)) {
-                                recommendedPlants.value.forEach {
+                                recommendedPlants.value.forEach { plant ->
                                     PlantCard(
-                                        it,
-                                        gardenList = gardenList.value,
+                                        plant,
                                         snackbarHostState = snackbarHostState,
-                                        addGarden = {plant, garden ->  findAPlantViewModel.assignGarden(garden,plant) },
-                                        removeGarden = {plant, garden ->  findAPlantViewModel.removeGarden(plantUi = plant, garden = garden) }
+                                        addGarden = {
+                                            garden -> findAPlantViewModel.addGardenToPlant(
+                                                plantUi = plant,
+                                                gardenDb = currentGarden.value.toDb()
+                                            )
+                                        },
+                                        clearGarden = {
+                                            findAPlantViewModel.removeGardenFromPlant(
+                                                plantUi = plant,
+                                                gardenName = plant.gardenName
+                                            )
+                                        }
                                     )
                                 }
                             }

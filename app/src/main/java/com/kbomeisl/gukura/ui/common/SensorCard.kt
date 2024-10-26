@@ -65,6 +65,7 @@ import androidx.navigation.NavHostController
 import com.google.firebase.Timestamp
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.humidityColor
@@ -87,13 +88,14 @@ fun SensorCard(
     lightLevel: MutableStateFlow<Float>,
     measurementViewModel: MeasurementViewModel,
     navHostController: NavHostController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
 ) {
 
     val temperatureState = temperature.collectAsState()
     val lightLevelState = lightLevel.collectAsState()
     val humidityState = humidity.collectAsState()
     val gardenList = measurementViewModel.gardenList.collectAsState()
+    val currentGarden = measurementViewModel.currentGarden.collectAsState()
     val textMeasurer = rememberTextMeasurer()
     val location by remember { mutableStateOf("") }
     val screenTransitionCue by remember { mutableStateOf(true) }
@@ -290,13 +292,20 @@ fun SensorCard(
                             textAlign = TextAlign.Center,
                             color = Color.Gray
                         )
-                        plantList.value.forEach {
+                        plantList.value.forEach { plant ->
                             PlantCard(
-                                it,
+                                plant,
                                 snackbarHostState = snackbarHostState,
-                                gardenList = gardenList.value,
-                                addGarden = {plant, garden -> measurementViewModel.assignGarden(garden, plant)},
-                                removeGarden = {plant, garden -> measurementViewModel.removeGarden(plant,garden) }
+                                addGarden = {
+                                    garden ->
+                                    measurementViewModel.addGardenToPlant(
+                                        plantUi = plant, gardenDb = currentGarden.value.toDb())
+                                            },
+                                clearGarden = {
+                                    garden ->
+                                    measurementViewModel.removeGardenFromPlant(
+                                        plantUi = plant, gardenName = garden.name)
+                                }
                             )
                         }
                     }

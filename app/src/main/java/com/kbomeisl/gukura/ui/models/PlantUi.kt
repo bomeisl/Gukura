@@ -9,8 +9,12 @@ data class PlantUi(
     val humidity: String = "Loading...",
     val lightLevel: String = "Loading...",
     var imageUrl: String = "",
-    var garden: String = "",
-    var wishListed: Boolean = false
+    var wishListed: Boolean = false,
+    //Garden values
+    var gardenName: String = "",
+    var gardenTemp: String = "0",
+    var gardenHumidity: String = "0",
+    var gardenLightLevel: String = "0"
 )
 
 fun PlantUi.toDb(): PlantDb =
@@ -24,7 +28,11 @@ fun PlantUi.toDb(): PlantDb =
         maxHumidity = humidity.split("-").last().toFloat().toInt(),
         minLightLevel = lightLevel.split("-").first().toFloat().toInt(),
         maxLightLevel = lightLevel.split("-").last().toFloat().toInt(),
-        garden = garden
+        //Garden values
+        gardenName = gardenName,
+        gardenTemp = gardenTemp,
+        gardenHumidity = gardenHumidity,
+        gardenLightLevel = gardenLightLevel
     )
 
 

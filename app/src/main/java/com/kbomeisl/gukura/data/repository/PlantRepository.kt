@@ -1,7 +1,9 @@
 package com.kbomeisl.gukura.data.repository
 
 import android.util.Log
+import com.kbomeisl.gukura.data.database.GardenDao
 import com.kbomeisl.gukura.data.database.PlantDao
+import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
@@ -11,7 +13,8 @@ import com.kbomeisl.gukura.data.network.plantNetworkDataSource
 import com.kbomeisl.gukura.ui.models.PlantUi
 
 class PlantRepository(
-    private val plantDao: PlantDao
+    private val plantDao: PlantDao,
+    private val gardenDao: GardenDao
 ) {
     private val logTag = "Plant Repository"
 
@@ -96,7 +99,32 @@ class PlantRepository(
                 maxLightLevel = plantDb.maxLightLevel,
                 imageUrl = plantDb.imageUrl,
                 wishListed = plantDb.wishListed,
-                garden = ""
+                gardenName = "",
+                gardenTemp = "null",
+                gardenHumidity = "null",
+                gardenLightLevel = "null"
+            )
+        )
+    }
+
+    suspend fun addGarden(plantDb: PlantDb, gardenDb: GardenDb) {
+        plantDao.updatePlant(
+            plantDb = PlantDb(
+                plantId = plantDb.plantId,
+                name = plantDb.name,
+                description = plantDb.description,
+                minTemperature = plantDb.minTemperature,
+                maxTemperature = plantDb.maxTemperature,
+                minHumidity = plantDb.minHumidity,
+                maxHumidity = plantDb.maxHumidity,
+                minLightLevel = plantDb.minLightLevel,
+                maxLightLevel = plantDb.maxLightLevel,
+                imageUrl = plantDb.imageUrl,
+                wishListed = plantDb.wishListed,
+                gardenName = gardenDb.name,
+                gardenTemp = gardenDb.avgTemperature,
+                gardenHumidity = gardenDb.avgHumidity,
+                gardenLightLevel = gardenDb.avgLightLevel
             )
         )
     }

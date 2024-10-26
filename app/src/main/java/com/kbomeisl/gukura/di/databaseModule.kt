@@ -21,17 +21,17 @@ val databaseModule = module {
             .build()
     }
 
-    factory<PlantDao> {
+    single<PlantDao> {
         val gukuraDatabase = get<GukuraDatabase>()
         gukuraDatabase.plantDao()
     }
 
-    factory<MeasurementDao> {
+    single<MeasurementDao> {
         val gukuraDatabase = get<GukuraDatabase>()
         gukuraDatabase.measurementDao()
     }
 
-    factory<GardenDao> {
+    single<GardenDao> {
         val gukuraDatabase = get<GukuraDatabase>()
         gukuraDatabase.gardenDao()
     }
