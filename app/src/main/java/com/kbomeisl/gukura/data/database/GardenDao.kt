@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.data.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import com.kbomeisl.gukura.data.database.models.GardenDb
@@ -15,4 +16,7 @@ interface GardenDao {
 
     @Upsert
     fun upsertGarden(gardenDb: GardenDb)
+
+    @Delete
+    fun deleteGarden(gardenDb: GardenDb)
 }

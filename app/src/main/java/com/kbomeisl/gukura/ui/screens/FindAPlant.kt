@@ -58,7 +58,7 @@ fun FindAPlant(
     val plantList = findAPlantViewModel.plantList.collectAsState()
     val gardenList = findAPlantViewModel.gardenList.collectAsState()
     val currentGarden = findAPlantViewModel.currentGarden.collectAsState()
-    val recommendedPlants = findAPlantViewModel.recommendedPlants.collectAsState()
+    val recommendedPlants = findAPlantViewModel.recommendedPlantList.collectAsState()
     val scrollState = rememberScrollState()
     var floweringDropDownExpanded by remember { mutableStateOf(false) }
     var annualDropDownExpanded by remember { mutableStateOf(false) }
@@ -66,7 +66,6 @@ fun FindAPlant(
     var gardenDropDownExpanded by remember { mutableStateOf(false) }
 
     Surface(Modifier.fillMaxSize()) {
-        Row {
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -80,7 +79,11 @@ fun FindAPlant(
                 }
                 Spacer(Modifier.height(15.dp))
 
-                Surface(onClick = { gardenDropDownExpanded = true }) {
+                Surface(onClick = {
+                    gardenDropDownExpanded = true
+                    findAPlantViewModel.getGardens()
+                }
+                ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "Select a Garden",
@@ -90,7 +93,6 @@ fun FindAPlant(
                         )
                         Icon(Icons.TwoTone.ArrowDropDown, "")
                         AnimatedVisibility( currentGarden.value.name != "" ) {
-                            Row {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text(currentGarden.value.name, color = Color.Gray)
                                     Row(
@@ -134,12 +136,11 @@ fun FindAPlant(
                                         }
                                     }
                                 }
-                            }
                         }
                     }
                     DropdownMenu(
                         content = {
-                            gardens.gardenList.forEach {
+                            gardenList.value.forEach {
                                 Column(modifier = Modifier
                                     .fillMaxWidth()
                                     .align(Alignment.CenterHorizontally)) {
@@ -196,7 +197,6 @@ fun FindAPlant(
                 ) {
                     Surface() {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Row {
                                 Text(
                                     "Recommended Plants",
                                     color = nightBlue,
@@ -204,24 +204,24 @@ fun FindAPlant(
                                     fontWeight = FontWeight.Light,
                                     fontSize = 20.sp
                                 )
-                            }
                             Column(Modifier.verticalScroll(scrollState)) {
                                 recommendedPlants.value.forEach { plant ->
                                     PlantCard(
                                         plant,
                                         snackbarHostState = snackbarHostState,
                                         addGarden = {
-                                            garden -> findAPlantViewModel.addGardenToPlant(
-                                                plantUi = plant,
-                                                gardenDb = currentGarden.value.toDb()
+                                            garden, plantUi -> findAPlantViewModel.addGardenToPlant(
+                                                plantUi = plantUi,
+                                                gardenDb = garden.toDb()
                                             )
                                         },
-                                        clearGarden = {
+                                        clearGarden = { garden, plantUi ->
                                             findAPlantViewModel.removeGardenFromPlant(
-                                                plantUi = plant,
-                                                gardenName = plant.gardenName
+                                                plantUi = plantUi,
+                                                gardenName = garden.name
                                             )
-                                        }
+                                        },
+                                        gardenList = findAPlantViewModel.gardenList
                                     )
                                 }
                             }
@@ -229,6 +229,5 @@ fun FindAPlant(
                     }
                 }
             }
-        }
     }
 }

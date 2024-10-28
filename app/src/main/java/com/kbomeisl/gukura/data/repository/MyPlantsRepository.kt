@@ -9,6 +9,7 @@ import com.kbomeisl.gukura.data.network.plantNetworkDataSource
 class MyPlantsRepository(
     private val plantDao: PlantDao
 ) {
+
     fun getMyPlants() {
         //retrieve a list of user's plants from db
     }

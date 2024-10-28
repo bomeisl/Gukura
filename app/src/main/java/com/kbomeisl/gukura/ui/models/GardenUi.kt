@@ -10,11 +10,11 @@ data class GardenUi(
     val plants: List<PlantUi> = listOf<PlantUi>()
 )
 
-fun GardenUi.toDb() =
+fun GardenUi.toDb(): GardenDb =
     GardenDb(
         gardenId = name.hashCode(),
         name = name,
         avgTemperature = avgTemperature,
         avgHumidity = avgHumidity,
-        avgLightLevel = avgLightLevel,
+        avgLightLevel = avgLightLevel
     )

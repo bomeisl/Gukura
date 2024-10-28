@@ -25,7 +25,7 @@ class HomeViewModel(
     private val gardenRepository: GardenRepository
 ): PlantViewModel(plantRepository, gardenRepository) {
 
-    var recommendedPlantList = listOf<PlantUi>()
+    var recommendedPlants = listOf<PlantUi>()
 
     fun cacheAllPlants() {
         coroutineScope.launch(Dispatchers.IO) {

@@ -7,10 +7,10 @@ import com.kbomeisl.gukura.ui.models.GardenUi
 @Entity
 data class GardenDb(
     @PrimaryKey(autoGenerate = true) val gardenId: Int,
-    val name: String="",
-    var avgTemperature: String="",
-    var avgHumidity: String="",
-    var avgLightLevel: String="",
+    val name: String=" ",
+    var avgTemperature: String="0",
+    var avgHumidity: String="0",
+    var avgLightLevel: String="0",
 )
 
 fun GardenDb.toUi(): GardenUi =

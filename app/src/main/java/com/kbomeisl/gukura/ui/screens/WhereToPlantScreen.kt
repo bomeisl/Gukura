@@ -47,18 +47,19 @@ fun WhereToPlantScreen(
                         PlantCard(
                             plant,
                             snackbarHostState = snackbarHostState,
-                            addGarden = {garden ->
+                            addGarden = {garden, plantUi ->
                                 whereToPlantViewModel.addGardenToPlant(
-                                    plantUi = plant,
-                                    gardenDb = currentGarden.value.toDb()
+                                    plantUi = plantUi,
+                                    gardenDb = garden.toDb()
                                 )
                             },
-                            clearGarden = {garden ->
+                            clearGarden = {garden, plantUi ->
                                 whereToPlantViewModel.removeGardenFromPlant(
-                                    plantUi = plant,
+                                    plantUi = plantUi,
                                     gardenName = garden.name
                                 )
-                            }
+                            },
+                            gardenList = whereToPlantViewModel.gardenList
                         )
                     }
                 }

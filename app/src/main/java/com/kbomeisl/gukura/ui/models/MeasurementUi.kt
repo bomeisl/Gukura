@@ -7,5 +7,5 @@ data class MeasurementUi(
     val humidity: Float,
     val lightLevel: Float,
     val timestamp: String,
-    val location: String
+    val garden: String
 )

@@ -19,7 +19,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,17 +41,21 @@ import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.testData.gardens
+import com.kbomeisl.gukura.ui.theme.add
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Composable
 fun PlantCard(
     plantUi: PlantUi,
     snackbarHostState: SnackbarHostState,
-    addGarden:  (garden: GardenUi) -> Unit,
-    clearGarden: (garden: GardenUi) -> Unit
+    addGarden:  (garden: GardenUi, plantUi: PlantUi) -> Unit,
+    clearGarden: (garden: GardenUi, plantUi: PlantUi) -> Unit,
+    gardenList: MutableStateFlow<List<GardenUi>>,
+    showGardenStats: Boolean = false
 ) {
     val colorToggleHeart = remember { mutableStateOf(false) }
     val heartIconColor = if (colorToggleHeart.value) {
@@ -64,9 +71,9 @@ fun PlantCard(
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val gardenName = remember {  mutableStateOf("") }
     val cardExpanded = remember {  mutableStateOf(false) }
     val currentGardenUi = remember { mutableStateOf(GardenUi()) }
+    val gardenListUi = gardenList.collectAsState()
 
     Surface(
         modifier = Modifier
@@ -144,8 +151,12 @@ fun PlantCard(
                     }
                         AnimatedVisibility(
                         plantUi.gardenName != ""
+                                && showGardenStats
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+
+                        ) {
                             Spacer(Modifier.height(20.dp))
                             Text(
                                 plantUi.gardenName,
@@ -153,12 +164,12 @@ fun PlantCard(
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(5.dp)
                             )
-                                Row(
+                                Column(
                                     Modifier
                                         .fillMaxWidth()
                                         .padding(5.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Row(
                                         horizontalArrangement = Arrangement.Center,
@@ -236,7 +247,7 @@ fun PlantCard(
                                             )
                                         },
                                         onClick = {
-
+                                            colorToggleHeart.value = !colorToggleHeart.value
                                             if (!colorToggleHeart.value) {
                                                 coroutineScope.launch {
                                                     snackbarHostState.showSnackbar(
@@ -254,7 +265,7 @@ fun PlantCard(
                                                     )
                                                 }
                                             }
-                                           addGarden(currentGardenUi.value)
+                                           addGarden(currentGardenUi.value, plantUi)
                                         }
                                     )
 
@@ -266,7 +277,7 @@ fun PlantCard(
                                                         painter = painterResource(R.drawable.trowel),
                                                         "",
                                                         modifier = Modifier.size(40.dp),
-                                                        tint = plantedIcon
+                                                        tint = add
                                                     )
                                                 }
                                             },
@@ -282,11 +293,11 @@ fun PlantCard(
                                                     Icons.Outlined.Delete,
                                                     "",
                                                     modifier = Modifier.size(30.dp),
-                                                    tint = Color.Red
+                                                    tint = Color.Black
                                                 )
                                             },
                                             onClick = {
-                                                clearGarden(currentGardenUi.value)
+                                                clearGarden(currentGardenUi.value, plantUi)
                                             },
                                         )
                                     }
@@ -302,12 +313,11 @@ fun PlantCard(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            gardens.gardenList.forEach {
+                            gardenListUi.value.forEach {
                                 Surface(
                                     modifier = Modifier
                                         .clickable {
-                                            currentGardenUi.value = it
-                                            addGarden(it)
+                                            addGarden(it, plantUi)
                                             coroutineScope.launch {
                                                 snackbarHostState.showSnackbar(
                                                     message = "${plantUi.name} added to ${it.name}",

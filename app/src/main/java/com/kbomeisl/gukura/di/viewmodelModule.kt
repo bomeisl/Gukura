@@ -9,6 +9,7 @@ import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MyPlantsViewModel
+import com.kbomeisl.gukura.ui.viewmodels.PlantViewModel
 import com.kbomeisl.gukura.ui.viewmodels.WhereToPlantViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -40,6 +41,12 @@ val viewmodelModule = module {
         WhereToPlantViewModel(
             get<GardenRepository>(),
             get<PlantRepository>()
+        )
+    }
+    viewModel<PlantViewModel> {
+        PlantViewModel(
+            get<PlantRepository>(),
+            get<GardenRepository>()
         )
     }
 }

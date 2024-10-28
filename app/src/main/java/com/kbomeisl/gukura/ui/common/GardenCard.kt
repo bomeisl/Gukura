@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.theme.add
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
@@ -32,17 +36,18 @@ import com.kbomeisl.gukura.ui.theme.sunOrange
 @Composable
 fun GardenCard(
     gardenUi: GardenUi,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    removeGarden: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     Surface(
         modifier = Modifier
             .padding(10.dp)
             .clickable { onClick() },
-        shadowElevation = 1.dp
+        shadowElevation = 3.dp
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(gardenUi.name, textAlign = TextAlign.Center, fontFamily = FontFamily.Monospace)
+            Text(gardenUi.name, textAlign = TextAlign.Center, fontFamily = FontFamily.Default)
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -76,6 +81,18 @@ fun GardenCard(
                     )
                     Text(gardenUi.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
                 }
+            }
+            Row {
+                IconButton(
+                    content = { Icon(Icons.Outlined.Clear, "", tint = Color.Red) },
+                    onClick = { removeGarden() }
+                )
+                IconButton(
+                    content = { Icon(painter = painterResource(R.drawable.trowel), "", tint = add) },
+                    onClick = {
+
+                    }
+                )
             }
         }
     }

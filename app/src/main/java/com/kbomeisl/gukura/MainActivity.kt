@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.sensor.sensorDataSource
@@ -18,13 +19,14 @@ import com.kbomeisl.gukura.data.sensor.sensorDataSource.lightSensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.temperatureSensor
 import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
+import com.kbomeisl.gukura.ui.viewmodels.PlantViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 
 class MainActivity() : ComponentActivity(), SensorEventListener {
     lateinit var sensorManager: SensorManager
-    private val plantRepository: PlantRepository by inject<PlantRepository>()
+    private val plantRepository: PlantRepository = get<PlantRepository>()
     private val temperature = MutableStateFlow<Float>(50F)
     private val humidity = MutableStateFlow<Float>(50F)
     private val lightLevel = MutableStateFlow<Float>(1000F)
@@ -43,10 +45,7 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
         }
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorDataSource.initializeSensors(sensorManager)
-        this.lifecycleScope.launch {
-            plantRepository.cacheAllPlants()
-        }
-
+        this.lifecycleScope.launch { plantRepository.cacheAllPlants() }
     }
 
     override fun onResume() {

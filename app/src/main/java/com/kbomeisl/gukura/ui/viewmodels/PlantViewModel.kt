@@ -9,7 +9,7 @@ import com.kbomeisl.gukura.data.repository.GardenRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
-import com.kbomeisl.gukura.ui.testData.gardens
+import com.kbomeisl.gukura.ui.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -20,10 +20,17 @@ open class PlantViewModel(
 ): ViewModel() {
     val coroutineScope = viewModelScope
     val plantList = MutableStateFlow(listOf<PlantUi>())
-    val gardenList = MutableStateFlow(gardens.gardenList)
-    val recommendedPlants = MutableStateFlow(listOf<PlantUi>())
+    val gardenPlantList = MutableStateFlow(listOf<PlantUi>())
+    val gardenList = MutableStateFlow(listOf<GardenUi>())
+    val recommendedPlantList = MutableStateFlow(listOf<PlantUi>())
     val currentGarden = MutableStateFlow(GardenUi())
     val wishListPlants = MutableStateFlow(listOf<PlantUi>())
+
+    fun getAllPlantsForScreen() {
+        coroutineScope.launch(Dispatchers.IO) {
+            plantList.value = plantRepository.getAllPlantsDb()
+        }
+    }
 
     fun getPlantsDb() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -40,8 +47,16 @@ open class PlantViewModel(
     }
 
     fun getPlantsInRange(temperature: Float,humidity: Float,lightLevel: Float) {
-        coroutineScope.launch {
-            recommendedPlants.value = plantRepository.getPlantsInRange(temperature, humidity, lightLevel)
+        coroutineScope.launch(Dispatchers.IO) {
+            val plants = plantRepository.getPlantsInRange(temperature, humidity, lightLevel)
+            plants.forEach {
+                it.gardenTemp = temperature.toString()
+                it.gardenHumidity = humidity.toString()
+                it.gardenLightLevel = lightLevel.toString()
+            }
+            recommendedPlantList.value = plants
+            plantList.value = plantRepository.getAllPlantsDb()
+            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
         }
     }
 
@@ -66,7 +81,7 @@ open class PlantViewModel(
 
     fun getPlantsInGarden(gardenName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            plantList.value = plantRepository.getAllPlantsDb()
+            gardenPlantList.value = plantRepository.getAllPlantsDb()
                 .filter { it.gardenName ==  gardenName}
         }
     }
@@ -100,8 +115,7 @@ open class PlantViewModel(
 
     fun addGardenToPlant(plantUi: PlantUi, gardenDb: GardenDb) {
         coroutineScope.launch(Dispatchers.IO) {
-            val plantDb = plantRepository.getPlantDb(plantUi.name)
-            plantRepository.addGarden(plantDb = plantDb, gardenDb = gardenDb)
+            plantRepository.addGarden(plantDb = plantUi.toDb(), gardenDb = gardenDb)
         }
     }
 
@@ -114,7 +128,29 @@ open class PlantViewModel(
 
     fun updateCurrentGarden(newGarden: GardenUi) {
         currentGarden.value = newGarden
+        coroutineScope.launch(Dispatchers.IO) {
+            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+        }
     }
 
+    fun addGarden(gardenDb: GardenDb) {
+        coroutineScope.launch(Dispatchers.IO) {
+            gardenRepository.upsertGarden(gardenDb = gardenDb)
+            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+        }
 
+    }
+
+    fun getGardens() {
+        coroutineScope.launch(Dispatchers.IO) {
+            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+        }
+    }
+
+    fun deleteGarden(gardenUi: GardenUi) {
+        coroutineScope.launch(Dispatchers.IO) {
+            gardenRepository.deleteGarden(gardenDb = gardenUi.toDb())
+            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+        }
+    }
 }

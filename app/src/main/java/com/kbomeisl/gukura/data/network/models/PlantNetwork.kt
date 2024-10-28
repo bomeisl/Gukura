@@ -23,6 +23,7 @@ data class PlantNetwork (
     @SerializedName("image"        ) var image        : String,
 
 )
+
 fun PlantNetwork.toUi(): PlantUi =
     PlantUi(
         name = name,
@@ -37,15 +38,18 @@ fun PlantNetwork.toDb(): PlantDb =
     PlantDb(
         plantId = name.hashCode(),
         name = name,
-        description = summary,
-        maxTemperature = tempMax,
         minTemperature = tempMin,
-        maxHumidity = humidityMin,
+        maxTemperature = tempMax,
         minHumidity = humidityMin,
+        maxHumidity = humidityMax,
+        minLightLevel = lightMax.toInt(),
         maxLightLevel = lightMax.toInt(),
-        minLightLevel = lightMin.toInt(),
+        imageUrl = image,
         wishListed = false,
-        imageUrl = image
+        gardenName = "",
+        gardenTemp = "0",
+        gardenHumidity = "0",
+        gardenLightLevel = "0"
     )
 
 

@@ -8,8 +8,8 @@ import kotlin.random.Random
 
 @Entity
 data class PlantDb(
-    @PrimaryKey(autoGenerate = true) val plantId: Int,
     val name: String = "Loading...",
+    @PrimaryKey(autoGenerate = true) val plantId: Int = name.hashCode(),
     val description: String = "Loading...",
     val maxTemperature: Int = 0,
     val minTemperature: Int = 0,
@@ -34,6 +34,8 @@ fun PlantDb.toUi(): PlantUi {
         humidity = "${minHumidity}-${maxHumidity}",
         lightLevel = "${minLightLevel}-${maxLightLevel}",
         imageUrl = imageUrl,
+        wishListed = false,
+        //Garden values
         gardenName = gardenName,
         gardenTemp = gardenTemp,
         gardenHumidity = gardenHumidity,

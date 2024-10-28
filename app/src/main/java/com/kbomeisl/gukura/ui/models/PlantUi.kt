@@ -28,6 +28,8 @@ fun PlantUi.toDb(): PlantDb =
         maxHumidity = humidity.split("-").last().toFloat().toInt(),
         minLightLevel = lightLevel.split("-").first().toFloat().toInt(),
         maxLightLevel = lightLevel.split("-").last().toFloat().toInt(),
+        imageUrl = imageUrl,
+        wishListed = false,
         //Garden values
         gardenName = gardenName,
         gardenTemp = gardenTemp,

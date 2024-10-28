@@ -8,18 +8,20 @@ import com.kbomeisl.gukura.ui.testData.gardens
 class GardenRepository(
     private val gardenDao: GardenDao,
 ) {
-    fun getAllGardens(): List<GardenDb> = gardenDao.getAllGardens()
+    suspend fun getAllGardens(): List<GardenDb> = gardenDao.getAllGardens()
 
     suspend fun getGardenByName(gardenName: String): GardenDb = gardenDao.getGardenByName(gardenName)
 
-    suspend fun populateDb() {
-        gardens.gardenList.forEach {
-            gardenDao.upsertGarden(it.toDb())
-        }
-    }
-
     suspend fun addPlantsToGarden() {
 
+    }
+
+    suspend fun upsertGarden(gardenDb: GardenDb) {
+        gardenDao.upsertGarden(gardenDb = gardenDb)
+    }
+
+    suspend fun deleteGarden(gardenDb: GardenDb) {
+        gardenDao.deleteGarden(gardenDb = gardenDb)
     }
 
 }

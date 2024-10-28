@@ -26,6 +26,7 @@ val nightBlue = Color(0xFF1A237E)
 
 //Plant Card
 val add = Color(0xFF1B5E20)
+val bgCard = Color(0x56050505)
 
 
 

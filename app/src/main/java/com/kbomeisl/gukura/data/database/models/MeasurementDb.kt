@@ -12,7 +12,7 @@ data class MeasurementDb(
     val temperature: Float,
     val humidity: Float,
     val lightLevel: Float,
-    val location: String,
+    val garden: String,
     val timestamp: String
 )
 
@@ -21,6 +21,6 @@ fun MeasurementDb.toUi(): MeasurementUi =
         temperature = temperature,
         humidity = humidity,
         lightLevel = lightLevel,
-        location = location,
+        garden = garden,
         timestamp = timestamp
     )

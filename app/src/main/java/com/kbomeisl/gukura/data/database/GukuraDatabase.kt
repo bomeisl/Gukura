@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
         MeasurementDb::class,
         GardenDb::class
                ],
-    version = 14,
+    version = 16,
     exportSchema = false
 )
 abstract class GukuraDatabase: RoomDatabase() {

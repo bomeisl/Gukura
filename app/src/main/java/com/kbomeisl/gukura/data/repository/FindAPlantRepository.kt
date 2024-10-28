@@ -52,7 +52,7 @@ class FindAPlantRepository(
             temperature = temperature,
             humidity = humidity,
             lightLevel = lightLevel,
-            location = location,
+            garden = location,
             timestamp = Timestamp.now().toString()
         )
         measurementDao.upsertMeasurement(measurement)

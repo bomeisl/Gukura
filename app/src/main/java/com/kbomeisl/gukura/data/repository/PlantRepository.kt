@@ -17,6 +17,7 @@ class PlantRepository(
     private val gardenDao: GardenDao
 ) {
     private val logTag = "Plant Repository"
+    var failedDbInsertPlantList = mutableListOf<PlantDb>()
 
     //fetch all plants from the online database
     suspend fun getAllPlantsNetwork(): List<PlantNetwork> {
@@ -24,12 +25,13 @@ class PlantRepository(
     }
 
     suspend fun cacheAllPlants() {
-        val plants = plantNetworkDataSource.getPlantList()
+        val plants = getAllPlantsNetwork()
         plants.forEach {
             try {
                 plantDao.insertPlant(it.toDb())
             } catch (e: Exception) {
                 Log.e(logTag, "Insert Dao exception")
+                failedDbInsertPlantList.add(it.toDb())
             }
 
         }

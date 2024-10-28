@@ -18,7 +18,7 @@ class MeasurementRepository(private val measurementDao: MeasurementDao) {
             temperature = temperature,
             humidity = humidity,
             lightLevel = lightLevel,
-            location = location,
+            garden = location,
             timestamp = Timestamp.now().toString()
         )
         measurementDao.upsertMeasurement(measurement)

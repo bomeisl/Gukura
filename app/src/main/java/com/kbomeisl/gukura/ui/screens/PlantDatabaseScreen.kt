@@ -1,11 +1,14 @@
 package com.kbomeisl.gukura.ui.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarHostState
@@ -28,6 +31,7 @@ import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlantDatabaseScreen(
     findAPlantViewModel: FindAPlantViewModel = koinViewModel(),
@@ -43,38 +47,39 @@ fun PlantDatabaseScreen(
         findAPlantViewModel.getPlantsByName(plantName.value)
     }
 
-    Surface() {
-        Column(
-            Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.height(120.dp))
-            Text("Look Up a Plant", fontFamily = FontFamily.Monospace)
-            TextField(
-                value = plantName.value,
-                onValueChange = { plantName.value = it}
-            )
-            Column(Modifier.verticalScroll(scrollState)) {
-                plantList.value.forEach { plant ->
+    LaunchedEffect(Unit) {
+        findAPlantViewModel.populateGardenList()
+    }
+
+            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                item { Spacer(Modifier.height(120.dp)) }
+                stickyHeader {
+                    Text("Look Up a Plant", fontFamily = FontFamily.Monospace)
+                    TextField(
+                        value = plantName.value,
+                        onValueChange = { plantName.value = it}
+                    )
+                }
+                    items(plantList.value) {
                     PlantCard(
-                        plant,
+                        it,
                         snackbarHostState = snackbarHostState,
-                        addGarden = { garden ->
+                        addGarden = { garden, plantUI ->
                             findAPlantViewModel.addGardenToPlant(
-                                plantUi = plant,
+                                plantUi = plantUI,
                                 gardenDb = garden.toDb()
                             )
                         },
-                        clearGarden = {
+                        clearGarden = { garden, plantUi ->
                             findAPlantViewModel.removeGardenFromPlant(
-                                plantUi = plant,
-                                gardenName = plant.gardenName
+                                plantUi = plantUi,
+                                gardenName = garden.name
                             )
-                        }
+                        },
+                        gardenList = findAPlantViewModel.gardenList
                     )
                 }
             }
         }
-    }
 
-}
+

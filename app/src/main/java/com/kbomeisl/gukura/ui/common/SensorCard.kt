@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowDropDown
 import androidx.compose.material3.Button
@@ -90,7 +93,6 @@ fun SensorCard(
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
 ) {
-
     val temperatureState = temperature.collectAsState()
     val lightLevelState = lightLevel.collectAsState()
     val humidityState = humidity.collectAsState()
@@ -98,16 +100,19 @@ fun SensorCard(
     val currentGarden = measurementViewModel.currentGarden.collectAsState()
     val textMeasurer = rememberTextMeasurer()
     val location by remember { mutableStateOf("") }
-    val screenTransitionCue by remember { mutableStateOf(true) }
-    val screenTransitionToPlantRecommendations by remember { mutableStateOf(false) }
+    val screenTransitionCue = remember { mutableStateOf(true) }
+    val screenTransitionToPlantRecommendations = remember { mutableStateOf(false) }
     val plantList = measurementViewModel.plantList.collectAsState()
+    val recommendedPlantList = measurementViewModel.recommendedPlantList.collectAsState()
     val gardenDropDownExpanded = remember { mutableStateOf(false) }
     val menuText = remember { mutableStateOf("Select a Garden") }
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
+    val scrollStateRec = rememberScrollState()
     KoinContext {
 
         AnimatedVisibility(
-            screenTransitionCue,
+            screenTransitionCue.value,
             exit = fadeOut()
         ) {
             Column(Modifier.fillMaxHeight().padding(top = 50.dp)) {
@@ -186,7 +191,6 @@ fun SensorCard(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Column(
-
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Surface(
@@ -225,17 +229,30 @@ fun SensorCard(
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(
                                             message = "Environmental measurements saved for " +
-                                                    "${measurementViewModel.currentGarden.value.name}"
+                                                    measurementViewModel.currentGarden.value.name
                                         )
                                     }
+                                    screenTransitionToPlantRecommendations.value = true
+                                    screenTransitionCue.value = false
+                                    measurementViewModel.saveMeasurementToDb(
+                                        gardenName = currentGarden.value.name,
+                                        temperature = temperatureState.value,
+                                        humidity = humidityState.value,
+                                        lightLevel = lightLevelState.value
+                                    )
                                 },
                                 shape = RoundedCornerShape(50),
                             )
                         }
                             DropdownMenu(
                                 content = {
-                                    gardens.gardenList.forEach {
-                                        Column(modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)) {
+                                    gardenList.value.forEach {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .align(Alignment.CenterHorizontally)
+                                                .horizontalScroll(scrollState)
+                                        ) {
                                             DropdownMenuItem(
                                                 text = {
                                                     Box(
@@ -253,6 +270,11 @@ fun SensorCard(
                                                 onClick = {
                                                     measurementViewModel.currentGarden.value =
                                                         it
+                                                    measurementViewModel.getPlantsInRange(
+                                                        temperature = temperatureState.value,
+                                                        humidity = humidityState.value,
+                                                        lightLevel = lightLevelState.value
+                                                    )
                                                     menuText.value = it.name
                                                     gardenDropDownExpanded.value = false
                                                 },
@@ -275,37 +297,41 @@ fun SensorCard(
             }
         }
         AnimatedVisibility(
-            screenTransitionToPlantRecommendations,
+            screenTransitionToPlantRecommendations.value,
             enter = fadeIn()
         ) {
             Surface(Modifier.fillMaxSize()) {
                 Row {
-                    Column(Modifier.padding(5.dp)) {
+                    Column(
+                        Modifier.padding(5.dp)
+                            .verticalScroll(scrollStateRec)
+                            ) {
                         Spacer(Modifier.height(110.dp))
                         Text(
-                            "Your ${location} has an average temperature of " +
+                            "Your ${currentGarden.value.name} has an average temperature of " +
                                     "${temperatureState.value} °C, relative humidity of ${humidityState.value} %," +
-                                    " and ambient sunlight level of ${lightLevelState.value} lux. Here are some " +
+                                    " and ambient sunlight levels of ${lightLevelState.value} lux. Here are some " +
                                     "plants that will thrive under these conditions.",
                             fontFamily = FontFamily.Monospace,
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center,
                             color = Color.Gray
                         )
-                        plantList.value.forEach { plant ->
+                        recommendedPlantList.value.forEach { plantItem ->
                             PlantCard(
-                                plant,
+                                plantItem,
                                 snackbarHostState = snackbarHostState,
                                 addGarden = {
-                                    garden ->
+                                        garden, plant  ->
                                     measurementViewModel.addGardenToPlant(
-                                        plantUi = plant, gardenDb = currentGarden.value.toDb())
+                                        plantUi = plant, gardenDb = garden.toDb())
                                             },
                                 clearGarden = {
-                                    garden ->
+                                    garden, plant  ->
                                     measurementViewModel.removeGardenFromPlant(
                                         plantUi = plant, gardenName = garden.name)
-                                }
+                                },
+                                gardenList = measurementViewModel.gardenList
                             )
                         }
                     }
