@@ -1,7 +1,7 @@
 package com.kbomeisl.gukura.ui.common
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
@@ -12,14 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -31,24 +30,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.Fill
@@ -65,24 +58,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.google.firebase.Timestamp
 import com.kbomeisl.gukura.R
-import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.models.toDb
-import com.kbomeisl.gukura.ui.navigation.Routes
-import com.kbomeisl.gukura.ui.testData.gardens
 import com.kbomeisl.gukura.ui.theme.humidityColor
-import com.kbomeisl.gukura.ui.theme.nightBlue
-import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
-import org.koin.core.context.KoinContext
-import java.sql.Time
-import java.util.Date
 
 @Composable
 fun SensorCard(
@@ -115,135 +98,137 @@ fun SensorCard(
             screenTransitionCue.value,
             exit = fadeOut()
         ) {
-            Column(Modifier.fillMaxHeight().padding(top = 50.dp)) {
-                Canvas(
-                    modifier = Modifier.fillMaxWidth(1f).fillMaxHeight(.6f),
-                    onDraw = {
-                        drawIntoCanvas { canvas ->
+            Surface(Modifier.defaultMinSize(250.dp)) {
+                Column {
+                    Box{
+                    Canvas(
+                        modifier = Modifier.size(1000.dp),
+                        onDraw = {
+                            drawIntoCanvas { canvas ->
 
-                            //temperature gauge
-                            drawArc(
-                                brush = Brush.linearGradient(
-                                    0.0f to Color.Blue,
-                                    0.4f to Color.Red,
-                                    tileMode = TileMode.Clamp,
-                                ),
-                                topLeft = Offset(380f, 200f),
-                                startAngle = -180f, // 0 represents 3'0 clock
-                                sweepAngle = 2 * temperatureState.value, // size of the arc
-                                useCenter = false,
-                                style = Stroke(10f, cap = StrokeCap.Round),
-                                size = Size(600f, 600f)
-                            )
-                            drawText(
-                                textMeasurer = textMeasurer,
-                                text = "Temperature: " + temperatureState.value.toString() + " °C",
-                                style = TextStyle(fontFamily = FontFamily.Monospace),
-                                topLeft = Offset(400f, 460f)
-                            )
+                                //temperature gauge
+                                drawArc(
+                                    brush = Brush.linearGradient(
+                                        0.0f to Color.Blue,
+                                        0.4f to Color.Red,
+                                        tileMode = TileMode.Clamp,
+                                    ),
+                                    topLeft = Offset(280f, 300f),
+                                    startAngle = -180f, // 0 represents 3'0 clock
+                                    sweepAngle = 2 * temperatureState.value, // size of the arc
+                                    useCenter = false,
+                                    style = Stroke(10f, cap = StrokeCap.Round),
+                                    size = Size(500f, 500f)
+                                )
+                                drawText(
+                                    textMeasurer = textMeasurer,
+                                    text = "Temperature: " + temperatureState.value.toString() + " °C",
+                                    style = TextStyle(fontFamily = FontFamily.Monospace),
+                                    topLeft = Offset(300f, 560f)
+                                )
 
-                            //sunlight gauge
-                            drawCircle(
-                                color = sunOrange,
-                                radius = 300f,
-                                alpha = lightLevelState.value / 40000,
-                                center = Offset(690f, 1170f)
-                            )
-                            drawText(
-                                textMeasurer = textMeasurer,
-                                text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
-                                style = TextStyle(fontFamily = FontFamily.Monospace),
-                                topLeft = Offset(320f, 1130f)
-                            )
+                                //sunlight gauge
+                                drawCircle(
+                                    color = sunOrange,
+                                    radius = 200f,
+                                    alpha = lightLevelState.value / 40000,
+                                    center = Offset(590f, 970f)
+                                )
+                                drawText(
+                                    textMeasurer = textMeasurer,
+                                    text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
+                                    style = TextStyle(fontFamily = FontFamily.Monospace),
+                                    topLeft = Offset(220f, 930f)
+                                )
 
-                            //humidity gauge
-                            drawRect(
-                                brush = Brush.linearGradient(
-                                    0.0f to Color.Transparent,
-                                    0.4f to humidityColor,
-                                    tileMode = TileMode.Clamp,
-                                ),
-                                topLeft = Offset(460f, 1650f),
-                                size = Size(width = humidityState.value * 5, height = 20f),
-                                style = Fill
-                            )
-                            drawText(
-                                textMeasurer = textMeasurer,
-                                text = "Relative Humidity: " + humidity.value.toString() + " %",
-                                style = TextStyle(fontFamily = FontFamily.Monospace),
-                                topLeft = Offset(370f, 1550f)
-                            )
+                                //humidity gauge
+                                drawRect(
+                                    brush = Brush.linearGradient(
+                                        0.0f to Color.Transparent,
+                                        0.4f to humidityColor,
+                                        tileMode = TileMode.Clamp,
+                                    ),
+                                    topLeft = Offset(360f, 1250f),
+                                    size = Size(width = humidityState.value * 5, height = 20f),
+                                    style = Fill
+                                )
+                                drawText(
+                                    textMeasurer = textMeasurer,
+                                    text = "Relative Humidity: " + humidity.value.toString() + " %",
+                                    style = TextStyle(fontFamily = FontFamily.Monospace),
+                                    topLeft = Offset(270f, 1350f)
+                                )
 
-                            canvas.save()
-                            canvas.restore()
-                        }
-                    }
-                )
-                Box {
-                    Image(
-                        painter = painterResource(R.drawable.plant_growing),
-                        "",
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.Crop
-                    )
-                    Row(
-                        Modifier.fillMaxWidth().padding(horizontal = 80.dp, vertical = 40.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Surface(
-                                onClick = { gardenDropDownExpanded.value = true },
-                                shape = RoundedCornerShape(50),
-                                shadowElevation = 7.dp,
-                                modifier = Modifier.padding(20.dp)
-                            ) {
-                                Row(Modifier.fillMaxWidth()) {
-                                    Column(
-                                        Modifier.fillMaxWidth(),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Text(
-                                            text = menuText.value,
-                                            color = Color.Black,
-                                            fontFamily = FontFamily.Monospace,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.padding(5.dp).fillMaxWidth()
-                                        )
-
-                                        Icon(Icons.TwoTone.ArrowDropDown, "")
-                                    }
-
-                                }
+                                canvas.save()
+                                canvas.restore()
                             }
-                            Button(
-                                content = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.sensor),
-                                        "",
-                                        modifier = Modifier.size(30.dp)
-                                    )
-                                },
-                                onClick = {
-                                    coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Environmental measurements saved for " +
-                                                    measurementViewModel.currentGarden.value.name
-                                        )
-                                    }
-                                    screenTransitionToPlantRecommendations.value = true
-                                    screenTransitionCue.value = false
-                                    measurementViewModel.saveMeasurementToDb(
-                                        gardenName = currentGarden.value.name,
-                                        temperature = temperatureState.value,
-                                        humidity = humidityState.value,
-                                        lightLevel = lightLevelState.value
-                                    )
-                                },
-                                shape = RoundedCornerShape(50),
-                            )
                         }
+                    )
+                    Box(Modifier.align(Alignment.BottomCenter)) {
+                        Image(
+                            painter = painterResource(R.drawable.plant_growing),
+                            "",
+                            modifier = Modifier,
+                            contentScale = ContentScale.Crop
+                        )
+                        Row(
+                            Modifier.fillMaxWidth().padding(horizontal = 80.dp, vertical = 40.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Surface(
+                                    onClick = { gardenDropDownExpanded.value = true },
+                                    shape = RoundedCornerShape(50),
+                                    shadowElevation = 7.dp,
+                                    modifier = Modifier.padding(20.dp)
+                                ) {
+                                    Row(Modifier.fillMaxWidth()) {
+                                        Column(
+                                            Modifier.fillMaxWidth(),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Text(
+                                                text = menuText.value,
+                                                color = Color.Black,
+                                                fontFamily = FontFamily.Monospace,
+                                                textAlign = TextAlign.Center,
+                                                modifier = Modifier.padding(5.dp).fillMaxWidth()
+                                            )
+
+                                            Icon(Icons.TwoTone.ArrowDropDown, "")
+                                        }
+
+                                    }
+                                }
+                                Button(
+                                    content = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.sensor),
+                                            "",
+                                            modifier = Modifier.size(30.dp)
+                                        )
+                                    },
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                message = "Environmental measurements saved for " +
+                                                        measurementViewModel.currentGarden.value.name
+                                            )
+                                        }
+                                        screenTransitionToPlantRecommendations.value = true
+                                        screenTransitionCue.value = false
+                                        measurementViewModel.saveMeasurementToDb(
+                                            gardenName = currentGarden.value.name,
+                                            temperature = temperatureState.value,
+                                            humidity = humidityState.value,
+                                            lightLevel = lightLevelState.value
+                                        )
+                                    },
+                                    shape = RoundedCornerShape(50),
+                                )
+                            }
                             DropdownMenu(
                                 content = {
                                     gardenList.value.forEach {
@@ -293,11 +278,12 @@ fun SensorCard(
                             )
                         }
                     }
+                        }
                 }
             }
         }
         AnimatedVisibility(
-            screenTransitionToPlantRecommendations.value,
+            visible = screenTransitionToPlantRecommendations.value,
             enter = fadeIn()
         ) {
             Surface(Modifier.fillMaxSize()) {
@@ -305,8 +291,8 @@ fun SensorCard(
                     Column(
                         Modifier.padding(5.dp)
                             .verticalScroll(scrollStateRec)
-                            ) {
-                        Spacer(Modifier.height(110.dp))
+                    ) {
+                        Spacer(Modifier.height(120.dp))
                         Text(
                             "Your ${currentGarden.value.name} has an average temperature of " +
                                     "${temperatureState.value} °C, relative humidity of ${humidityState.value} %," +
@@ -321,15 +307,15 @@ fun SensorCard(
                             PlantCard(
                                 plantItem,
                                 snackbarHostState = snackbarHostState,
-                                addGarden = {
-                                        garden, plant  ->
+                                addGarden = { garden, plant ->
                                     measurementViewModel.addGardenToPlant(
-                                        plantUi = plant, gardenDb = garden.toDb())
-                                            },
-                                clearGarden = {
-                                    garden, plant  ->
+                                        plantUi = plant, gardenDb = garden.toDb()
+                                    )
+                                },
+                                clearGarden = { garden, plant ->
                                     measurementViewModel.removeGardenFromPlant(
-                                        plantUi = plant, gardenName = garden.name)
+                                        plantUi = plant, gardenName = garden.name
+                                    )
                                 },
                                 gardenList = measurementViewModel.gardenList
                             )
@@ -338,6 +324,7 @@ fun SensorCard(
                 }
             }
         }
+    }
     }
 
 

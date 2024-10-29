@@ -26,7 +26,7 @@ import org.koin.android.ext.android.get
 
 class MainActivity() : ComponentActivity(), SensorEventListener {
     lateinit var sensorManager: SensorManager
-    private val plantRepository: PlantRepository = get<PlantRepository>()
+    private val plantViewModel: PlantViewModel = get<PlantViewModel>()
     private val temperature = MutableStateFlow<Float>(50F)
     private val humidity = MutableStateFlow<Float>(50F)
     private val lightLevel = MutableStateFlow<Float>(1000F)
@@ -45,7 +45,8 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
         }
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorDataSource.initializeSensors(sensorManager)
-        this.lifecycleScope.launch { plantRepository.cacheAllPlants() }
+        this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
+        lifecycle.addObserver(plantViewModel)
     }
 
     override fun onResume() {
@@ -74,6 +75,9 @@ class MainActivity() : ComponentActivity(), SensorEventListener {
     }
 
     fun registerSensorListener() {
+        temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, humiditySensor, SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)

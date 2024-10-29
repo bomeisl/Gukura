@@ -77,8 +77,8 @@ class PlantRepository(
         lightLevel: Float
     ): List<PlantUi> {
         return plantNetworkDataSource.getPlantList()
-            .filter { temperature > it.tempMin-10 && temperature < it.tempMax+10 }
-            .filter { humidity > it.humidityMin-10 && humidity < it.humidityMax+10 }
+            .filter { temperature > it.tempMin-20 && temperature < it.tempMax+10 }
+            .filter { humidity > it.humidityMin-20 && humidity < it.humidityMax+10 }
             .filter { lightLevel > it.lightMin-1000 && lightLevel < it.lightMax+1000 }
             .map { it.toUi() }
     }

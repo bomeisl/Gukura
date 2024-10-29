@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.database.models.GardenDb
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 open class PlantViewModel(
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository
-): ViewModel() {
+): ViewModel(), DefaultLifecycleObserver {
     val coroutineScope = viewModelScope
     val plantList = MutableStateFlow(listOf<PlantUi>())
     val gardenPlantList = MutableStateFlow(listOf<PlantUi>())
@@ -25,6 +26,12 @@ open class PlantViewModel(
     val recommendedPlantList = MutableStateFlow(listOf<PlantUi>())
     val currentGarden = MutableStateFlow(GardenUi())
     val wishListPlants = MutableStateFlow(listOf<PlantUi>())
+
+    fun initialPlantCaching() {
+        coroutineScope.launch(Dispatchers.IO) {
+            plantRepository.cacheAllPlants()
+        }
+    }
 
     fun getAllPlantsForScreen() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -89,7 +96,7 @@ open class PlantViewModel(
     fun getMyPlants() {
         coroutineScope.launch(Dispatchers.IO) {
             wishListPlants.value = plantRepository.getAllPlantsDb()
-                .filter { it.wishListed == true }
+                .filter { it.wishListed }
         }
     }
 
@@ -150,6 +157,8 @@ open class PlantViewModel(
     fun deleteGarden(gardenUi: GardenUi) {
         coroutineScope.launch(Dispatchers.IO) {
             gardenRepository.deleteGarden(gardenDb = gardenUi.toDb())
+            val plantsInGarden = plantList.value.filter { it.gardenName == gardenUi.name }
+            plantsInGarden.forEach { removeGardenFromPlant(it, gardenName = gardenUi.name) }
             gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
         }
     }

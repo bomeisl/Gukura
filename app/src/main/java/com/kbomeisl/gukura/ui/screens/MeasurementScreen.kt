@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.data.repository.PlantRepository
@@ -41,9 +42,9 @@ fun MeasurementScreen(
     measurementViewModel: MeasurementViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState
 ) {
-    val temperatureState = temperature.collectAsState()
-    val humidityState = humidity.collectAsState()
-    val lightLevelState = lightLevel.collectAsState()
+    val temperatureState = temperature.collectAsStateWithLifecycle()
+    val humidityState = humidity.collectAsStateWithLifecycle()
+    val lightLevelState = lightLevel.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         measurementViewModel.populateGardenList()

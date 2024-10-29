@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -20,7 +21,7 @@ fun PlantRecommendationScreen(
     measurementViewModel: MeasurementViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState
 ) {
-    val plantList = measurementViewModel.plantList.collectAsState()
+    val plantList = measurementViewModel.plantList.collectAsStateWithLifecycle()
 
     Surface(Modifier.fillMaxSize()){
         Row{

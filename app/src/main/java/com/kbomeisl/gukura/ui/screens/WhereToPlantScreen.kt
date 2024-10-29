@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.testData.gardens
@@ -27,8 +28,8 @@ fun WhereToPlantScreen(
     snackbarHostState: SnackbarHostState
 ) {
     val plant = remember { mutableStateOf("") }
-    val plantSearchList = whereToPlantViewModel.plantSearchList.collectAsState()
-    val currentGarden = whereToPlantViewModel.currentGarden.collectAsState()
+    val plantSearchList = whereToPlantViewModel.plantSearchList.collectAsStateWithLifecycle()
+    val currentGarden = whereToPlantViewModel.currentGarden.collectAsStateWithLifecycle()
     Surface() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.height(140.dp))

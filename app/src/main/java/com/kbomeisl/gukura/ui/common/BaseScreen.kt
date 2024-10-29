@@ -2,6 +2,7 @@ package com.kbomeisl.gukura.ui.common
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -119,7 +120,11 @@ fun GukuraBaseScreen(
                             "Garden Planner",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(10.dp).clickable {
+                                navController.navigate(Routes.FINDAPLANT.name)
+                                subtitle = "Garden Planner"
+                                coroutineScope.launch { drawerState.close() }
+                            }
                         )
                     }
                     Row(modifier = Modifier.padding(10.dp)) {
@@ -144,7 +149,11 @@ fun GukuraBaseScreen(
                             "Where Should I Plant This?",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(10.dp).clickable {
+                                navController.navigate(Routes.WHERETOPLANT.name)
+                                subtitle = "Where to Plant"
+                                coroutineScope.launch { drawerState.close() }
+                            }
                         )
                     }
                     Row(modifier = Modifier.padding(10.dp)) {
@@ -169,7 +178,11 @@ fun GukuraBaseScreen(
                             "Which Plants Will Thrive Here?",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(10.dp).clickable {
+                                navController.navigate(Routes.MEASURE.name)
+                                subtitle = "Measurements"
+                                coroutineScope.launch { drawerState.close() }
+                            }
                         )
                     }
                     Row(modifier = Modifier.padding(10.dp)) {
@@ -194,7 +207,11 @@ fun GukuraBaseScreen(
                             "My Plant Wishlist",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(10.dp).clickable {
+                                navController.navigate(Routes.MYPLANTS.name)
+                                subtitle = "My Plant Wishlist"
+                                coroutineScope.launch { drawerState.close() }
+                            }
                         )
                     }
                     Row(Modifier.padding(10.dp)) {
@@ -219,7 +236,11 @@ fun GukuraBaseScreen(
                             "Plant Database",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(10.dp).clickable {
+                                navController.navigate(Routes.PLANTDB.name)
+                                subtitle = "Database"
+                                coroutineScope.launch { drawerState.close() }
+                            }
                         )
                     }
                 }

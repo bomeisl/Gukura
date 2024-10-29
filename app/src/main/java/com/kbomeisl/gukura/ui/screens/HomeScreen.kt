@@ -31,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -76,7 +75,6 @@ fun HomeScreen(
         ) {
 
             stickyHeader {
-
                     Spacer(Modifier.height(100.dp))
                     Text(
                         "Gardens",
@@ -189,9 +187,6 @@ fun HomeScreen(
                         },
                         gardenList = homeViewModel.gardenList
                     )
-                    Column(horizontalAlignment = Alignment.End) {
-
-                    }
                 }
         }
 

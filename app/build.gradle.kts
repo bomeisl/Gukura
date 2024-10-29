@@ -69,11 +69,16 @@ dependencies {
     //Koin
     val koin_version = "4.0.0"
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:$koin_version"))
-    implementation("io.insert-koin:koin-core:$koin_version")
-    implementation("io.insert-koin:koin-android:$koin_version")
+    implementation("io.insert-koin:koin-core")
+    implementation("io.insert-koin:koin-android")
+    testImplementation("io.insert-koin:koin-test-junit5")
+    testImplementation("io.insert-koin:koin-android-test")
     //Koin Jetpack Compose
-    implementation("io.insert-koin:koin-androidx-compose:$koin_version")
-    implementation("io.insert-koin:koin-androidx-compose-navigation:$koin_version")
+    implementation("io.insert-koin:koin-androidx-compose")
+    implementation("io.insert-koin:koin-androidx-compose-navigation")
+    //Koin for Ktor
+    implementation("io.insert-koin:koin-ktor")
+    implementation("io.insert-koin:koin-logger-slf4j")
     //Ktor
     val ktorVersion = "3.0.0"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -94,4 +99,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.13")
     //Kotlin Serialization
     implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
 }
+

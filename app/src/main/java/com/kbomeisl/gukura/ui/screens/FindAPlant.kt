@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.common.PlantCard
@@ -55,10 +56,10 @@ fun FindAPlant(
     snackbarHostState: SnackbarHostState
 ) {
     var plantSearchText by remember { mutableStateOf("") }
-    val plantList = findAPlantViewModel.plantList.collectAsState()
-    val gardenList = findAPlantViewModel.gardenList.collectAsState()
-    val currentGarden = findAPlantViewModel.currentGarden.collectAsState()
-    val recommendedPlants = findAPlantViewModel.recommendedPlantList.collectAsState()
+    val plantList = findAPlantViewModel.plantList.collectAsStateWithLifecycle()
+    val gardenList = findAPlantViewModel.gardenList.collectAsStateWithLifecycle()
+    val currentGarden = findAPlantViewModel.currentGarden.collectAsStateWithLifecycle()
+    val recommendedPlants = findAPlantViewModel.recommendedPlantList.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     var floweringDropDownExpanded by remember { mutableStateOf(false) }
     var annualDropDownExpanded by remember { mutableStateOf(false) }
@@ -79,10 +80,11 @@ fun FindAPlant(
                 }
                 Spacer(Modifier.height(15.dp))
 
-                Surface(onClick = {
-                    gardenDropDownExpanded = true
-                    findAPlantViewModel.getGardens()
-                }
+                Surface(
+                    onClick = {
+                        gardenDropDownExpanded = true
+                        findAPlantViewModel.getGardens()
+                    }
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(

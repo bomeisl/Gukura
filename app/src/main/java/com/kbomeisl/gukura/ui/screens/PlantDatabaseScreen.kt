@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.models.toDb
@@ -38,9 +39,9 @@ fun PlantDatabaseScreen(
     snackbarHostState: SnackbarHostState
 ) {
     var plantName = remember { mutableStateOf("") }
-    val plantList = findAPlantViewModel.plantList.collectAsState()
-    val gardenList = findAPlantViewModel.gardenList.collectAsState()
-    val currentGarden = findAPlantViewModel.currentGarden.collectAsState()
+    val plantList = findAPlantViewModel.plantList.collectAsStateWithLifecycle()
+    val gardenList = findAPlantViewModel.gardenList.collectAsStateWithLifecycle()
+    val currentGarden = findAPlantViewModel.currentGarden.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(plantName.value) {
