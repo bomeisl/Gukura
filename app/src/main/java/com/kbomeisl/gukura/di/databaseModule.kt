@@ -12,8 +12,6 @@ import org.koin.dsl.module
 
 val databaseModule = module {
 
-
-
     single<GukuraDatabase> {
         Room.databaseBuilder(
             androidApplication(),
