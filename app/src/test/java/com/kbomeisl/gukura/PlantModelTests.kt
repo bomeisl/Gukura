@@ -1,30 +1,47 @@
 package com.kbomeisl.gukura
 
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import com.kbomeisl.gukura.data.database.GukuraDatabase
 import com.kbomeisl.gukura.data.database.PlantDao
+import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toDb
-import com.kbomeisl.gukura.di.databaseModule
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withContext
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
-import org.koin.test.KoinTest
-import org.koin.test.inject
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
-class PlantModelTests: KoinTest {
+
+@RunWith(RobolectricTestRunner::class)
+class PlantModelTests {
     private lateinit var plantNetwork: PlantNetwork
-    private val plantDao: PlantDao by inject()
-    //private val context: Context = GukuraApplication().applicationContext
+    private lateinit var plantDao: PlantDao
+    private lateinit var gukuraDatabase: GukuraDatabase
+    private lateinit var context: Context
+    private lateinit var retrievedPlant: PlantDb
+    private lateinit var plantDb: PlantDb
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
-        startKoin {
-            androidLogger()
-            //androidContext(androidContext = context)
-            modules(databaseModule)
-        }
+        val dispatcher = StandardTestDispatcher()
+        Dispatchers.setMain(dispatcher)
+        context = ApplicationProvider.getApplicationContext()
+        gukuraDatabase = Room.inMemoryDatabaseBuilder(
+            context, GukuraDatabase::class.java
+        ).build()
+        plantDao = gukuraDatabase.plantDao()
 
         plantNetwork = PlantNetwork(
             name = "TestName",
@@ -41,16 +58,56 @@ class PlantModelTests: KoinTest {
             notes = "notes",
             image = "www.link.com"
         )
+
+        plantDb = PlantDb(
+            name = "Species Test",
+            plantId = "Species Test".hashCode(),
+            description = "This is a plant",
+            minTemperature = 10,
+            maxTemperature = 54,
+            minHumidity = 5,
+            maxHumidity = 55,
+            minLightLevel = 2300,
+            maxLightLevel = 4567,
+            imageUrl = "www.plants.com",
+            wishListed = false,
+            gardenName = "garden 4",
+            gardenTemp = "93",
+            gardenHumidity = "39",
+            gardenLightLevel = "2390"
+        )
     }
 
+    @Test
+    fun plantDbModelShouldTransactWithDb() {
+        val insertedPlant = plantDb
+        runTest {
+            withContext(Dispatchers.IO) {
+                plantDao.insertPlant(plantDb = plantDb)
+                retrievedPlant = plantDao.findPlant(plantNetwork.name)
+                Assert.assertSame(retrievedPlant, insertedPlant)
+            }
+        }
+
+
+    }
 
     @Test
-    fun plantDbModelShouldInsertToDb() {
-        val plantDb = plantNetwork.toDb()
+    fun plantNetworkModelShouldMapToDbModel() {
+        val insertedPlant = plantNetwork.toDb()
         runTest {
-            plantDao.insertPlant(plantDb = plantDb)
+            withContext(Dispatchers.IO) {
+                plantDao.insertPlant(plantDb = plantDb)
+                retrievedPlant = plantDao.findPlant(plantNetwork.name)
+                Assert.assertSame(retrievedPlant, insertedPlant)
+            }
         }
-        val retrievedPlant = plantDao.findPlant(plantNetwork.name)
-        Assert.assertSame(retrievedPlant,plantDb)
+
+
+    }
+
+    @After
+    fun cleanUp() {
+        gukuraDatabase.close()
     }
 }

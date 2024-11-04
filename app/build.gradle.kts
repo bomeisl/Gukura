@@ -66,6 +66,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+    testImplementation("androidx.room:room-testing:$room_version")
     //Koin
     val koin_version = "4.0.0"
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:$koin_version"))
@@ -94,9 +95,12 @@ dependencies {
     //Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation ("androidx.test:core-ktx:1.6.1")
+    testImplementation("androidx.test:runner:1.6.2")
     testImplementation("org.mockito:mockito-core:5.14.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("org.robolectric:robolectric:4.13")
     //Kotlin Serialization
     implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
