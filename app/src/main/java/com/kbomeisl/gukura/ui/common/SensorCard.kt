@@ -31,6 +31,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.toDb
@@ -66,6 +68,7 @@ import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinContext
+import kotlin.time.times
 
 @Composable
 fun SensorCard(
@@ -76,23 +79,28 @@ fun SensorCard(
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
 ) {
-    val temperatureState = temperature.collectAsState()
-    val lightLevelState = lightLevel.collectAsState()
-    val humidityState = humidity.collectAsState()
-    val gardenList = measurementViewModel.gardenList.collectAsState()
-    val currentGarden = measurementViewModel.currentGarden.collectAsState()
+    val temperatureState = temperature.collectAsStateWithLifecycle()
+    val lightLevelState = lightLevel.collectAsStateWithLifecycle()
+    val humidityState = measurementViewModel.humidity.collectAsStateWithLifecycle()
+    val gardenList = measurementViewModel.gardenList.collectAsStateWithLifecycle()
+    val currentGarden = measurementViewModel.currentGarden.collectAsStateWithLifecycle()
     val textMeasurer = rememberTextMeasurer()
     val location by remember { mutableStateOf("") }
     val screenTransitionCue = remember { mutableStateOf(true) }
     val screenTransitionToPlantRecommendations = remember { mutableStateOf(false) }
-    val plantList = measurementViewModel.plantList.collectAsState()
-    val recommendedPlantList = measurementViewModel.recommendedPlantList.collectAsState()
+    val plantList = measurementViewModel.plantList.collectAsStateWithLifecycle()
+    val recommendedPlantList = measurementViewModel.recommendedPlantList.collectAsStateWithLifecycle()
     val gardenDropDownExpanded = remember { mutableStateOf(false) }
     val menuText = remember { mutableStateOf("Select a Garden") }
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val scrollStateRec = rememberScrollState()
     KoinContext {
+
+        LaunchedEffect(Unit) {
+            measurementViewModel.getHumidity()
+            Log.d("Sensor Card", "Humidity: ${humidityState.value}")
+        }
 
         AnimatedVisibility(
             screenTransitionCue.value,
@@ -122,7 +130,7 @@ fun SensorCard(
                                 )
                                 drawText(
                                     textMeasurer = textMeasurer,
-                                    text = "Temperature: " + temperatureState.value.toString() + " °C",
+                                    text = "Temperature: " + (9/5*temperatureState.value+12).toString() + " °F",
                                     style = TextStyle(fontFamily = FontFamily.Monospace),
                                     topLeft = Offset(300f, 560f)
                                 )
@@ -132,7 +140,7 @@ fun SensorCard(
                                     color = sunOrange,
                                     radius = 200f,
                                     alpha = lightLevelState.value / 40000,
-                                    center = Offset(590f, 970f)
+                                    center = Offset(500f, 970f)
                                 )
                                 drawText(
                                     textMeasurer = textMeasurer,
@@ -149,12 +157,12 @@ fun SensorCard(
                                         tileMode = TileMode.Clamp,
                                     ),
                                     topLeft = Offset(360f, 1250f),
-                                    size = Size(width = humidityState.value * 5, height = 20f),
+                                    size = Size(width = humidityState.value.toFloat() * 5, height = 20f),
                                     style = Fill
                                 )
                                 drawText(
                                     textMeasurer = textMeasurer,
-                                    text = "Relative Humidity: " + humidity.value.toString() + " %",
+                                    text = "Relative Humidity: " + humidityState.value.toString() + " %",
                                     style = TextStyle(fontFamily = FontFamily.Monospace),
                                     topLeft = Offset(270f, 1350f)
                                 )
@@ -222,7 +230,7 @@ fun SensorCard(
                                         measurementViewModel.saveMeasurementToDb(
                                             gardenName = currentGarden.value.name,
                                             temperature = temperatureState.value,
-                                            humidity = humidityState.value,
+                                            humidity = humidityState.value.toFloat(),
                                             lightLevel = lightLevelState.value
                                         )
                                     },
@@ -256,8 +264,8 @@ fun SensorCard(
                                                     measurementViewModel.currentGarden.value =
                                                         it
                                                     measurementViewModel.getPlantsInRange(
-                                                        temperature = temperatureState.value,
-                                                        humidity = humidityState.value,
+                                                        temperature = (9/5*temperatureState.value+12),
+                                                        humidity = humidityState.value.toFloat(),
                                                         lightLevel = lightLevelState.value
                                                     )
                                                     menuText.value = it.name
@@ -295,7 +303,7 @@ fun SensorCard(
                         Spacer(Modifier.height(120.dp))
                         Text(
                             "Your ${currentGarden.value.name} has an average temperature of " +
-                                    "${temperatureState.value} °C, relative humidity of ${humidityState.value} %," +
+                                    "${(9/5*temperatureState.value.toInt()+12)} °F, relative humidity of ${humidityState.value} %," +
                                     " and ambient sunlight levels of ${lightLevelState.value} lux. Here are some " +
                                     "plants that will thrive under these conditions.",
                             fontFamily = FontFamily.Monospace,

@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.kbomeisl.gukura.data.database.MeasurementDao
@@ -7,7 +8,7 @@ import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.data.database.models.MeasurementDb
 import com.kbomeisl.gukura.data.repository.GardenRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
-import com.kbomeisl.gukura.ui.models.GardenUi
+import com.kbomeisl.gukura.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -15,9 +16,12 @@ import kotlinx.coroutines.launch
 class MeasurementViewModel(
     private val measurementDao: MeasurementDao,
     private val plantRepository: PlantRepository,
-    private val gardenRepository: GardenRepository
+    private val gardenRepository: GardenRepository,
+    private val weatherRepository: WeatherRepository
 ): PlantViewModel(plantRepository,gardenRepository) {
     val location = MutableStateFlow("")
+    val humidity = MutableStateFlow(0)
+    override val coroutineScope = viewModelScope
 
     fun saveMeasurementToDb(
         temperature: Float,
@@ -47,5 +51,11 @@ class MeasurementViewModel(
         }
     }
 
-
+    fun getHumidity() {
+        coroutineScope.launch(Dispatchers.IO) {
+            val weather = weatherRepository.getWeather()
+            humidity.value = weather.current.humidity
+            Log.d("Measurement VM",weather.toString())
+        }
+    }
 }

@@ -6,6 +6,7 @@ import com.kbomeisl.gukura.data.repository.MyPlantsRepository
 import com.kbomeisl.gukura.data.repository.RecommendationRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.GardenRepository
+import com.kbomeisl.gukura.data.repository.WeatherRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -16,4 +17,5 @@ val repositoryModule = module {
     singleOf(::RecommendationRepository)
     singleOf(::PlantRepository)
     singleOf(::GardenRepository)
+    singleOf(::WeatherRepository)
 }

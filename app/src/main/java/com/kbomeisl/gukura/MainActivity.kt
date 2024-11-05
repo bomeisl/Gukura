@@ -28,11 +28,13 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 
 class MainActivity() : ComponentActivity() {
+    private val logtag = "Main Activity"
     lateinit var sensorManager: SensorManager
     private val plantViewModel: PlantViewModel = get<PlantViewModel>()
     lateinit var temperatureEventListener: TemperatureEventListener
     lateinit var humidityEventListener: HumidityEventListener
     lateinit var lightEventListener: LightEventListener
+    var temperatureSensor1: Sensor? = null
     var temperatureSensor: Sensor? = null
     var humiditySensor: Sensor? = null
     var lightSensor: Sensor? = null
@@ -40,12 +42,16 @@ class MainActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
-        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         temperatureEventListener = TemperatureEventListener()
         humidityEventListener = HumidityEventListener()
         lightEventListener = LightEventListener()
+        temperatureSensor1 = sensorManager.getDefaultSensor(65538)
+        temperatureSensor = sensorManager.getDefaultSensor(65539)
+        Log.d(logtag, "Temperature Sensors: ${sensorManager.getSensorList(Sensor.TYPE_AMBIENT_TEMPERATURE)}")
+        Log.d(logtag, "Humidity Sensors: ${sensorManager.getSensorList(Sensor.TYPE_RELATIVE_HUMIDITY)}")
+        Log.d(logtag, "Light Sensors: ${sensorManager.getSensorList(Sensor.TYPE_LIGHT)}")
+        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
         lifecycle.addObserver(plantViewModel)
         enableEdgeToEdge()
@@ -63,9 +69,27 @@ class MainActivity() : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        sensorManager.registerListener(temperatureEventListener, temperatureSensor, Sensor.TYPE_AMBIENT_TEMPERATURE)
-        sensorManager.registerListener(humidityEventListener, humiditySensor, Sensor.TYPE_RELATIVE_HUMIDITY)
-        sensorManager.registerListener(lightEventListener, lightSensor, Sensor.TYPE_LIGHT)
+        temperatureSensor?.also {
+            sensorManager.registerListener(
+                temperatureEventListener,
+                temperatureSensor,
+                Sensor.TYPE_AMBIENT_TEMPERATURE
+            )
+        }
+        humiditySensor?.also {
+            sensorManager.registerListener(
+                humidityEventListener,
+                humiditySensor,
+                Sensor.TYPE_RELATIVE_HUMIDITY
+            )
+        }
+        lightSensor?.also {
+            sensorManager.registerListener(
+                lightEventListener,
+                lightSensor,
+                Sensor.TYPE_LIGHT
+            )
+        }
     }
 
     override fun onPause() {

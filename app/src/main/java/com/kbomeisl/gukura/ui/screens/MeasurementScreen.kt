@@ -42,10 +42,6 @@ fun MeasurementScreen(
     measurementViewModel: MeasurementViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState
 ) {
-    val temperatureState = temperature.collectAsStateWithLifecycle()
-    val humidityState = humidity.collectAsStateWithLifecycle()
-    val lightLevelState = lightLevel.collectAsStateWithLifecycle()
-
     LaunchedEffect(Unit) {
         measurementViewModel.populateGardenList()
     }

@@ -20,7 +20,7 @@ open class PlantViewModel(
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository,
 ): ViewModel(), DefaultLifecycleObserver {
-    val coroutineScope = viewModelScope
+    open val coroutineScope = viewModelScope
     val plantList = MutableStateFlow(listOf<PlantUi>())
     val gardenPlantList = MutableStateFlow(listOf<PlantUi>())
     val gardenList = MutableStateFlow(listOf<GardenUi>())
