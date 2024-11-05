@@ -29,7 +29,6 @@ object plantNetworkDataSource {
     private val requestRootUrl = environmentalVariables.firebaseRootUrl
 
     suspend fun getPlantList(): List<PlantNetwork> {
-        Log.d(logTag,"get json")
         return ktorClient.get(requestRootUrl).body()
     }
 

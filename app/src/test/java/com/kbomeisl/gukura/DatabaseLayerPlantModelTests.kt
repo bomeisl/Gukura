@@ -8,7 +8,6 @@ import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toDb
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,12 +23,11 @@ import org.robolectric.RobolectricTestRunner
 
 
 @RunWith(RobolectricTestRunner::class)
-class PlantModelTests {
+class DatabaseLayerPlantModelTests {
     private lateinit var plantNetwork: PlantNetwork
     private lateinit var plantDao: PlantDao
     private lateinit var gukuraDatabase: GukuraDatabase
     private lateinit var context: Context
-    private lateinit var retrievedPlant: PlantDb
     private lateinit var plantDb: PlantDb
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -84,12 +82,10 @@ class PlantModelTests {
         runTest {
             withContext(Dispatchers.IO) {
                 plantDao.insertPlant(plantDb = plantDb)
-                retrievedPlant = plantDao.findPlant(plantNetwork.name)
+                val retrievedPlant = plantDao.findPlant(plantNetwork.name)
                 Assert.assertSame(retrievedPlant, insertedPlant)
             }
         }
-
-
     }
 
     @Test
@@ -98,12 +94,10 @@ class PlantModelTests {
         runTest {
             withContext(Dispatchers.IO) {
                 plantDao.insertPlant(plantDb = plantDb)
-                retrievedPlant = plantDao.findPlant(plantNetwork.name)
+                val retrievedPlant = plantDao.findPlant(plantNetwork.name)
                 Assert.assertSame(retrievedPlant, insertedPlant)
             }
         }
-
-
     }
 
     @After
