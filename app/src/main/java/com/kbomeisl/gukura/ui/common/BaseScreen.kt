@@ -51,6 +51,7 @@ import com.kbomeisl.gukura.ui.screens.GukuraNavHost
 import com.kbomeisl.gukura.ui.theme.forestGreen
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
+import com.kbomeisl.gukura.ui.viewmodels.PlantViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 

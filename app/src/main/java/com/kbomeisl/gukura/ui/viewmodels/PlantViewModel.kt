@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 
 open class PlantViewModel(
     private val plantRepository: PlantRepository,
-    private val gardenRepository: GardenRepository
+    private val gardenRepository: GardenRepository,
 ): ViewModel(), DefaultLifecycleObserver {
     val coroutineScope = viewModelScope
     val plantList = MutableStateFlow(listOf<PlantUi>())
@@ -26,6 +27,7 @@ open class PlantViewModel(
     val recommendedPlantList = MutableStateFlow(listOf<PlantUi>())
     val currentGarden = MutableStateFlow(GardenUi())
     val wishListPlants = MutableStateFlow(listOf<PlantUi>())
+
 
     fun initialPlantCaching() {
         coroutineScope.launch(Dispatchers.IO) {

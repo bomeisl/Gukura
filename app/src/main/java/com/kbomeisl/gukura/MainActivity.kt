@@ -13,6 +13,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import com.kbomeisl.gukura.data.repository.PlantRepository
+import com.kbomeisl.gukura.data.sensor.HumidityEventListener
+import com.kbomeisl.gukura.data.sensor.LightEventListener
+import com.kbomeisl.gukura.data.sensor.TemperatureEventListener
 import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.humiditySensor
 import com.kbomeisl.gukura.data.sensor.sensorDataSource.lightSensor
@@ -24,62 +27,51 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 
-class MainActivity() : ComponentActivity(), SensorEventListener {
+class MainActivity() : ComponentActivity() {
     lateinit var sensorManager: SensorManager
     private val plantViewModel: PlantViewModel = get<PlantViewModel>()
-    private val temperature = MutableStateFlow<Float>(50F)
-    private val humidity = MutableStateFlow<Float>(50F)
-    private val lightLevel = MutableStateFlow<Float>(1000F)
+    lateinit var temperatureEventListener: TemperatureEventListener
+    lateinit var humidityEventListener: HumidityEventListener
+    lateinit var lightEventListener: LightEventListener
+    var temperatureSensor: Sensor? = null
+    var humiditySensor: Sensor? = null
+    var lightSensor: Sensor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        temperatureEventListener = TemperatureEventListener()
+        humidityEventListener = HumidityEventListener()
+        lightEventListener = LightEventListener()
+        this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
+        lifecycle.addObserver(plantViewModel)
         enableEdgeToEdge()
         setContent {
             GukuraTheme {
                 GukuraBaseScreen(
-                    temperature = temperature,
-                    humidity = humidity,
-                    lightLevel = lightLevel
+                    temperature = temperatureEventListener.temperature,
+                    humidity = humidityEventListener.humidity,
+                    lightLevel = lightEventListener.light
                 )
             }
         }
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensorDataSource.initializeSensors(sensorManager)
-        this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
-        lifecycle.addObserver(plantViewModel)
+
     }
 
     override fun onResume() {
         super.onResume()
-        registerSensorListener()
+        sensorManager.registerListener(temperatureEventListener, temperatureSensor, Sensor.TYPE_AMBIENT_TEMPERATURE)
+        sensorManager.registerListener(humidityEventListener, humiditySensor, Sensor.TYPE_RELATIVE_HUMIDITY)
+        sensorManager.registerListener(lightEventListener, lightSensor, Sensor.TYPE_LIGHT)
     }
 
     override fun onPause() {
         super.onPause()
-        sensorManager.unregisterListener(this)
-    }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-        Log.d("Main Activity", "sensor changed")
-        event?.also {
-            when (event.sensor.type) {
-                Sensor.TYPE_AMBIENT_TEMPERATURE -> temperature.value = event.values[0]
-                Sensor.TYPE_RELATIVE_HUMIDITY -> humidity.value = event.values[0]
-                Sensor.TYPE_LIGHT -> lightLevel.value = event.values[0]
-            }
-        }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        val dummyVar = "something"
-    }
-
-    fun registerSensorListener() {
-        temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
-        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-        sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, humiditySensor, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.unregisterListener(temperatureEventListener)
+        sensorManager.unregisterListener(humidityEventListener)
+        sensorManager.unregisterListener(lightEventListener)
     }
 }
