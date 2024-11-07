@@ -21,6 +21,7 @@ class MeasurementViewModel(
 ): PlantViewModel(plantRepository,gardenRepository) {
     val location = MutableStateFlow("")
     val humidity = MutableStateFlow(0)
+    val temperature = MutableStateFlow(0f)
     override val coroutineScope = viewModelScope
 
     fun saveMeasurementToDb(
@@ -55,7 +56,13 @@ class MeasurementViewModel(
         coroutineScope.launch(Dispatchers.IO) {
             val weather = weatherRepository.getWeather()
             humidity.value = weather.current.humidity
-            Log.d("Measurement VM",weather.toString())
+        }
+    }
+
+    fun getTemperature() {
+        coroutineScope.launch(Dispatchers.IO) {
+            val weather = weatherRepository.getWeather()
+            temperature.value = weather.current.temp_f
         }
     }
 }

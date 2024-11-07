@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.BODY_SENSORS"/>
-    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND"/>
-    <uses-feature android:name="android.hardware.sensor.ambient_temperature"/>
-    <uses-feature android:name="android.hardware.sensor.relative_humidity"/>
+    <uses-feature android:name="android.hardware.sensor.light" android:required="false"/>
     <application
         android:name=".GukuraApplication"
         android:allowBackup="true"

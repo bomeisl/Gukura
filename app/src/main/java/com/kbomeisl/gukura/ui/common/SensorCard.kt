@@ -79,7 +79,7 @@ fun SensorCard(
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
 ) {
-    val temperatureState = temperature.collectAsStateWithLifecycle()
+    val temperatureState = measurementViewModel.temperature.collectAsStateWithLifecycle()
     val lightLevelState = lightLevel.collectAsStateWithLifecycle()
     val humidityState = measurementViewModel.humidity.collectAsStateWithLifecycle()
     val gardenList = measurementViewModel.gardenList.collectAsStateWithLifecycle()
@@ -99,7 +99,7 @@ fun SensorCard(
 
         LaunchedEffect(Unit) {
             measurementViewModel.getHumidity()
-            Log.d("Sensor Card", "Humidity: ${humidityState.value}")
+            measurementViewModel.getTemperature()
         }
 
         AnimatedVisibility(

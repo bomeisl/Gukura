@@ -47,9 +47,6 @@ class MainActivity() : ComponentActivity() {
         lightEventListener = LightEventListener()
         temperatureSensor1 = sensorManager.getDefaultSensor(65538)
         temperatureSensor = sensorManager.getDefaultSensor(65539)
-        Log.d(logtag, "Temperature Sensors: ${sensorManager.getSensorList(Sensor.TYPE_AMBIENT_TEMPERATURE)}")
-        Log.d(logtag, "Humidity Sensors: ${sensorManager.getSensorList(Sensor.TYPE_RELATIVE_HUMIDITY)}")
-        Log.d(logtag, "Light Sensors: ${sensorManager.getSensorList(Sensor.TYPE_LIGHT)}")
         humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
