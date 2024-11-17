@@ -97,7 +97,8 @@ fun HomeScreen(
                                         onClick = {
                                             homeViewModel.getPlantsInGarden(it.name)
                                         },
-                                        removeGarden = { homeViewModel.deleteGarden(it) }
+                                        removeGarden = { homeViewModel.deleteGarden(it) },
+                                        navController = navHostController
                                     )
                                 }
                             }

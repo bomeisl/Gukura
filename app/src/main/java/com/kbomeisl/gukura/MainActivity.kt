@@ -13,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import com.kbomeisl.gukura.data.repository.PlantRepository
+import com.kbomeisl.gukura.data.sensor.GeomagneticEventListener
 import com.kbomeisl.gukura.data.sensor.HumidityEventListener
 import com.kbomeisl.gukura.data.sensor.LightEventListener
 import com.kbomeisl.gukura.data.sensor.TemperatureEventListener
@@ -34,10 +35,13 @@ class MainActivity() : ComponentActivity() {
     lateinit var temperatureEventListener: TemperatureEventListener
     lateinit var humidityEventListener: HumidityEventListener
     lateinit var lightEventListener: LightEventListener
+    lateinit var geomagneticEventListener: GeomagneticEventListener
     var temperatureSensor: Sensor? = null
     var humiditySensor: Sensor? = null
     var lightSensor: Sensor? = null
+    var geomagneticSensor: Sensor? = null
     lateinit var sensorList: List<Sensor>
+    val samplingIntervalMs = 5000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +50,11 @@ class MainActivity() : ComponentActivity() {
         temperatureEventListener = TemperatureEventListener()
         humidityEventListener = HumidityEventListener()
         lightEventListener = LightEventListener()
+        geomagneticEventListener = GeomagneticEventListener()
         initializeLightSensor()
         initializeHumiditySensor()
         initializeTemperatureSensor()
+        initializeGeomagneticSensor()
         this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
         lifecycle.addObserver(plantViewModel)
         enableEdgeToEdge()
@@ -57,11 +63,13 @@ class MainActivity() : ComponentActivity() {
                 GukuraBaseScreen(
                     temperature = temperatureEventListener.temperature,
                     humidity = humidityEventListener.humidity,
-                    lightLevel = lightEventListener.light
+                    lightLevel = lightEventListener.light,
+                    geomagneticX = geomagneticEventListener.geomagneticFieldX,
+                    geomagneticY = geomagneticEventListener.geomagneticFieldY,
+                    geomagneticZ = geomagneticEventListener.geomagneticFieldZ
                 )
             }
         }
-
     }
 
     override fun onResume() {
@@ -70,21 +78,28 @@ class MainActivity() : ComponentActivity() {
             sensorManager.registerListener(
                 temperatureEventListener,
                 temperatureSensor,
-                Sensor.TYPE_AMBIENT_TEMPERATURE
+                samplingIntervalMs
             )
         }
         humiditySensor?.also {
             sensorManager.registerListener(
                 humidityEventListener,
                 humiditySensor,
-                Sensor.TYPE_RELATIVE_HUMIDITY
+                samplingIntervalMs,
             )
         }
         lightSensor?.also {
             sensorManager.registerListener(
                 lightEventListener,
                 lightSensor,
-                Sensor.TYPE_LIGHT
+                samplingIntervalMs
+            )
+        }
+        geomagneticSensor?.also {
+            sensorManager.registerListener(
+                geomagneticEventListener,
+                geomagneticSensor,
+                samplingIntervalMs
             )
         }
     }
@@ -94,6 +109,7 @@ class MainActivity() : ComponentActivity() {
         sensorManager.unregisterListener(temperatureEventListener)
         sensorManager.unregisterListener(humidityEventListener)
         sensorManager.unregisterListener(lightEventListener)
+        sensorManager.unregisterListener(geomagneticEventListener)
     }
 
     fun initializeTemperatureSensor() {
@@ -114,6 +130,12 @@ class MainActivity() : ComponentActivity() {
     fun initializeLightSensor() {
         if (sensorList.map { it.type }.contains(Sensor.TYPE_LIGHT)) {
             lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        }
+    }
+
+    fun initializeGeomagneticSensor() {
+        if (sensorList.map { it.type }.contains(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)) {
+            geomagneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         }
     }
 }

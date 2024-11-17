@@ -22,8 +22,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.GardenUi
+import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.theme.add
 import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
@@ -32,9 +35,9 @@ import com.kbomeisl.gukura.ui.theme.sunOrange
 fun GardenCard(
     gardenUi: GardenUi,
     onClick: () -> Unit,
-    removeGarden: () -> Unit
+    removeGarden: () -> Unit,
+    navController: NavHostController
 ) {
-    val scrollState = rememberScrollState()
     Surface(
         modifier = Modifier
             .padding(10.dp)
@@ -78,16 +81,39 @@ fun GardenCard(
                 }
             }
             Row {
-                IconButton(
-                    content = { Icon(Icons.Outlined.Clear, "", tint = Color.Red) },
-                    onClick = { removeGarden() }
-                )
-                IconButton(
-                    content = { Icon(painter = painterResource(R.drawable.trowel), "", tint = add) },
-                    onClick = {
+                Column(Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
 
-                    }
-                )
+                ) {
+                    IconButton(
+                        content = { Icon(Icons.Outlined.Clear, "", tint = Color.Red) },
+                        onClick = { removeGarden() }
+                    )
+                    Text("Remove Garden", fontFamily = FontFamily.Monospace)
+                }
+                Column(Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconButton(
+                        content = {
+                            Icon(
+                                painter = painterResource(R.drawable.trowel),
+                                "",
+                                tint = add
+                            )
+                        },
+                        onClick = {
+                            navController.navigate("${Routes.MEASURE.name}/${gardenUi.name}")
+                        }
+                    )
+                    Text("Plan Your Garden", fontFamily = FontFamily.Monospace)
+                }
             }
         }
     }

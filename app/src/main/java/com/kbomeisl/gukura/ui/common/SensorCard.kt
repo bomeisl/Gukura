@@ -1,6 +1,5 @@
 package com.kbomeisl.gukura.ui.common
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -32,7 +31,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,20 +66,23 @@ import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinContext
-import kotlin.time.times
 
 @Composable
 fun SensorCard(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>,
+    geomagneticX: MutableStateFlow<Float>,
+    geomagneticY: MutableStateFlow<Float>,
+    geomagneticZ: MutableStateFlow<Float>,
     measurementViewModel: MeasurementViewModel,
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
+    gardenName: String = ""
 ) {
-    val temperatureState = measurementViewModel.temperature.collectAsStateWithLifecycle()
+    val temperatureState = measurementViewModel.outsideTemperature.collectAsStateWithLifecycle()
     val lightLevelState = lightLevel.collectAsStateWithLifecycle()
-    val humidityState = measurementViewModel.humidity.collectAsStateWithLifecycle()
+    val humidityState = measurementViewModel.outsideHumidity.collectAsStateWithLifecycle()
     val gardenList = measurementViewModel.gardenList.collectAsStateWithLifecycle()
     val currentGarden = measurementViewModel.currentGarden.collectAsStateWithLifecycle()
     val textMeasurer = rememberTextMeasurer()
@@ -197,15 +198,25 @@ fun SensorCard(
                                             Modifier.fillMaxWidth(),
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            Text(
-                                                text = menuText.value,
-                                                color = Color.Black,
-                                                fontFamily = FontFamily.Monospace,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier.padding(5.dp).fillMaxWidth()
-                                            )
+                                            if (gardenName == "") {
+                                                Text(
+                                                    text = menuText.value,
+                                                    color = Color.Black,
+                                                    fontFamily = FontFamily.Monospace,
+                                                    textAlign = TextAlign.Center,
+                                                    modifier = Modifier.padding(5.dp).fillMaxWidth()
+                                                )
+                                                Icon(Icons.TwoTone.ArrowDropDown, "")
+                                            } else {
+                                                Text(
+                                                    text = gardenName,
+                                                    color = Color.Black,
+                                                    fontFamily = FontFamily.Monospace,
+                                                    textAlign = TextAlign.Center,
+                                                    modifier = Modifier.padding(5.dp).fillMaxWidth()
+                                                )
+                                            }
 
-                                            Icon(Icons.TwoTone.ArrowDropDown, "")
                                         }
 
                                     }
@@ -219,20 +230,37 @@ fun SensorCard(
                                         )
                                     },
                                     onClick = {
-                                        coroutineScope.launch {
-                                            snackbarHostState.showSnackbar(
-                                                message = "Environmental measurements saved for " +
-                                                        measurementViewModel.currentGarden.value.name
+                                        if (currentGarden.value.name.isNotEmpty()) {
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    message = "Environmental measurements saved for " +
+                                                            measurementViewModel.currentGarden.value.name
+                                                )
+                                            }
+                                            screenTransitionToPlantRecommendations.value = true
+                                            screenTransitionCue.value = false
+                                            measurementViewModel.saveMeasurementToDb(
+                                                gardenName = currentGarden.value.name,
+                                                temperature = temperatureState.value,
+                                                humidity = humidityState.value.toFloat(),
+                                                lightLevel = lightLevelState.value
+                                            )
+                                        } else {
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    message = "Environmental measurements saved for " +
+                                                            gardenName
+                                                )
+                                            }
+                                            screenTransitionToPlantRecommendations.value = true
+                                            screenTransitionCue.value = false
+                                            measurementViewModel.saveMeasurementToDb(
+                                                gardenName = gardenName,
+                                                temperature = temperatureState.value,
+                                                humidity = humidityState.value.toFloat(),
+                                                lightLevel = lightLevelState.value
                                             )
                                         }
-                                        screenTransitionToPlantRecommendations.value = true
-                                        screenTransitionCue.value = false
-                                        measurementViewModel.saveMeasurementToDb(
-                                            gardenName = currentGarden.value.name,
-                                            temperature = temperatureState.value,
-                                            humidity = humidityState.value.toFloat(),
-                                            lightLevel = lightLevelState.value
-                                        )
                                     },
                                     shape = RoundedCornerShape(50),
                                 )
@@ -301,16 +329,29 @@ fun SensorCard(
                             .verticalScroll(scrollStateRec)
                     ) {
                         Spacer(Modifier.height(120.dp))
-                        Text(
-                            "Your ${currentGarden.value.name} has an average temperature of " +
-                                    "${(9/5*temperatureState.value.toInt()+12)} °F, relative humidity of ${humidityState.value} %," +
-                                    " and ambient sunlight levels of ${lightLevelState.value} lux. Here are some " +
-                                    "plants that will thrive under these conditions.",
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Center,
-                            color = Color.Gray
-                        )
+                        if (currentGarden.value.name.isNotEmpty()) {
+                            Text(
+                                "Your ${currentGarden.value.name} has an average temperature of " +
+                                        "${(9 / 5 * temperatureState.value.toInt() + 12)} °F, relative humidity of ${humidityState.value} %," +
+                                        " and ambient sunlight levels of ${lightLevelState.value} lux. Here are some " +
+                                        "plants that will thrive under these conditions.",
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray
+                            )
+                        } else {
+                            Text(
+                                "Your ${gardenName} has an average temperature of " +
+                                        "${(9 / 5 * temperatureState.value.toInt() + 12)} °F, relative humidity of ${humidityState.value} %," +
+                                        " and ambient sunlight levels of ${lightLevelState.value} lux. Here are some " +
+                                        "plants that will thrive under these conditions.",
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray
+                            )
+                        }
                         recommendedPlantList.value.forEach { plantItem ->
                             PlantCard(
                                 plantItem,

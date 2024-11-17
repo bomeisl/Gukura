@@ -11,12 +11,16 @@ import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.viewmodel.factory.KoinViewModelFactory
 
 @Composable
 fun GukuraNavHost(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
     lightLevel: MutableStateFlow<Float>,
+    geomaneticX: MutableStateFlow<Float>,
+    geomaneticY: MutableStateFlow<Float>,
+    geomaneticZ: MutableStateFlow<Float>,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState
 ) {
@@ -39,14 +43,34 @@ fun GukuraNavHost(
                composable(route = Routes.WHERETOPLANT.name) {
                    WhereToPlantScreen(snackbarHostState=snackbarHostState)
                }
-               composable(route = Routes.MEASURE.name) {
-                   MeasurementScreen(
-                       temperature = temperature,
-                       humidity = humidity,
-                       lightLevel = lightLevel,
-                       navHostController = navController,
-                       snackbarHostState = snackbarHostState
-                   )
+               composable("${Routes.MEASURE.name}/{gardenName}") { navBackStackEntry ->
+                   val gardenName = navBackStackEntry.arguments?.getString("gardenName")
+                   val subtitle = navBackStackEntry.arguments?.getString("subtitle")
+                   if (!gardenName.isNullOrEmpty()) {
+                       MeasurementScreen(
+                           temperature = temperature,
+                           humidity = humidity,
+                           lightLevel = lightLevel,
+                           geomagneticX = geomaneticX,
+                           geomagneticY = geomaneticY,
+                           geomagneticZ = geomaneticZ,
+                           navHostController = navController,
+                           snackbarHostState = snackbarHostState,
+                           gardenName = gardenName
+                       )
+                   } else {
+                       MeasurementScreen(
+                           temperature = temperature,
+                           humidity = humidity,
+                           lightLevel = lightLevel,
+                           geomagneticX = geomaneticX,
+                           geomagneticY = geomaneticY,
+                           geomagneticZ = geomaneticZ,
+                           navHostController = navController,
+                           snackbarHostState = snackbarHostState
+                       )
+                   }
+
                }
                composable(route = Routes.MYPLANTS.name) {
                    MyPlantsScreen()

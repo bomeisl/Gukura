@@ -61,7 +61,10 @@ import kotlinx.coroutines.launch
 fun GukuraBaseScreen(
     temperature: MutableStateFlow<Float>,
     humidity: MutableStateFlow<Float>,
-    lightLevel: MutableStateFlow<Float>
+    lightLevel: MutableStateFlow<Float>,
+    geomagneticX: MutableStateFlow<Float>,
+    geomagneticY: MutableStateFlow<Float>,
+    geomagneticZ: MutableStateFlow<Float>
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -180,7 +183,7 @@ fun GukuraBaseScreen(
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp).clickable {
-                                navController.navigate(Routes.MEASURE.name)
+                                navController.navigate("${Routes.MEASURE.name}/")
                                 subtitle = "Measurements"
                                 coroutineScope.launch { drawerState.close() }
                             }
@@ -303,13 +306,18 @@ fun GukuraBaseScreen(
                     )
                 },
                 modifier = Modifier,
-                content = { GukuraNavHost(
-                    temperature = temperature,
-                    humidity = humidity,
-                    lightLevel = lightLevel,
-                    navController = navController,
-                    snackBarHostState
-                ) },
+                content = {
+                    GukuraNavHost(
+                        temperature = temperature,
+                        humidity = humidity,
+                        lightLevel = lightLevel,
+                        navController = navController,
+                        geomaneticX = geomagneticX,
+                        geomaneticY = geomagneticY,
+                        geomaneticZ = geomagneticZ,
+                        snackbarHostState = snackBarHostState,
+                    )
+                          },
                 snackbarHost = {
                     SnackbarHost(
                         snackBarHostState,
