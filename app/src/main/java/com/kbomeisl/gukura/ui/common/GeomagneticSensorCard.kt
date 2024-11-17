@@ -22,13 +22,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun GeomagneticSensorCard(
-    geomagneticX: MutableStateFlow<Float>,
-    geomagneticY: MutableStateFlow<Float>,
-    geomagneticZ: MutableStateFlow<Float>
+    magneticOrientation: MutableStateFlow<Float>
 ) {
-    val geomagneticXState = geomagneticX.collectAsStateWithLifecycle()
-    val geomagneticYState = geomagneticY.collectAsStateWithLifecycle()
-    val geomagneticZState = geomagneticZ.collectAsStateWithLifecycle()
+    val magneticOrientationState = magneticOrientation.collectAsStateWithLifecycle()
     val textMeasurer = rememberTextMeasurer()
 
     Canvas(
@@ -51,19 +47,7 @@ fun GeomagneticSensorCard(
                 )
                 drawText(
                     textMeasurer = textMeasurer,
-                    text = "Magnetic Field X: " + geomagneticXState.value.toString() + " lux",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(300f, 100f)
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "Magnetic Field Y: " + geomagneticYState.value.toString() + " lux",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(300f, 200f)
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "Magnetic Field Z: " + geomagneticZState.value.toString() + " lux",
+                    text = "Magnetic Orientation: " + Math.toDegrees(magneticOrientationState.value.toDouble()).toString(),
                     style = TextStyle(fontFamily = FontFamily.Monospace),
                     topLeft = Offset(300f, 300f)
                 )

@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.di
 
+import android.hardware.SensorManager
 import com.kbomeisl.gukura.data.database.MeasurementDao
 import com.kbomeisl.gukura.data.repository.GardenRepository
 import com.kbomeisl.gukura.data.repository.HomeRepository
@@ -48,7 +49,8 @@ val viewmodelModule = module {
     viewModel<PlantViewModel> {
         PlantViewModel(
             get<PlantRepository>(),
-            get<GardenRepository>()
+            get<GardenRepository>(),
+            get<SensorManager>()
         )
     }
 }

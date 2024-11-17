@@ -58,14 +58,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun GukuraBaseScreen(
-    temperature: MutableStateFlow<Float>,
-    humidity: MutableStateFlow<Float>,
-    lightLevel: MutableStateFlow<Float>,
-    geomagneticX: MutableStateFlow<Float>,
-    geomagneticY: MutableStateFlow<Float>,
-    geomagneticZ: MutableStateFlow<Float>
-) {
+fun GukuraBaseScreen() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -308,14 +301,8 @@ fun GukuraBaseScreen(
                 modifier = Modifier,
                 content = {
                     GukuraNavHost(
-                        temperature = temperature,
-                        humidity = humidity,
-                        lightLevel = lightLevel,
                         navController = navController,
-                        geomaneticX = geomagneticX,
-                        geomaneticY = geomagneticY,
-                        geomaneticZ = geomagneticZ,
-                        snackbarHostState = snackBarHostState,
+                        snackbarHostState = snackBarHostState
                     )
                           },
                 snackbarHost = {

@@ -2,4 +2,5 @@
     <string name="app_name">Gukura</string>
     <string name="title_activity_measurement">MeasurementActivity</string>
     <string name="title_activity_sensor">SensorActivity</string>
+    <string name="title_activity_light_measurement">LightMeasurementActivity</string>
 </resources>

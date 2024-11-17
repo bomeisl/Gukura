@@ -42,20 +42,16 @@ import org.koin.androidx.compose.koinViewModel
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MeasurementScreen(
-    temperature: MutableStateFlow<Float>,
-    humidity: MutableStateFlow<Float>,
-    lightLevel: MutableStateFlow<Float>,
-    geomagneticX: MutableStateFlow<Float>,
-    geomagneticY: MutableStateFlow<Float>,
-    geomagneticZ: MutableStateFlow<Float>,
     navHostController: NavHostController,
     measurementViewModel: MeasurementViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState,
     gardenName: String = ""
 ) {
     LaunchedEffect(Unit) {
+        measurementViewModel.initializeLightMeasurements()
         measurementViewModel.populateGardenList()
     }
+
     Column(
         Modifier.padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,14 +59,12 @@ fun MeasurementScreen(
     ) {
 
         SunlightSensorCard(
-            lightLevel = lightLevel
+            lightLevel = measurementViewModel.lightEventListener.light
         )
 
-        GeomagneticSensorCard(
-            geomagneticX = geomagneticX,
-            geomagneticY = geomagneticY,
-            geomagneticZ = geomagneticZ
-        )
+//        GeomagneticSensorCard(
+//            magneticOrientation = magneticOrientation
+//        )
 
     }
 }

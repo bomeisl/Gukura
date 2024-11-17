@@ -1,6 +1,6 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
-import android.content.Context
+import android.hardware.SensorManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,10 +15,12 @@ import com.kbomeisl.gukura.ui.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.get
 
 open class PlantViewModel(
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository,
+    val sensorManager: SensorManager = get(SensorManager::class.java)
 ): ViewModel(), DefaultLifecycleObserver {
     open val coroutineScope = viewModelScope
     val plantList = MutableStateFlow(listOf<PlantUi>())

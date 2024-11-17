@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
+import android.hardware.SensorManager
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,14 +19,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.koin.compose.getKoin
+import org.koin.compose.koinInject
+import org.koin.core.context.GlobalContext.get
 
 class FindAPlantViewModel(
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository
 ): PlantViewModel(
-        plantRepository = plantRepository,
-        gardenRepository = gardenRepository
-    ) {
+    plantRepository = plantRepository,
+    gardenRepository = gardenRepository
+) {
     var plantLifeType = mutableStateOf("")
     var plantFlowerType = mutableStateOf("")
     var plantSizeType = mutableStateOf("")

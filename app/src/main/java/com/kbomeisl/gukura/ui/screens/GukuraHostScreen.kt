@@ -9,18 +9,13 @@ import androidx.navigation.compose.rememberNavController
 import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
+import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.viewmodel.factory.KoinViewModelFactory
 
 @Composable
 fun GukuraNavHost(
-    temperature: MutableStateFlow<Float>,
-    humidity: MutableStateFlow<Float>,
-    lightLevel: MutableStateFlow<Float>,
-    geomaneticX: MutableStateFlow<Float>,
-    geomaneticY: MutableStateFlow<Float>,
-    geomaneticZ: MutableStateFlow<Float>,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState
 ) {
@@ -48,24 +43,12 @@ fun GukuraNavHost(
                    val subtitle = navBackStackEntry.arguments?.getString("subtitle")
                    if (!gardenName.isNullOrEmpty()) {
                        MeasurementScreen(
-                           temperature = temperature,
-                           humidity = humidity,
-                           lightLevel = lightLevel,
-                           geomagneticX = geomaneticX,
-                           geomagneticY = geomaneticY,
-                           geomagneticZ = geomaneticZ,
                            navHostController = navController,
                            snackbarHostState = snackbarHostState,
                            gardenName = gardenName
                        )
                    } else {
                        MeasurementScreen(
-                           temperature = temperature,
-                           humidity = humidity,
-                           lightLevel = lightLevel,
-                           geomagneticX = geomaneticX,
-                           geomagneticY = geomaneticY,
-                           geomagneticZ = geomaneticZ,
                            navHostController = navController,
                            snackbarHostState = snackbarHostState
                        )
