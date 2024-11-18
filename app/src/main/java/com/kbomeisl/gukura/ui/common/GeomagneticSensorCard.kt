@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,64 +52,65 @@ fun GeomagneticSensorCard(
     val eastYOffset = 65.dp
     val westXOffset = 5.dp
     val westYOffset = 65.dp
-Row(horizontalArrangement = Arrangement.Center) {
-    Spacer(Modifier.width(120.dp))
-    Canvas(
-        modifier = Modifier.size(canvasSize),
-        onDraw = {
-            drawIntoCanvas { canvas ->
-                //compass readings
-                drawArc(
-                    brush = Brush.linearGradient(
-                        0.0f to Color.LightGray,
-                        0.4f to Color.LightGray,
-                        tileMode = TileMode.Clamp,
-                    ),
-                    topLeft = Offset(0f, 0f),
-                    startAngle = -180f, // 0 represents 3'0 clock
-                    sweepAngle = 360f, // size of the arc
-                    useCenter = true,
-                    style = Stroke(10f, cap = StrokeCap.Round),
-                    size = Size(R.toPx(), R.toPx())
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "N",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(northXOffset.toPx(), northYOffset.toPx())
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "S",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(southXOffset.toPx(), southYOffset.toPx())
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "E",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(eastXOffset.toPx(), eastYOffset.toPx())
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "W",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(westXOffset.toPx(), westYOffset.toPx())
-                )
-                drawLine(
-                    brush = Brush.linearGradient(
-                        0.0f to Color.Blue,
-                        0.4f to Color.Blue,
-                        tileMode = TileMode.Clamp,
-                    ),
-                    start = Offset(needleStart.toPx(), needleStart.toPx()),
-                    end = Offset(
-                        (cos(Math.toRadians(magneticOrientationState.value.toDouble() - 90)) * (R / 2).toPx() + needleStart.toPx()).toFloat(),
-                        (sin(Math.toRadians(magneticOrientationState.value.toDouble() - 90)) * (R / 2).toPx() + needleStart.toPx()).toFloat()
-                    )
-                )
-            }
+    Surface(shadowElevation = 10.dp, shape = CircleShape) {
+        Row(horizontalArrangement = Arrangement.Center) {
+            Canvas(
+                modifier = Modifier.size(canvasSize),
+                onDraw = {
+                    drawIntoCanvas { canvas ->
+                        //compass readings
+                        drawArc(
+                            brush = Brush.linearGradient(
+                                0.0f to Color.LightGray,
+                                0.4f to Color.LightGray,
+                                tileMode = TileMode.Clamp,
+                            ),
+                            topLeft = Offset(0f, 0f),
+                            startAngle = -180f, // 0 represents 3'0 clock
+                            sweepAngle = 360f, // size of the arc
+                            useCenter = true,
+                            style = Stroke(10f, cap = StrokeCap.Round),
+                            size = Size(R.toPx(), R.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = "N",
+                            style = TextStyle(fontFamily = FontFamily.Monospace),
+                            topLeft = Offset(northXOffset.toPx(), northYOffset.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = "S",
+                            style = TextStyle(fontFamily = FontFamily.Monospace),
+                            topLeft = Offset(southXOffset.toPx(), southYOffset.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = "E",
+                            style = TextStyle(fontFamily = FontFamily.Monospace),
+                            topLeft = Offset(eastXOffset.toPx(), eastYOffset.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = "W",
+                            style = TextStyle(fontFamily = FontFamily.Monospace),
+                            topLeft = Offset(westXOffset.toPx(), westYOffset.toPx())
+                        )
+                        drawLine(
+                            brush = Brush.linearGradient(
+                                0.0f to Color.Red,
+                                0.4f to Color.Red,
+                                tileMode = TileMode.Clamp,
+                            ),
+                            start = Offset(needleStart.toPx(), needleStart.toPx()),
+                            end = Offset(
+                                (cos(Math.toRadians(magneticOrientationState.value.toDouble() - 90)) * (R / 2).toPx() + needleStart.toPx()).toFloat(),
+                                (sin(Math.toRadians(magneticOrientationState.value.toDouble() - 90)) * (R / 2).toPx() + needleStart.toPx()).toFloat()
+                            )
+                        )
+                    }
+                }
+            )
         }
-    )
-}
+    }
 }

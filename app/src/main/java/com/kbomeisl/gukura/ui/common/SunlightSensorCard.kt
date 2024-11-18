@@ -2,11 +2,18 @@ package com.kbomeisl.gukura.ui.common
 
 import android.hardware.lights.Light
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.text.TextStyle
@@ -44,33 +51,54 @@ fun SunlightSensorCard(
             }
         }
     }
-
-    Canvas(
-        modifier = Modifier.size(300.dp),
-        onDraw = {
-            drawIntoCanvas { canvas ->
-                //sunlight gauge
-                drawCircle(
-                    color = sunOrange,
-                    radius = 230f,
-                    alpha = lightLevelState.value / 4000,
-                    center = Offset(500f, 500f)
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
-                    style = TextStyle(fontFamily = FontFamily.Monospace, textAlign = TextAlign.Center),
-                    topLeft = Offset(350f, 400f)
-                )
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = lightCondition.value,
-                    style = TextStyle(fontFamily = FontFamily.Monospace, textAlign = TextAlign.Center),
-                    topLeft = Offset(350f, 550f)
-                )
-                canvas.save()
-                canvas.restore()
-            }
+    val canvasSize = 200.dp
+    val textXOffest = 20.dp
+    val textYOffset = 50.dp
+    val textXOffest2 = 30.dp
+    val textYOffset2 = 150.dp
+    val sunOffsetX = 100.dp
+    val sunOffsetY = 100.dp
+    Surface(
+        modifier = Modifier
+            .size(canvasSize),
+        shadowElevation = 10.dp,
+        shape = CircleShape
+    ) {
+        Row(horizontalArrangement = Arrangement.Center) {
+            Canvas(
+                modifier = Modifier.size(canvasSize),
+                onDraw = {
+                    drawIntoCanvas { canvas ->
+                        //sunlight gauge
+                        drawCircle(
+                            color = sunOrange,
+                            radius = 230f,
+                            alpha = lightLevelState.value / 4000,
+                            center = Offset(sunOffsetX.toPx(), sunOffsetY.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
+                            style = TextStyle(
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center
+                            ),
+                            topLeft = Offset(textXOffest.toPx(), textYOffset.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = lightCondition.value,
+                            style = TextStyle(
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = TextAlign.Center
+                            ),
+                            topLeft = Offset(textXOffest2.toPx(), textYOffset2.toPx())
+                        )
+                        canvas.save()
+                        canvas.restore()
+                    }
+                }
+            )
         }
-    )
+    }
 }
