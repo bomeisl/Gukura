@@ -4,6 +4,7 @@ import android.hardware.SensorManager
 import com.kbomeisl.gukura.data.database.MeasurementDao
 import com.kbomeisl.gukura.data.repository.GardenRepository
 import com.kbomeisl.gukura.data.repository.HomeRepository
+import com.kbomeisl.gukura.data.repository.LocationRepository
 import com.kbomeisl.gukura.data.repository.MyPlantsRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.WeatherRepository
@@ -37,7 +38,8 @@ val viewmodelModule = module {
             get<MeasurementDao>(),
             get<PlantRepository>(),
             get<GardenRepository>(),
-            get<WeatherRepository>()
+            get<WeatherRepository>(),
+            get<LocationRepository>()
         )
     }
     viewModel<WhereToPlantViewModel> {

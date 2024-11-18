@@ -61,10 +61,10 @@ fun MeasurementScreen(
         SunlightSensorCard(
             lightLevel = measurementViewModel.lightEventListener.light
         )
-
-//        GeomagneticSensorCard(
-//            magneticOrientation = magneticOrientation
-//        )
+        Spacer(Modifier.height(30.dp))
+        GeomagneticSensorCard(
+            magneticOrientation = measurementViewModel.heading
+        )
 
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kbomeisl.gukura.data.sensor.LightConditions
@@ -51,21 +52,21 @@ fun SunlightSensorCard(
                 //sunlight gauge
                 drawCircle(
                     color = sunOrange,
-                    radius = 200f,
+                    radius = 230f,
                     alpha = lightLevelState.value / 4000,
                     center = Offset(500f, 500f)
                 )
                 drawText(
                     textMeasurer = textMeasurer,
                     text = "Ambient Sunlight: " + lightLevelState.value.toString() + " lux",
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(230f, 400f)
+                    style = TextStyle(fontFamily = FontFamily.Monospace, textAlign = TextAlign.Center),
+                    topLeft = Offset(350f, 400f)
                 )
                 drawText(
                     textMeasurer = textMeasurer,
                     text = lightCondition.value,
-                    style = TextStyle(fontFamily = FontFamily.Monospace),
-                    topLeft = Offset(300f, 550f)
+                    style = TextStyle(fontFamily = FontFamily.Monospace, textAlign = TextAlign.Center),
+                    topLeft = Offset(350f, 550f)
                 )
                 canvas.save()
                 canvas.restore()

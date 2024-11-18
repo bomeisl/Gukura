@@ -9,11 +9,11 @@ import com.kbomeisl.gukura.data.database.MeasurementDao
 import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.data.database.models.MeasurementDb
 import com.kbomeisl.gukura.data.repository.GardenRepository
+import com.kbomeisl.gukura.data.repository.LocationRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.WeatherRepository
 import com.kbomeisl.gukura.data.sensor.CompassEventListener
 import com.kbomeisl.gukura.data.sensor.LightEventListener
-import com.kbomeisl.gukura.data.sensor.sensorDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,6 +23,7 @@ class MeasurementViewModel(
     private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository,
     private val weatherRepository: WeatherRepository,
+    private val locationRepository: LocationRepository
 ): PlantViewModel(plantRepository,gardenRepository) {
     val logTag = "Measurement View Model"
     val outsideHumidity = MutableStateFlow(0)
@@ -40,33 +41,34 @@ class MeasurementViewModel(
     var inclinationMatrix = floatArrayOf(0f,0f,0f,0f,0f,0f,0f,0f,0f)
     var magneticOrientation = floatArrayOf(0f,0f,0f)
     val magneticOrientationX = MutableStateFlow(magneticOrientation[1])
+    val heading = locationRepository.heading
 
     init {
         sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL)
+        //bootstrap light sensor systems
         initializeLightSensor()
         lightEventListener = LightEventListener()
         lightSensor?.also { sensorManager.registerListener(lightEventListener, it, samplingIntervalMs) }
+        //bootstrap compass sensor systems
+        initializeCompassSensor()
+        compassEventListener = CompassEventListener()
+        locationRepository.initializeLocationServices()
     }
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
-
-
     }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
         Log.d(logTag, "OnResume")
         lightSensor?.also { sensorManager.registerListener(lightEventListener, it, samplingIntervalMs) }
-        accelerometerSensor?.also { sensorManager.registerListener(compassEventListener, it, samplingIntervalMs) }
-        geomagneticSensor?.also { sensorManager.registerListener(compassEventListener, it, samplingIntervalMs) }
     }
 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
         lightSensor?.let { sensorManager.unregisterListener(lightEventListener) }
-        accelerometerSensor?.let { sensorManager.unregisterListener(compassEventListener) }
-        compassEventListener?.let { sensorManager.unregisterListener(compassEventListener) }
+        locationRepository.unRegisterLocationListener()
     }
 
     fun saveMeasurementToDb(

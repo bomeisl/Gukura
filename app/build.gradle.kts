@@ -104,5 +104,7 @@ dependencies {
     //Kotlin Serialization
     implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    //Play
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
 
