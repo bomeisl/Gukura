@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,24 +55,6 @@ fun GardenCard(
             ) {
                 Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
                     Icon(
-                        painter = painterResource(R.drawable.thermometer),
-                        "",
-                        Modifier.size(10.dp).align(Alignment.CenterVertically),
-                        tint = Color.Red
-                    )
-                    Text(gardenUi.avgTemperature + "°F", fontFamily = FontFamily.Monospace)
-                }
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
-                    Icon(
-                        painter = painterResource(R.drawable.humidity),
-                        "",
-                        Modifier.size(10.dp).align(Alignment.CenterVertically),
-                        tint = skyBlue,
-                    )
-                    Text(gardenUi.avgHumidity + "%", fontFamily = FontFamily.Monospace)
-                }
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
-                    Icon(
                         painter = painterResource(R.drawable.sun_2),
                         "",
                         Modifier.size(10.dp).align(Alignment.CenterVertically),
@@ -79,6 +62,15 @@ fun GardenCard(
                     )
                     Text(gardenUi.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
                 }
+                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
+                    Image(
+                        painter = painterResource(R.drawable.window2),
+                        "",
+                        Modifier.size(10.dp).align(Alignment.CenterVertically)
+                    )
+                    Text(gardenUi.windowDirection + " facing window", fontFamily = FontFamily.Monospace)
+                }
+
             }
             Row {
                 Column(Modifier

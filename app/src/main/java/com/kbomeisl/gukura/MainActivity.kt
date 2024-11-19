@@ -25,6 +25,7 @@ import com.kbomeisl.gukura.data.sensor.sensorDataSource.temperatureSensor
 import com.kbomeisl.gukura.ui.common.GukuraBaseScreen
 import com.kbomeisl.gukura.ui.theme.GukuraTheme
 import com.kbomeisl.gukura.ui.viewmodels.PlantViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -33,15 +34,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity() : ComponentActivity() {
     private val logtag = "Main Activity"
-    private val gardenRepository = get<GardenRepository>()
-    private val plantRepository = get<PlantRepository>()
-    private val sensorManager = get<SensorManager>()
     private val plantViewModel: PlantViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        this.lifecycleScope.launch { plantViewModel.initialPlantCaching() }
+        this.lifecycleScope.launch(Dispatchers.IO) { plantViewModel.initialPlantCaching() }
         lifecycle.addObserver(plantViewModel)
         enableEdgeToEdge()
         setContent {

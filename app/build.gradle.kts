@@ -101,6 +101,8 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testImplementation("io.mockk:mockk:1.13.13")
     testImplementation("org.robolectric:robolectric:4.13")
+    //Gson
+    implementation("com.google.code.gson:gson:2.11.0")
     //Kotlin Serialization
     implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")

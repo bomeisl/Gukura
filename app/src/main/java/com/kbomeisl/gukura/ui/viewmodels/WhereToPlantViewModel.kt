@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 
 class WhereToPlantViewModel(
     private val gardenRepository: GardenRepository,
-    private val plantRepository: PlantRepository
-): PlantViewModel(plantRepository, gardenRepository) {
+): PlantViewModel() {
     val recommendedGardenList = MutableStateFlow(listOf<GardenUi>())
     val plantSearchList = MutableStateFlow(listOf<PlantUi>())
 }

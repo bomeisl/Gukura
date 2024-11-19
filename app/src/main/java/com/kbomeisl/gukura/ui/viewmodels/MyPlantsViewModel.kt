@@ -3,6 +3,7 @@ package com.kbomeisl.gukura.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.MyPlantsRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
@@ -21,7 +22,7 @@ class MyPlantsViewModel(
 
     fun getMyPlants() {
         coroutineScope.launch {
-            wishListPlants.value = plantRepository.getAllPlantsDb()
+            wishListPlants.value = plantRepository.getAllPlantsDb().map { it.toUi() }
                 .filter { it.wishListed == true }
         }
     }

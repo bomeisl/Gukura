@@ -52,6 +52,7 @@ fun GeomagneticSensorCard(
     val eastYOffset = 65.dp
     val westXOffset = 5.dp
     val westYOffset = 65.dp
+    val textOffset = 20.dp
     Surface(shadowElevation = 10.dp, shape = CircleShape) {
         Row(horizontalArrangement = Arrangement.Center) {
             Canvas(
@@ -95,6 +96,12 @@ fun GeomagneticSensorCard(
                             text = "W",
                             style = TextStyle(fontFamily = FontFamily.Monospace),
                             topLeft = Offset(westXOffset.toPx(), westYOffset.toPx())
+                        )
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = magneticOrientationState.value.toString(),
+                            style = TextStyle(fontFamily = FontFamily.Monospace),
+                            topLeft = Offset(southXOffset.toPx(), southYOffset.toPx()-textOffset.toPx())
                         )
                         drawLine(
                             brush = Brush.linearGradient(

@@ -61,8 +61,18 @@ fun GukuraNavHost(
                composable(route = Routes.PLANTDB.name) {
                    PlantDatabaseScreen(snackbarHostState = snackbarHostState)
                }
-               composable(route = Routes.PLANTRECOMMENDATIONS.name) {
-                   PlantRecommendationScreen(snackbarHostState = snackbarHostState)
+               composable(route = "${Routes.PLANTRECOMMENDATIONS.name}/{heading}/{light}") { navBackStackEntry ->
+                   val heading = navBackStackEntry.arguments?.getString("heading")
+                   val light = navBackStackEntry.arguments?.getString("light")
+                   light?.also {
+                       heading?.also {
+                           PlantRecommendationScreen(
+                               heading = heading,
+                               light = light,
+                               snackbarHostState = snackbarHostState
+                           )
+                       }
+                   }
                }
            }
        }

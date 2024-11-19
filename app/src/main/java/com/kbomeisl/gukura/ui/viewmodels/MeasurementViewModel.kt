@@ -20,11 +20,10 @@ import kotlinx.coroutines.launch
 
 class MeasurementViewModel(
     private val measurementDao: MeasurementDao,
-    private val plantRepository: PlantRepository,
     private val gardenRepository: GardenRepository,
     private val weatherRepository: WeatherRepository,
     private val locationRepository: LocationRepository
-): PlantViewModel(plantRepository,gardenRepository) {
+): PlantViewModel() {
     val logTag = "Measurement View Model"
     val outsideHumidity = MutableStateFlow(0)
     val outsideTemperature = MutableStateFlow(0f)
@@ -137,5 +136,25 @@ class MeasurementViewModel(
 
     fun initializeLightMeasurements() {
         lightSensor?.also { sensorManager.registerListener(lightEventListener, it, samplingIntervalMs) }
+    }
+
+    fun saveGardenMeasurements(
+        gardenName: String,
+        lightLevel: Float,
+        compassDirection: String
+    ) {
+        coroutineScope.launch(Dispatchers.IO) {
+            val garden = gardenRepository.getGardenByName(gardenName = gardenName)
+            gardenRepository.upsertGarden(
+                GardenDb(
+                    gardenId = garden.gardenId,
+                    name = garden.name,
+                    avgTemperature = garden.avgTemperature,
+                    avgHumidity = garden.avgHumidity,
+                    avgLightLevel = lightLevel.toString(),
+                    windowDirection = compassDirection
+                )
+            )
+        }
     }
 }

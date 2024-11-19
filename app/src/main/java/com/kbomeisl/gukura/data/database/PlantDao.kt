@@ -2,12 +2,14 @@ package com.kbomeisl.gukura.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.DeleteTable
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
 import com.kbomeisl.gukura.data.database.models.PlantDb
+import com.kbomeisl.gukura.ui.testData.plants
 
 @Dao
 interface PlantDao {

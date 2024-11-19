@@ -15,7 +15,7 @@ import com.kbomeisl.gukura.ui.models.PlantUi
 class PlantRepository(
     private val plantDao: PlantDao,
     private val gardenDao: GardenDao
-) {
+):BaseRepository() {
     private val logTag = "Plant Repository"
     var failedDbInsertPlantList = mutableListOf<PlantDb>()
 
@@ -28,10 +28,10 @@ class PlantRepository(
         val plants = getAllPlantsNetwork()
         plants.forEach {
             try {
-                plantDao.insertPlant(it.toDb())
+                plantDao.upsertPlant(it.toDb())
             } catch (e: Exception) {
                 Log.e(logTag, "Insert Dao exception")
-                failedDbInsertPlantList.add(it.toDb())
+                //failedDbInsertPlantList.add(it.toDb())
             }
 
         }
@@ -46,8 +46,8 @@ class PlantRepository(
     }
 
     //retrieve all plants from the app database
-    suspend fun getAllPlantsDb(): List<PlantUi> {
-        return plantDao.listAllPlants().map { it.toUi() }
+    suspend fun getAllPlantsDb(): List<PlantDb> {
+        return plantDao.listAllPlants()
     }
 
     //retrieve a plant from the app database by name
@@ -69,18 +69,6 @@ class PlantRepository(
       return plantNetworkDataSource.getPlantsByNames(listOf(plantName))
           .first()
           .toUi()
-    }
-
-    suspend fun getPlantsInRange(
-        temperature: Float,
-        humidity: Float,
-        lightLevel: Float
-    ): List<PlantUi> {
-        return plantNetworkDataSource.getPlantList()
-            .filter { temperature > it.tempMin-20 && temperature < it.tempMax+10 }
-            .filter { humidity > it.humidityMin-20 && humidity < it.humidityMax+10 }
-            .filter { lightLevel > it.lightMin-1000 && lightLevel < it.lightMax+1000 }
-            .map { it.toUi() }
     }
 
     suspend fun upsertPlant(plantDb: PlantDb) {
@@ -129,5 +117,11 @@ class PlantRepository(
                 gardenLightLevel = gardenDb.avgLightLevel
             )
         )
+    }
+
+    suspend fun purgePlants(plantList: List<PlantDb>) {
+        plantList.forEach {
+            plantDao.deletePlant(it)
+        }
     }
 }

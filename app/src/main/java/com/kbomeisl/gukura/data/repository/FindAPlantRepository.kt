@@ -19,7 +19,7 @@ class FindAPlantRepository(
         return plantNetworkDataSource.getPlantList()
     }
 
-    fun indexPlantNames(plantList: List<PlantNetwork>): List<String> {
+    fun indexPlantNames(plantList: List<PlantNetwork>): List<String?> {
         return plantList.map { plant -> plant.name }
     }
 

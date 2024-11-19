@@ -38,12 +38,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -62,12 +64,17 @@ import com.kbomeisl.gukura.ui.common.SensorCard
 import com.kbomeisl.gukura.ui.common.SunlightSensorCard
 import com.kbomeisl.gukura.ui.common.TemperatureSensorCard
 import com.kbomeisl.gukura.ui.models.GukuraTopAppBar
+import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.theme.forestGreen
 import com.kbomeisl.gukura.ui.theme.nightBlue
 import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -78,22 +85,26 @@ fun MeasurementScreen(
     snackbarHostState: SnackbarHostState,
     gardenName: String = ""
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val light = measurementViewModel.lightEventListener.light.collectAsStateWithLifecycle()
+    val heading = measurementViewModel.heading.collectAsStateWithLifecycle()
     val enableAnimation1 = remember { mutableStateOf(false) }
     val enableAnimation2 = remember { mutableStateOf(false) }
     val animatedFloat by animateDpAsState(
-        targetValue = if (enableAnimation1.value) 0.dp else 80.dp,
-        animationSpec = tween(durationMillis = 5000)
+        targetValue = if (enableAnimation1.value) 0.dp else 100.dp,
+        animationSpec = tween(durationMillis = 3000)
     )
     val animatedFloat2 by animateFloatAsState(
         targetValue = if (enableAnimation2.value) 1f else 0f,
-        animationSpec = tween(3000)
+        animationSpec = tween(1000)
     )
 
     LaunchedEffect(Unit) {
         enableAnimation1.value = !enableAnimation1.value
-        delay(6000)
+        delay(3000)
         enableAnimation2.value = !enableAnimation2.value
     }
+
     val active = remember { mutableStateOf(false) }
     val spacer: Dp by animateDpAsState(if (active.value) 0.dp else 30.dp)
     LaunchedEffect(Unit) {
@@ -136,17 +147,35 @@ fun MeasurementScreen(
                 )
             }
             Spacer(Modifier.height(animatedFloat))
-            Image(painter = painterResource(R.drawable.phone), "")
+            Image(painter = painterResource(R.drawable.phone), "", Modifier.size(150.dp))
             Surface(Modifier.alpha(animatedFloat2)) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         painter = painterResource(R.drawable.sensor),
                         "",
                         tint = nightBlue,
-                        modifier = Modifier.size(60.dp).clickable {  }
+                        modifier = Modifier.size(60.dp).clickable {
+                            navHostController.navigate(
+                                route = "${Routes.PLANTRECOMMENDATIONS.name}/${heading.value.toString()}/${light.value.toString()}"
+                            )
+                            val direction = measurementViewModel.convertCompassHeadingToDirection(heading.value)
+                            if (!direction.isNullOrEmpty()) {
+                                measurementViewModel.saveGardenMeasurements(
+                                    gardenName = gardenName,
+                                    lightLevel = light.value,
+                                    compassDirection = direction
+                                )
+                            } else {
+                                measurementViewModel.saveGardenMeasurements(
+                                    gardenName = gardenName,
+                                    lightLevel = light.value,
+                                    compassDirection = ""
+                                )
+                            }
+                        }
                     )
                     Text(
-                        "Then press the above button to measure the ambient sunlight and direction that the windows are facing in this room",
+                        "Then hold your phone level, point the top towards the window, and press the above button",
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Light,
                         fontFamily = FontFamily.SansSerif,

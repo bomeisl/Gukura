@@ -9,6 +9,7 @@ import com.kbomeisl.gukura.data.repository.MyPlantsRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.WeatherRepository
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
+import com.kbomeisl.gukura.ui.viewmodels.GardenPlannerViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MyPlantsViewModel
@@ -20,15 +21,10 @@ import org.koin.dsl.module
 val viewmodelModule = module {
     viewModel<HomeViewModel> {
         HomeViewModel(
-            get<PlantRepository>(),
-            get<GardenRepository>()
         )
     }
     viewModel<FindAPlantViewModel> {
-        FindAPlantViewModel(
-            get<PlantRepository>(),
-            get<GardenRepository>()
-        )
+        FindAPlantViewModel()
     }
     viewModel<MyPlantsViewModel> {
         MyPlantsViewModel(get<PlantRepository>())
@@ -36,16 +32,14 @@ val viewmodelModule = module {
     viewModel<MeasurementViewModel> {
         MeasurementViewModel(
             get<MeasurementDao>(),
-            get<PlantRepository>(),
-            get<GardenRepository>(),
-            get<WeatherRepository>(),
-            get<LocationRepository>()
+            gardenRepository = get<GardenRepository>(),
+            weatherRepository =get<WeatherRepository>(),
+            locationRepository = get<LocationRepository>(),
         )
     }
     viewModel<WhereToPlantViewModel> {
         WhereToPlantViewModel(
             get<GardenRepository>(),
-            get<PlantRepository>()
         )
     }
     viewModel<PlantViewModel> {
@@ -54,5 +48,8 @@ val viewmodelModule = module {
             get<GardenRepository>(),
             get<SensorManager>()
         )
+    }
+    viewModel<GardenPlannerViewModel> {
+        GardenPlannerViewModel()
     }
 }

@@ -7,6 +7,7 @@ data class GardenUi(
     val avgTemperature: String="",
     val avgHumidity: String="",
     val avgLightLevel: String="",
+    var windowDirection: String="",
     val plants: List<PlantUi> = listOf<PlantUi>()
 )
 
@@ -16,5 +17,6 @@ fun GardenUi.toDb(): GardenDb =
         name = name,
         avgTemperature = avgTemperature,
         avgHumidity = avgHumidity,
-        avgLightLevel = avgLightLevel
+        avgLightLevel = avgLightLevel,
+        windowDirection = windowDirection
     )

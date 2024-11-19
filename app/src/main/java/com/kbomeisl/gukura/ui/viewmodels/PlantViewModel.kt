@@ -9,6 +9,7 @@ import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.GardenRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
+import com.kbomeisl.gukura.data.sensor.CompassHeading
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.models.toDb
@@ -18,12 +19,12 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.get
 
 open class PlantViewModel(
-    private val plantRepository: PlantRepository,
-    private val gardenRepository: GardenRepository,
+    val plantRepository: PlantRepository = get(PlantRepository::class.java),
+    private val gardenRepository: GardenRepository = get(GardenRepository::class.java),
     val sensorManager: SensorManager = get(SensorManager::class.java)
 ): ViewModel(), DefaultLifecycleObserver {
     open val coroutineScope = viewModelScope
-    val plantList = MutableStateFlow(listOf<PlantUi>())
+    open val plantList = MutableStateFlow(listOf<PlantUi>())
     val gardenPlantList = MutableStateFlow(listOf<PlantUi>())
     val gardenList = MutableStateFlow(listOf<GardenUi>())
     val recommendedPlantList = MutableStateFlow(listOf<PlantUi>())
@@ -37,22 +38,57 @@ open class PlantViewModel(
         }
     }
 
-    fun getAllPlantsForScreen() {
+    fun convertCompassHeadingToDirection(heading: Float): String? {
+        if (heading <= CompassHeading.EAST.max
+            &&
+            heading >= CompassHeading.EAST.min
+        ) {
+            return CompassHeading.EAST.dir
+        }
+        if (heading <= CompassHeading.WEST.max
+            &&
+            heading >= CompassHeading.WEST.min
+        ) {
+            return CompassHeading.WEST.dir
+        }
+        if (heading <= CompassHeading.SOUTH.max
+            &&
+            heading >= CompassHeading.SOUTH.min
+        ) {
+            return CompassHeading.SOUTH.dir
+        }
+        if (heading >= CompassHeading.NORTH.min
+            &&
+            heading <= CompassHeading.NORTH.max
+        ) {
+            return CompassHeading.NORTH.dir
+        }
+        if (heading >= CompassHeading.NORTH2.min
+            &&
+            heading <= CompassHeading.NORTH2.max
+        ) {
+            return CompassHeading.NORTH.dir
+        } else {
+            return null
+        }
+    }
+
+    open fun getAllPlantsForScreen() {
         coroutineScope.launch(Dispatchers.IO) {
-            plantList.value = plantRepository.getAllPlantsDb()
+            plantList.value = plantRepository.getAllPlantsDb().map { it.toUi() }
         }
     }
 
     fun getPlantsDb() {
         coroutineScope.launch(Dispatchers.IO) {
-            plantList.value = plantRepository.getAllPlantsDb()
+            plantList.value = plantRepository.getAllPlantsDb().map { it.toUi() }
         }
     }
 
     fun getPlantsByName(plantName: String) {
         coroutineScope.launch {
             plantList.value = plantRepository.getAllPlantsNetwork()
-                .filter { it.name.startsWith(plantName, ignoreCase = true) }
+                .filter { it.name?.startsWith(plantName, ignoreCase = true) ?: false }
                 .map { it.toUi() }
         }
     }
@@ -66,7 +102,7 @@ open class PlantViewModel(
                 it.gardenLightLevel = lightLevel.toString()
             }
             recommendedPlantList.value = plants
-            plantList.value = plantRepository.getAllPlantsDb()
+            plantList.value = plantRepository.getAllPlantsDb().map { it.toUi() }
             gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
         }
     }
@@ -92,14 +128,14 @@ open class PlantViewModel(
 
     fun getPlantsInGarden(gardenName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            gardenPlantList.value = plantRepository.getAllPlantsDb()
+            gardenPlantList.value = plantRepository.getAllPlantsDb().map { it.toUi() }
                 .filter { it.gardenName ==  gardenName}
         }
     }
 
     fun getMyPlants() {
         coroutineScope.launch(Dispatchers.IO) {
-            wishListPlants.value = plantRepository.getAllPlantsDb()
+            wishListPlants.value = plantRepository.getAllPlantsDb().map { it.toUi() }
                 .filter { it.wishListed }
         }
     }

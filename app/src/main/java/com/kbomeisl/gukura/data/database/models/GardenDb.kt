@@ -11,6 +11,7 @@ data class GardenDb(
     var avgTemperature: String="0",
     var avgHumidity: String="0",
     var avgLightLevel: String="0",
+    var windowDirection: String=""
 )
 
 fun GardenDb.toUi(): GardenUi =
@@ -18,5 +19,6 @@ fun GardenDb.toUi(): GardenUi =
         name = name,
         avgTemperature = avgTemperature,
         avgHumidity = avgHumidity,
-        avgLightLevel = avgLightLevel
+        avgLightLevel = avgLightLevel,
+        windowDirection = windowDirection
     )

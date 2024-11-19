@@ -23,13 +23,7 @@ import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import org.koin.core.context.GlobalContext.get
 
-class FindAPlantViewModel(
-    private val plantRepository: PlantRepository,
-    private val gardenRepository: GardenRepository
-): PlantViewModel(
-    plantRepository = plantRepository,
-    gardenRepository = gardenRepository
-) {
+class FindAPlantViewModel(): PlantViewModel() {
     var plantLifeType = mutableStateOf("")
     var plantFlowerType = mutableStateOf("")
     var plantSizeType = mutableStateOf("")

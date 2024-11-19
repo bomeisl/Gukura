@@ -20,10 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-    private val plantRepository: PlantRepository,
-    private val gardenRepository: GardenRepository
-): PlantViewModel(plantRepository, gardenRepository) {
+class HomeViewModel(): PlantViewModel() {
 
     var recommendedPlants = listOf<PlantUi>()
 

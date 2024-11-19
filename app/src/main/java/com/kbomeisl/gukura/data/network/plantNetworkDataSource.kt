@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.data.network
 import android.util.Log
+import com.google.gson.GsonBuilder
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.environmentalVariables
@@ -22,7 +23,9 @@ object plantNetworkDataSource {
 
     val ktorClient = HttpClient(CIO) {
         install(ContentNegotiation) {
-            gson()
+           gson{
+               GsonBuilder().setPrettyPrinting().serializeNulls()
+           }
         }
     }
 

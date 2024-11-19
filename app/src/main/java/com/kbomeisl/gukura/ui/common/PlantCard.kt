@@ -54,7 +54,7 @@ fun PlantCard(
     snackbarHostState: SnackbarHostState,
     addGarden:  (garden: GardenUi, plantUi: PlantUi) -> Unit,
     clearGarden: (garden: GardenUi, plantUi: PlantUi) -> Unit,
-    gardenList: MutableStateFlow<List<GardenUi>>,
+    gardenList: MutableStateFlow<List<GardenUi>> = MutableStateFlow(listOf()),
     showGardenStats: Boolean = false
 ) {
     val colorToggleHeart = remember { mutableStateOf(false) }
@@ -247,7 +247,6 @@ fun PlantCard(
                                             )
                                         },
                                         onClick = {
-                                            colorToggleHeart.value = !colorToggleHeart.value
                                             if (!colorToggleHeart.value) {
                                                 coroutineScope.launch {
                                                     snackbarHostState.showSnackbar(
@@ -266,6 +265,7 @@ fun PlantCard(
                                                 }
                                             }
                                            addGarden(currentGardenUi.value, plantUi)
+                                           colorToggleHeart.value = !colorToggleHeart.value
                                         }
                                     )
 
