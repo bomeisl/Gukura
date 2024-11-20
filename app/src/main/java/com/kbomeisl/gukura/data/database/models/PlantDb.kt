@@ -20,6 +20,8 @@ data class PlantDb(
     val minLightLevel: Int = 0,
     var imageUrl: String="",
     var wishListed: Boolean = false,
+    var dryWeight: Int = 0,
+    var wetWeight: Int = 0,
     //Garden values
     var gardenName: String = "",
     var gardenTemp: String = "0",

@@ -5,7 +5,6 @@ import com.kbomeisl.gukura.data.database.GardenDao
 import com.kbomeisl.gukura.data.database.PlantDao
 import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.data.database.models.PlantDb
-import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.network.models.PlantNetwork
 import com.kbomeisl.gukura.data.network.models.toDb
 import com.kbomeisl.gukura.data.network.models.toUi

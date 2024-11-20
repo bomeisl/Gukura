@@ -29,6 +29,7 @@ import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.ui.common.PlantCard
 import com.kbomeisl.gukura.ui.models.PlantUi
+import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.theme.sunOrange
 import com.kbomeisl.gukura.ui.viewmodels.GardenPlannerViewModel
 import io.ktor.util.reflect.typeInfo
@@ -79,9 +80,10 @@ fun PlantRecommendationScreen(
                     PlantCard(
                         it,
                         snackbarHostState = snackbarHostState,
-                        addGarden = {garden, plantUi ->  },
-                        clearGarden = {garden, plantUi ->  },
+                        addGarden = {garden, plantUi ->  gardenPlannerViewModel.addGardenToPlant(plantUi = plantUi, gardenDb = garden.toDb())},
+                        clearGarden = { garden, plantUi ->  gardenPlannerViewModel.removeGardenFromPlant(plantUi = plantUi, gardenName = garden.name) },
                         showGardenStats = false,
+                        gardenList = gardenPlannerViewModel.gardenList
                     )
                 }
             }

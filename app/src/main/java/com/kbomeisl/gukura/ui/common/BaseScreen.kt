@@ -196,17 +196,17 @@ fun GukuraBaseScreen() {
                             },
                             onClick = {
                                 navController.navigate(Routes.MYPLANTS.name)
-                                subtitle = "My Plant Wishlist"
+                                subtitle = "Wishlist"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
                         Text(
-                            "My Plant Wishlist",
+                            "Wishlist",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp).clickable {
                                 navController.navigate(Routes.MYPLANTS.name)
-                                subtitle = "My Plant Wishlist"
+                                subtitle = "Wishlist"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )

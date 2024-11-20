@@ -56,7 +56,9 @@ fun GukuraNavHost(
 
                }
                composable(route = Routes.MYPLANTS.name) {
-                   MyPlantsScreen()
+                   MyPlantsScreen(
+
+                   )
                }
                composable(route = Routes.PLANTDB.name) {
                    PlantDatabaseScreen(snackbarHostState = snackbarHostState)
@@ -73,6 +75,14 @@ fun GukuraNavHost(
                            )
                        }
                    }
+               }
+               composable(route = Routes.WEIGHTPLANT.name) {
+                   PlantWeightScreen()
+               }
+               composable(route = Routes.WISHLIST.name) {
+                   MyWishListScreen(
+                       snackbarHostState = snackbarHostState
+                   )
                }
            }
        }

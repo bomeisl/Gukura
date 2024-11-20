@@ -61,9 +61,7 @@ fun HomeScreen(
     }
 
     val scrollstate = rememberScrollState()
-    val verticalScrollState = rememberScrollState()
     val gardenPlantList = homeViewModel.gardenPlantList.collectAsState()
-    val currentGarden = remember { mutableStateOf(GardenUi()) }
     val expandCard = remember { mutableStateOf(false) }
     val newGardenName = remember { mutableStateOf("") }
     val gardenList = homeViewModel.gardenList.collectAsState()

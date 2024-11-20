@@ -1,11 +1,11 @@
-package com.kbomeisl.gukura.ui.screens
+package com.kbomeisl.gukura.ui.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 
 @Composable
-fun MyWishListScreen() {
+fun WishlistCard() {
     Surface {
         Column {
 

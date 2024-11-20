@@ -14,7 +14,9 @@ import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MyPlantsViewModel
 import com.kbomeisl.gukura.ui.viewmodels.PlantViewModel
+import com.kbomeisl.gukura.ui.viewmodels.WeightViewModel
 import com.kbomeisl.gukura.ui.viewmodels.WhereToPlantViewModel
+import com.kbomeisl.gukura.ui.viewmodels.WishListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -51,5 +53,11 @@ val viewmodelModule = module {
     }
     viewModel<GardenPlannerViewModel> {
         GardenPlannerViewModel()
+    }
+    viewModel<WeightViewModel> {
+        WeightViewModel()
+    }
+    viewModel<WishListViewModel>() {
+        WishListViewModel()
     }
 }

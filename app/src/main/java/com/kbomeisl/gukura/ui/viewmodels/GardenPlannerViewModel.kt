@@ -3,22 +3,20 @@ package com.kbomeisl.gukura.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.database.models.PlantDb
-import com.kbomeisl.gukura.data.database.models.toUi
-import com.kbomeisl.gukura.data.sensor.CompassHeading
-import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.models.toDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class GardenPlannerViewModel(): PlantViewModel() {
     val logTag = "Garden View Model"
     override val coroutineScope = viewModelScope
     val plantListDb = MutableStateFlow(listOf<PlantDb>())
     val filteredList = MutableStateFlow(listOf<PlantDb>())
+
+    init {
+        populateGardenList()
+    }
 
     fun getPlantsFromDb() {
         coroutineScope.launch(Dispatchers.IO) {
