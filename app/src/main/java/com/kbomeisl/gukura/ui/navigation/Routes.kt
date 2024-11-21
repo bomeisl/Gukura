@@ -8,6 +8,6 @@ enum class Routes {
     MYPLANTS,
     PLANTDB,
     PLANTRECOMMENDATIONS,
-    WEIGHTPLANT,
+    GROWTH,
     WISHLIST
 }

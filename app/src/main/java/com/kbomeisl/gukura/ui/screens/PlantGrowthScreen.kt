@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.theme.forestGreen
-import com.kbomeisl.gukura.ui.viewmodels.WeightViewModel
+import com.kbomeisl.gukura.ui.viewmodels.GrowthViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PlantWeightScreen(
-    plantWeightViewModel: WeightViewModel = koinViewModel()
+fun PlantGrowthScreen(
+    growthViewModel: GrowthViewModel = koinViewModel()
 ) {
     Surface() {
         Column {
@@ -26,7 +26,6 @@ fun PlantWeightScreen(
                 painter = painterResource(R.drawable.scale),
                 ""
             )
-
         }
     }
 }

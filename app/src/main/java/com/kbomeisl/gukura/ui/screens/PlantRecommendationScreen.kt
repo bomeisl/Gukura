@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.ui.common.PlantCard
+import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.theme.sunOrange
@@ -39,6 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 fun PlantRecommendationScreen(
     heading: String,
     light: String,
+    gardenName: String,
     gardenPlannerViewModel: GardenPlannerViewModel = koinViewModel<GardenPlannerViewModel>(),
     snackbarHostState: SnackbarHostState
 ) {
@@ -80,8 +82,12 @@ fun PlantRecommendationScreen(
                     PlantCard(
                         it,
                         snackbarHostState = snackbarHostState,
-                        addGarden = {garden, plantUi ->  gardenPlannerViewModel.addGardenToPlant(plantUi = plantUi, gardenDb = garden.toDb())},
-                        clearGarden = { garden, plantUi ->  gardenPlannerViewModel.removeGardenFromPlant(plantUi = plantUi, gardenName = garden.name) },
+                        addGarden = {gardenUi: String, plantUi: PlantUi ->
+                            gardenPlannerViewModel.addGardenToPlant(
+                                plantUi = it,
+                                gardenName = gardenName)
+                                    },
+                        clearGarden = {gardenUi: String, plantUi: PlantUi ->  },
                         showGardenStats = false,
                         gardenList = gardenPlannerViewModel.gardenList
                     )

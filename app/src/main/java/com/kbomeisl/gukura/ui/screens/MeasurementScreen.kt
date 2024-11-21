@@ -124,7 +124,7 @@ fun MeasurementScreen(
                         tint = nightBlue,
                         modifier = Modifier.size(60.dp).clickable {
                             navHostController.navigate(
-                                route = "${Routes.PLANTRECOMMENDATIONS.name}/${heading.value}/${light.value}"
+                                route = "${Routes.PLANTRECOMMENDATIONS.name}/${heading.value}/${light.value}/${gardenName}"
                             )
                             val direction = measurementViewModel.convertCompassHeadingToDirection(heading.value)
                             if (!direction.isNullOrEmpty()) {

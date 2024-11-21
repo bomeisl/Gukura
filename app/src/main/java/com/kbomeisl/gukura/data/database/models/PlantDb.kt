@@ -1,10 +1,8 @@
 package com.kbomeisl.gukura.data.database.models
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.kbomeisl.gukura.ui.models.PlantUi
-import kotlin.random.Random
 
 @Entity
 data class PlantDb(
@@ -39,6 +37,8 @@ fun PlantDb.toUi(): PlantUi {
         lightLevel = "${minLightLevel}-${maxLightLevel}",
         imageUrl = imageUrl,
         wishListed = false,
+        dryWeight = dryWeight,
+        wetWeight = wetWeight,
         //Garden values
         gardenName = gardenName,
         gardenTemp = gardenTemp,

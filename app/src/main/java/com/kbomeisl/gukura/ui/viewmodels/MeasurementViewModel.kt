@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 
 class MeasurementViewModel(
     private val measurementDao: MeasurementDao,
-    private val gardenRepository: GardenRepository,
     private val weatherRepository: WeatherRepository,
     private val locationRepository: LocationRepository
 ): PlantViewModel() {

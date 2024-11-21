@@ -30,17 +30,13 @@ fun GukuraNavHost(
                    )
                }
                composable(route = Routes.FINDAPLANT.name) {
-                   FindAPlant(
-                       navHostController = navController,
-                       snackbarHostState = snackbarHostState,
-                   )
+//
                }
                composable(route = Routes.WHERETOPLANT.name) {
                    WhereToPlantScreen(snackbarHostState=snackbarHostState)
                }
                composable("${Routes.MEASURE.name}/{gardenName}") { navBackStackEntry ->
                    val gardenName = navBackStackEntry.arguments?.getString("gardenName")
-                   val subtitle = navBackStackEntry.arguments?.getString("subtitle")
                    if (!gardenName.isNullOrEmpty()) {
                        MeasurementScreen(
                            navHostController = navController,
@@ -56,28 +52,30 @@ fun GukuraNavHost(
 
                }
                composable(route = Routes.MYPLANTS.name) {
-                   MyPlantsScreen(
-
-                   )
+                   MyPlantsScreen()
                }
                composable(route = Routes.PLANTDB.name) {
                    PlantDatabaseScreen(snackbarHostState = snackbarHostState)
                }
-               composable(route = "${Routes.PLANTRECOMMENDATIONS.name}/{heading}/{light}") { navBackStackEntry ->
+               composable(route = "${Routes.PLANTRECOMMENDATIONS.name}/{heading}/{light}/{gardenName}") { navBackStackEntry ->
                    val heading = navBackStackEntry.arguments?.getString("heading")
                    val light = navBackStackEntry.arguments?.getString("light")
+                   val gardenName = navBackStackEntry.arguments?.getString("gardenName")
                    light?.also {
                        heading?.also {
-                           PlantRecommendationScreen(
-                               heading = heading,
-                               light = light,
-                               snackbarHostState = snackbarHostState
-                           )
+                           gardenName?.also {
+                               PlantRecommendationScreen(
+                                   heading = heading,
+                                   light = light,
+                                   gardenName = gardenName,
+                                   snackbarHostState = snackbarHostState
+                               )
+                           }
                        }
                    }
                }
-               composable(route = Routes.WEIGHTPLANT.name) {
-                   PlantWeightScreen()
+               composable(route = Routes.GROWTH.name) {
+                   PlantGrowthScreen()
                }
                composable(route = Routes.WISHLIST.name) {
                    MyWishListScreen(

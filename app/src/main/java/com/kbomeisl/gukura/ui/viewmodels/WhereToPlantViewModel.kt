@@ -12,9 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class WhereToPlantViewModel(
-    private val gardenRepository: GardenRepository,
-): PlantViewModel() {
+class WhereToPlantViewModel(): PlantViewModel() {
     val recommendedGardenList = MutableStateFlow(listOf<GardenUi>())
     val plantSearchList = MutableStateFlow(listOf<PlantUi>())
 }

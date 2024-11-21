@@ -1,6 +1,7 @@
 package com.kbomeisl.gukura.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -36,11 +37,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.ui.common.GardenCard
 import com.kbomeisl.gukura.ui.common.PlantCard
-import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.toDb
 import com.kbomeisl.gukura.ui.theme.add
 import com.kbomeisl.gukura.ui.theme.bgCard
@@ -61,10 +62,11 @@ fun HomeScreen(
     }
 
     val scrollstate = rememberScrollState()
-    val gardenPlantList = homeViewModel.gardenPlantList.collectAsState()
+    val gardenPlantList = homeViewModel.gardenPlantList.collectAsStateWithLifecycle()
     val expandCard = remember { mutableStateOf(false) }
     val newGardenName = remember { mutableStateOf("") }
     val gardenList = homeViewModel.gardenList.collectAsState()
+    val currentGarden = homeViewModel.currentGarden.collectAsStateWithLifecycle()
 
     Surface {
         LazyColumn(
@@ -94,6 +96,7 @@ fun HomeScreen(
                                         it,
                                         onClick = {
                                             homeViewModel.getPlantsInGarden(it.name)
+                                            Log.d(logTag, "${gardenPlantList.value}")
                                         },
                                         removeGarden = { homeViewModel.deleteGarden(it) },
                                         navController = navHostController
@@ -172,16 +175,16 @@ fun HomeScreen(
                     PlantCard(
                         it,
                         snackbarHostState = snackbarHostState,
-                        addGarden = { garden, plantUi ->
+                        addGarden = {garden, plantUi ->
                             homeViewModel.addGardenToPlant(
                                 plantUi = plantUi,
-                                gardenDb = garden.toDb()
+                                gardenName = currentGarden.value.name
                             )
                         },
-                        clearGarden = { garden, plantUi ->
+                        clearGarden = {garden, plantUi ->
                             homeViewModel.removeGardenFromPlant(
                                 plantUi = plantUi,
-                                gardenName = garden.name
+                                gardenName = currentGarden.value.name
                             )
                         },
                         gardenList = homeViewModel.gardenList

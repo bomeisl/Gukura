@@ -20,17 +20,14 @@ import org.koin.java.KoinJavaComponent.get
 
 open class PlantViewModel(
     val plantRepository: PlantRepository = get(PlantRepository::class.java),
-    private val gardenRepository: GardenRepository = get(GardenRepository::class.java),
+    val gardenRepository: GardenRepository = get(GardenRepository::class.java),
     val sensorManager: SensorManager = get(SensorManager::class.java)
 ): ViewModel(), DefaultLifecycleObserver {
     open val coroutineScope = viewModelScope
     open val plantList = MutableStateFlow(listOf<PlantUi>())
     val gardenList = MutableStateFlow(listOf<GardenUi>())
     val recommendedPlantList = MutableStateFlow(listOf<PlantUi>())
-    val currentGarden = MutableStateFlow(GardenUi())
     val wishListPlants = MutableStateFlow(listOf<PlantUi>())
-    val gardenPlantList = MutableStateFlow(listOf<PlantUi>())
-
 
     fun initialPlantCaching() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -153,8 +150,9 @@ open class PlantViewModel(
         }
     }
 
-    fun addGardenToPlant(plantUi: PlantUi, gardenDb: GardenDb) {
+    fun addGardenToPlant(plantUi: PlantUi, gardenName: String) {
         coroutineScope.launch(Dispatchers.IO) {
+            val gardenDb = gardenRepository.getGardenByName(gardenName)
             plantRepository.addGarden(plantDb = plantUi.toDb(), gardenDb = gardenDb)
         }
     }
@@ -166,13 +164,6 @@ open class PlantViewModel(
         }
     }
 
-    fun updateCurrentGarden(newGarden: GardenUi) {
-        currentGarden.value = newGarden
-        coroutineScope.launch(Dispatchers.IO) {
-            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
-        }
-    }
-
     fun addGarden(gardenDb: GardenDb) {
         coroutineScope.launch(Dispatchers.IO) {
             gardenRepository.upsertGarden(gardenDb = gardenDb)
@@ -181,25 +172,12 @@ open class PlantViewModel(
 
     }
 
-    fun getGardens() {
-        coroutineScope.launch(Dispatchers.IO) {
-            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
-        }
-    }
-
     fun deleteGarden(gardenUi: GardenUi) {
         coroutineScope.launch(Dispatchers.IO) {
             gardenRepository.deleteGarden(gardenDb = gardenUi.toDb())
             val plantsInGarden = plantList.value.filter { it.gardenName == gardenUi.name }
             plantsInGarden.forEach { removeGardenFromPlant(it, gardenName = gardenUi.name) }
             gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
-        }
-    }
-
-    fun getPlantsInGarden(gardenName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            gardenPlantList.value = plantRepository.getAllPlantsDb().map { it.toUi() }
-                .filter { it.gardenName ==  gardenName}
         }
     }
 }

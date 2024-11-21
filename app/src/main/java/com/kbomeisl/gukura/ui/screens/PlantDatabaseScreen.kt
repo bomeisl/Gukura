@@ -41,7 +41,6 @@ fun PlantDatabaseScreen(
     var plantName = remember { mutableStateOf("") }
     val plantList = findAPlantViewModel.plantList.collectAsStateWithLifecycle()
     val gardenList = findAPlantViewModel.gardenList.collectAsStateWithLifecycle()
-    val currentGarden = findAPlantViewModel.currentGarden.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(plantName.value) {
@@ -65,17 +64,10 @@ fun PlantDatabaseScreen(
                     PlantCard(
                         it,
                         snackbarHostState = snackbarHostState,
-                        addGarden = { garden, plantUI ->
-                            findAPlantViewModel.addGardenToPlant(
-                                plantUi = plantUI,
-                                gardenDb = garden.toDb()
-                            )
+                        addGarden = { gardenUi, plantUi ->  
+                            
                         },
-                        clearGarden = { garden, plantUi ->
-                            findAPlantViewModel.removeGardenFromPlant(
-                                plantUi = plantUi,
-                                gardenName = garden.name
-                            )
+                        clearGarden = { gardenUi, plantUi ->  
                         },
                         gardenList = findAPlantViewModel.gardenList
                     )

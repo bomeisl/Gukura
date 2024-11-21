@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.GardenUi
@@ -52,8 +53,8 @@ import kotlinx.coroutines.launch
 fun PlantCard(
     plantUi: PlantUi,
     snackbarHostState: SnackbarHostState,
-    addGarden:  (garden: GardenUi, plantUi: PlantUi) -> Unit,
-    clearGarden: (garden: GardenUi, plantUi: PlantUi) -> Unit,
+    addGarden:  (gardenUi: String, plantUi: PlantUi) -> Unit,
+    clearGarden: (gardenUi: String, plantUi: PlantUi) -> Unit,
     gardenList: MutableStateFlow<List<GardenUi>> = MutableStateFlow(listOf()),
     showGardenStats: Boolean = false
 ) {
@@ -72,8 +73,7 @@ fun PlantCard(
 
     val coroutineScope = rememberCoroutineScope()
     val cardExpanded = remember {  mutableStateOf(false) }
-    val currentGardenUi = remember { mutableStateOf(GardenUi()) }
-    val gardenListUi = gardenList.collectAsState()
+    val gardenListUi = gardenList.collectAsStateWithLifecycle()
 
     Surface(
         modifier = Modifier
@@ -264,12 +264,11 @@ fun PlantCard(
                                                     )
                                                 }
                                             }
-                                           addGarden(currentGardenUi.value, plantUi)
                                            colorToggleHeart.value = !colorToggleHeart.value
                                         }
                                     )
 
-                                    AnimatedVisibility(currentGardenUi.value.name == "") {
+                                    AnimatedVisibility(gardenListUi.value.isNotEmpty()) {
                                         IconButton(
                                             content = {
                                                 Column {
@@ -286,7 +285,7 @@ fun PlantCard(
                                             },
                                         )
                                     }
-                                    AnimatedVisibility(currentGardenUi.value.name == "") {
+                                    AnimatedVisibility(plantUi.gardenName.isNotEmpty()) {
                                         IconButton(
                                             content = {
                                                 Icon(
@@ -297,7 +296,7 @@ fun PlantCard(
                                                 )
                                             },
                                             onClick = {
-                                                clearGarden(currentGardenUi.value, plantUi)
+                                                
                                             },
                                         )
                                     }
@@ -317,7 +316,7 @@ fun PlantCard(
                                 Surface(
                                     modifier = Modifier
                                         .clickable {
-                                            addGarden(it, plantUi)
+                                            addGarden(it.name, plantUi)
                                             coroutineScope.launch {
                                                 snackbarHostState.showSnackbar(
                                                     message = "${plantUi.name} added to ${it.name}",

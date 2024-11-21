@@ -29,7 +29,7 @@ fun WhereToPlantScreen(
 ) {
     val plant = remember { mutableStateOf("") }
     val plantSearchList = whereToPlantViewModel.plantSearchList.collectAsStateWithLifecycle()
-    val currentGarden = whereToPlantViewModel.currentGarden.collectAsStateWithLifecycle()
+
     Surface() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.height(140.dp))
@@ -48,17 +48,12 @@ fun WhereToPlantScreen(
                         PlantCard(
                             plant,
                             snackbarHostState = snackbarHostState,
-                            addGarden = {garden, plantUi ->
-                                whereToPlantViewModel.addGardenToPlant(
-                                    plantUi = plantUi,
-                                    gardenDb = garden.toDb()
-                                )
-                            },
-                            clearGarden = {garden, plantUi ->
-                                whereToPlantViewModel.removeGardenFromPlant(
-                                    plantUi = plantUi,
-                                    gardenName = garden.name
-                                )
+                            addGarden = {gardenUi, plantUi ->
+
+                                        },
+                            clearGarden = {gardenUi, plantUi ->
+
+
                             },
                             gardenList = whereToPlantViewModel.gardenList
                         )

@@ -21,12 +21,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(): PlantViewModel() {
-
+    val currentGarden = MutableStateFlow(GardenUi())
     var recommendedPlants = listOf<PlantUi>()
+    val gardenPlantList = MutableStateFlow(listOf<PlantUi>())
 
     fun cacheAllPlants() {
         coroutineScope.launch(Dispatchers.IO) {
             plantRepository.cacheAllPlants()
+        }
+    }
+
+    fun getGardens() {
+        coroutineScope.launch(Dispatchers.IO) {
+            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+        }
+    }
+
+    fun getPlantsInGarden(gardenName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            gardenPlantList.value = plantRepository.getAllPlantsDb().map { it.toUi() }
+                .filter { it.gardenName ==  gardenName}
         }
     }
 }
