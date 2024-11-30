@@ -9,5 +9,6 @@ enum class Routes {
     PLANTDB,
     PLANTRECOMMENDATIONS,
     GROWTH,
+    GARDENGROWTH,
     WISHLIST
 }

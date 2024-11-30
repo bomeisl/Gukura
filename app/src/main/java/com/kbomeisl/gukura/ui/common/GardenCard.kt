@@ -108,6 +108,26 @@ fun GardenCard(
                     )
                     Text("Plan Your Garden", fontFamily = FontFamily.Monospace, fontSize = 10.sp)
                 }
+                Column(Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconButton(
+                        content = {
+                            Icon(
+                                painter = painterResource(R.drawable.progress),
+                                "",
+                                tint = nightBlue
+                            )
+                        },
+                        onClick = {
+                            navController.navigate("${Routes.GROWTH.name}/${gardenUi.name}")
+                        }
+                    )
+                    Text("Plant Growth", fontFamily = FontFamily.Monospace, fontSize = 10.sp)
+                }
             }
         }
     }

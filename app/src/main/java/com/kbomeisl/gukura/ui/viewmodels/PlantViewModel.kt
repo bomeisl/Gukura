@@ -13,6 +13,7 @@ import com.kbomeisl.gukura.data.sensor.CompassHeading
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.PlantUi
 import com.kbomeisl.gukura.ui.models.toDb
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -179,5 +180,13 @@ open class PlantViewModel(
             plantsInGarden.forEach { removeGardenFromPlant(it, gardenName = gardenUi.name) }
             gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
         }
+    }
+
+    fun lookUpGardenByName(gardenName: String): GardenDb {
+        var garden = GardenUi().toDb()
+        coroutineScope.launch(Dispatchers.IO) {
+            garden = gardenRepository.getGardenByName(gardenName)
+        }
+        return garden
     }
 }

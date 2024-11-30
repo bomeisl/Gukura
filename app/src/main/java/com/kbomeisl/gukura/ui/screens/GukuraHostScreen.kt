@@ -2,6 +2,7 @@ package com.kbomeisl.gukura.ui.screens
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -75,12 +76,23 @@ fun GukuraNavHost(
                    }
                }
                composable(route = Routes.GROWTH.name) {
-                   PlantGrowthScreen()
+                   PlantGrowthScreen(
+                       navHostController = navController
+                   )
                }
                composable(route = Routes.WISHLIST.name) {
                    MyWishListScreen(
                        snackbarHostState = snackbarHostState
                    )
+               }
+               composable(route = "${Routes.GARDENGROWTH.name}/{gardenName") { navBackStackEntry: NavBackStackEntry ->
+                   val gardenName = navBackStackEntry.arguments?.getString("gardenName")
+                   gardenName?.also {
+                       GardenGrowthScreen(
+                           gardenName = it,
+                           navHostController = navController
+                       )
+                   }
                }
            }
        }

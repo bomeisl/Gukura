@@ -7,6 +7,7 @@ import com.kbomeisl.gukura.data.repository.LocationRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.data.repository.WeatherRepository
 import com.kbomeisl.gukura.ui.viewmodels.FindAPlantViewModel
+import com.kbomeisl.gukura.ui.viewmodels.GardenGrowthViewModel
 import com.kbomeisl.gukura.ui.viewmodels.GardenPlannerViewModel
 import com.kbomeisl.gukura.ui.viewmodels.HomeViewModel
 import com.kbomeisl.gukura.ui.viewmodels.MeasurementViewModel
@@ -54,5 +55,8 @@ val viewmodelModule = module {
     }
     viewModel<WishListViewModel>() {
         WishListViewModel()
+    }
+    viewModel<GardenGrowthViewModel> {
+        GardenGrowthViewModel()
     }
 }

@@ -101,25 +101,25 @@ fun GukuraBaseScreen() {
                             enabled = true,
                             content = {
                                 Icon(
-                                    painter = painterResource(R.drawable.plant),
+                                    painter = painterResource(R.drawable.progress),
                                     "",
                                     tint = forestGreen,
                                     modifier = Modifier.size(iconSize)
                                 )
                             },
                             onClick = {
-                                navController.navigate(Routes.FINDAPLANT.name)
-                                subtitle = "Garden Planner"
+                                navController.navigate(Routes.GROWTH.name)
+                                subtitle = "Growth"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
                         Text(
-                            "Garden Planner",
+                            "Plant Growth",
                             color = Color.Gray,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(10.dp).clickable {
-                                navController.navigate(Routes.FINDAPLANT.name)
-                                subtitle = "Garden Planner"
+                                navController.navigate(Routes.GROWTH.name)
+                                subtitle = "Growth"
                                 coroutineScope.launch { drawerState.close() }
                             }
                         )
