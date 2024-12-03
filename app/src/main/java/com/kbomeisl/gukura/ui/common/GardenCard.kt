@@ -1,5 +1,6 @@
 package com.kbomeisl.gukura.ui.common
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.Icon
@@ -24,14 +24,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.kbomeisl.gukura.R
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.navigation.Routes
 import com.kbomeisl.gukura.ui.theme.add
 import com.kbomeisl.gukura.ui.theme.nightBlue
-import com.kbomeisl.gukura.ui.theme.skyBlue
 import com.kbomeisl.gukura.ui.theme.sunOrange
 
 @Composable
@@ -55,22 +53,35 @@ fun GardenCard(
                     .padding(5.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
-                    Icon(
-                        painter = painterResource(R.drawable.sun_2),
-                        "",
-                        Modifier.size(10.dp).align(Alignment.CenterVertically),
-                        tint = sunOrange
-                    )
-                    Text(gardenUi.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
+                AnimatedVisibility(gardenUi.avgLightLevel.isNotEmpty()) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.sun_2),
+                            "",
+                            Modifier.size(10.dp).align(Alignment.CenterVertically),
+                            tint = sunOrange
+                        )
+                        Text(gardenUi.avgLightLevel + " lux", fontFamily = FontFamily.Monospace)
+                    }
                 }
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(5.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.window2),
-                        "",
-                        Modifier.size(10.dp).align(Alignment.CenterVertically)
-                    )
-                    Text(gardenUi.windowDirection + " facing window", fontFamily = FontFamily.Monospace)
+                AnimatedVisibility(gardenUi.windowDirection.isNotEmpty()) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.window2),
+                            "",
+                            Modifier.size(10.dp).align(Alignment.CenterVertically)
+                        )
+                        Text(
+                            gardenUi.windowDirection + " facing window",
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
                 }
 
             }

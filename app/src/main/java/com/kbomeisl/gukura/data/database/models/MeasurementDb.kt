@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 @Entity
 data class MeasurementDb(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     val temperature: Float,
     val humidity: Float,
     val lightLevel: Float,

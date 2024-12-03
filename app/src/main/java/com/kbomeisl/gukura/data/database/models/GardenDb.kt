@@ -10,7 +10,7 @@ data class GardenDb(
     val name: String=" ",
     var avgTemperature: String="0",
     var avgHumidity: String="0",
-    var avgLightLevel: String="0",
+    var avgLightLevel: String="",
     var windowDirection: String=""
 )
 
