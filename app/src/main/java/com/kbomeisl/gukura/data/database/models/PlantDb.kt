@@ -8,6 +8,7 @@ import com.kbomeisl.gukura.ui.models.PlantUi
 data class PlantDb(
     val name: String = "Loading...",
     @PrimaryKey(autoGenerate = true) val plantId: Int = name.hashCode(),
+    val nickname: String = "Loading...",
     val description: String = "Loading...",
     val directions: String = "",
     val maxTemperature: Int = 0,

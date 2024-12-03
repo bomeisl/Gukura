@@ -4,6 +4,7 @@ import com.kbomeisl.gukura.data.database.models.PlantDb
 
 data class PlantUi(
     val name: String = "Loading...",
+    val nickname: String = "Loading...",
     val description: String = "Loading...",
     val directions: String = "Loading...",
     val temperature: String = "Loading...",
@@ -24,6 +25,7 @@ fun PlantUi.toDb(): PlantDb =
     PlantDb(
         plantId = name.hashCode(),
         name = name,
+        nickname = nickname,
         description = description,
         directions = directions,
         minTemperature = temperature.split("-").first().toFloat().toInt(),
