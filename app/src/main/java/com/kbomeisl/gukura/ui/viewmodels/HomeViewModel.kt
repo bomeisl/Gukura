@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.repository.GardenRepository
-import com.kbomeisl.gukura.data.repository.HomeRepository
 import com.kbomeisl.gukura.data.repository.PlantRepository
 import com.kbomeisl.gukura.ui.models.GardenUi
 import com.kbomeisl.gukura.ui.models.navigationIcons

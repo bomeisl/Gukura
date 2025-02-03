@@ -5,6 +5,7 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.kbomeisl.gukura.data.database.models.BiomassMeasurementDb
 import com.kbomeisl.gukura.data.database.models.GardenDb
 import com.kbomeisl.gukura.data.database.models.MeasurementDb
 import com.kbomeisl.gukura.data.database.models.PlantDb
@@ -14,15 +15,17 @@ import kotlinx.coroutines.CoroutineScope
     entities = [
         PlantDb::class,
         MeasurementDb::class,
-        GardenDb::class
+        GardenDb::class,
+        BiomassMeasurementDb::class
                ],
-    version = 20,
+    version = 21,
     exportSchema = false
 )
 abstract class GukuraDatabase: RoomDatabase() {
     abstract fun plantDao(): PlantDao
     abstract fun measurementDao(): MeasurementDao
     abstract fun gardenDao(): GardenDao
+    abstract fun biomassMeasurementDao(): BiomassMeasurementDao
 
     companion object {
         @Volatile

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -77,7 +78,7 @@ fun HomeScreen(
             stickyHeader {
                     Spacer(Modifier.height(100.dp))
                     Text(
-                        "Gardens",
+                        "My Gardens",
                         fontFamily = FontFamily.Monospace,
                         textAlign = TextAlign.Center,
                         color = Color.Gray,
@@ -107,15 +108,25 @@ fun HomeScreen(
                                 modifier = Modifier.padding(5.dp),
                                 content = {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Icon(
-                                            Icons.Outlined.Add,
-                                            "",
-                                            tint = add,
-                                            modifier = Modifier.clickable {
-                                                expandCard.value = !expandCard.value
-                                            }
-                                        )
-
+                                        if (!expandCard.value) {
+                                            Icon(
+                                                Icons.Outlined.Add,
+                                                "",
+                                                tint = add,
+                                                modifier = Modifier.clickable {
+                                                    expandCard.value = !expandCard.value
+                                                }
+                                            )
+                                        } else {
+                                            Icon(
+                                                Icons.Outlined.Clear,
+                                                "",
+                                                tint = Color.Black,
+                                                modifier = Modifier.clickable {
+                                                    expandCard.value = !expandCard.value
+                                                }
+                                            )
+                                        }
                                         AnimatedVisibility(expandCard.value) {
                                             Row {
                                                 TextField(
@@ -144,9 +155,9 @@ fun HomeScreen(
                                                     ),
                                                     trailingIcon = {
                                                         Icon(
-                                                            Icons.Outlined.Send,
+                                                            Icons.Outlined.Add,
                                                             "",
-                                                            tint = Color.Gray,
+                                                            tint = add,
                                                             modifier = Modifier.clickable {
                                                                 homeViewModel.addGarden(
                                                                     GardenDb(

@@ -1,10 +1,13 @@
 package com.kbomeisl.gukura.ui.viewmodels
 
 import android.hardware.SensorManager
+import android.util.Log
+import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kbomeisl.gukura.data.database.models.GardenDb
+import com.kbomeisl.gukura.data.database.models.PlantDb
 import com.kbomeisl.gukura.data.database.models.toUi
 import com.kbomeisl.gukura.data.network.models.toUi
 import com.kbomeisl.gukura.data.repository.GardenRepository
@@ -29,6 +32,8 @@ open class PlantViewModel(
     val gardenList = MutableStateFlow(listOf<GardenUi>())
     val recommendedPlantList = MutableStateFlow(listOf<PlantUi>())
     val wishListPlants = MutableStateFlow(listOf<PlantUi>())
+
+    open val logTag = "PlantViewModel"
 
     fun initialPlantCaching() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -151,11 +156,22 @@ open class PlantViewModel(
         }
     }
 
-    fun addGardenToPlant(plantUi: PlantUi, gardenName: String) {
-        coroutineScope.launch(Dispatchers.IO) {
-            val gardenDb = gardenRepository.getGardenByName(gardenName)
-            plantRepository.addGarden(plantDb = plantUi.toDb(), gardenDb = gardenDb)
+    fun addGardenToPlant(plantUi: PlantUi, gardenName: String): List<String> {
+        val errorList = mutableListOf<String>()
+        if (validateDataString(gardenName).dataValid && validatePlantUi(plantUi).dataValid) {
+            coroutineScope.launch(Dispatchers.IO) {
+                val gardenDb = gardenRepository.getGardenByName(gardenName)
+                plantRepository.addGarden(plantDb = plantUi.toDb(), gardenDb = gardenDb)
+            }
+        } else {
+            if (!validateDataString(gardenName).dataValid) {
+                errorList.add(validateDataString(gardenName).errorMessage)
+            }
+            if (!validatePlantUi(plantUi).dataValid) {
+                errorList.add(validatePlantUi(plantUi).errorMessage)
+            }
         }
+        return errorList
     }
 
     fun removeGardenFromPlant(plantUi: PlantUi, gardenName: String) {
@@ -165,12 +181,16 @@ open class PlantViewModel(
         }
     }
 
-    fun addGarden(gardenDb: GardenDb) {
-        coroutineScope.launch(Dispatchers.IO) {
-            gardenRepository.upsertGarden(gardenDb = gardenDb)
-            gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+    fun addGarden(gardenDb: GardenDb): String {
+        if (validateGardenDb(gardenDb).dataValid) {
+            coroutineScope.launch(Dispatchers.IO) {
+                gardenRepository.upsertGarden(gardenDb = gardenDb)
+                gardenList.value = gardenRepository.getAllGardens().map { it.toUi() }
+            }
+            return ""
+        } else {
+            return validateGardenDb(gardenDb).errorMessage
         }
-
     }
 
     fun deleteGarden(gardenUi: GardenUi) {
@@ -188,5 +208,29 @@ open class PlantViewModel(
             garden = gardenRepository.getGardenByName(gardenName)
         }
         return garden
+    }
+
+    fun validateDataString(data: String): DataValidation {
+        val dataStringValidator = DataValidation(
+            dataValid = data.isNotEmpty(),
+            errorMessages = listOf("This cannot be blank")
+        )
+        return dataStringValidator
+    }
+
+    fun validateGardenDb(data: GardenDb): DataValidation {
+        val gardenDbValidator = DataValidation(
+            dataValid = data.name.isNotEmpty(),
+            errorMessages = listOf("Garden name cannot be blank")
+        )
+        return gardenDbValidator
+    }
+
+    fun validatePlantUi(data: PlantUi): DataValidation {
+        val plantValidator = DataValidation(
+            dataValid = data.name.isNotEmpty(),
+            errorMessages = listOf("Plant name cannot be blank")
+        )
+        return plantValidator
     }
 }

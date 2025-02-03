@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class GardenPlannerViewModel(): PlantViewModel() {
-    val logTag = "Garden View Model"
+    override val logTag = "Garden View Model"
     override val coroutineScope = viewModelScope
     val plantListDb = MutableStateFlow(listOf<PlantDb>())
     val filteredList = MutableStateFlow(listOf<PlantDb>())

@@ -12,13 +12,13 @@ data class BiomassMeasurementDb(
     val month: Int,
     val day: Int,
     val year: Int,
-    val plantDb: PlantDb,
+    val plantId: Int,
     val weight: Double
 )
 
 fun BiomassMeasurementDb.toUi(): BiomassMeasurementUi =
     BiomassMeasurementUi(
         date = Timestamp(date = Date(year, month, day)),
-        plant = plantDb.toUi(),
+        plantId = plantId,
         weight = weight
     )

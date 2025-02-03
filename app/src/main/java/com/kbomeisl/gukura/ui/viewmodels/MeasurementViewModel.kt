@@ -23,7 +23,7 @@ class MeasurementViewModel(
     private val weatherRepository: WeatherRepository,
     private val locationRepository: LocationRepository
 ): PlantViewModel() {
-    val logTag = "Measurement View Model"
+    override val logTag = "Measurement View Model"
     val outsideHumidity = MutableStateFlow(0)
     val outsideTemperature = MutableStateFlow(0f)
     override val coroutineScope = viewModelScope
